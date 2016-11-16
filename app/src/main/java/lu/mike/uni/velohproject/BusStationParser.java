@@ -22,7 +22,6 @@ public class BusStationParser {
                 stationsObject.put(convert(station));
         }
         return stationsObject;
-        // comment
     }
 
     private JSONObject convert(String station) {
