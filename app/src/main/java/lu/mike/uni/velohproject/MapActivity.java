@@ -99,8 +99,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.nav_web:
+            case R.id.nav_bus_request:
+            //case R.id.nav_veloh_request:
                 Intent intent = new Intent(this, WebActivity.class);
+                intent.putExtra("test", item.getItemId());
                 startActivity(intent);
                 break;
         }

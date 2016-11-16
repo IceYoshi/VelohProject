@@ -10,6 +10,7 @@ public class RequestFactory {
     private static final String REQUEST_STATION_INFO = "http://travelplanner.mobiliteit.lu/restproxy/departureBoard?accessId=cdt&$station$&format=json";
 
     private static final String VELOH_API_KEY = "8b40b6abc96ba26ea4157be6a3f7c33bc54ca63f";
+    private static final String REQUEST_VELOH_STATIONS = "https://api.jcdecaux.com/vls/v1/stations?contract=Luxembourg&apiKey=$api_key$";
 
     public static String requestBusStations() { return requestBusStationsNearby(6112550, 49610700, 150000); }
 
@@ -27,6 +28,10 @@ public class RequestFactory {
                 .replace("$station$", station.replaceAll(";", ""));
     }
 
+    public static String requestVelohStations() {
+        return REQUEST_VELOH_STATIONS
+                .replace("$api_key$", VELOH_API_KEY);
+    }
 
 
 }
