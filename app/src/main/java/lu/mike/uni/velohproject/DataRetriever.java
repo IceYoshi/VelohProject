@@ -1,7 +1,6 @@
 package lu.mike.uni.velohproject;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -12,16 +11,16 @@ import java.net.URL;
  * Created by Mike on 13.11.2016.
  */
 
-interface RetrieveDataListener {
-    void onRetrieve(String response);
+interface DataRetrievedListener {
+    void onDataRetrieved(String result);
 }
 
-public class RetrieveData extends AsyncTask<Void, Void, String> {
+public class DataRetriever extends AsyncTask<Void, Void, String> {
 
     private String address;
-    private RetrieveDataListener listener;
+    private DataRetrievedListener listener;
 
-    public RetrieveData(RetrieveDataListener listener, String address) {
+    public DataRetriever(DataRetrievedListener listener, String address) {
         this.address = address;
         this.listener = listener;
         this.execute();
@@ -53,6 +52,6 @@ public class RetrieveData extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        listener.onRetrieve(result);
+        listener.onDataRetrieved(result);
     }
 }

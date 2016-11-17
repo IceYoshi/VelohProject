@@ -31,37 +31,32 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MapActivity extends AppCompatActivity implements  OnMapReadyCallback,
+public class MapActivity extends AppCompatActivity implements   OnMapReadyCallback,
                                                                 IDialogManagerInputDialogProtocol,
                                                                 NavigationView.OnNavigationItemSelectedListener,
                                                                 GoogleApiClient.ConnectionCallbacks,
                                                                 GoogleApiClient.OnConnectionFailedListener,
                                                                 LocationListener,
-                                                                RetrieveDataListener {
+                                                                DataRetrievedListener, ClusterManager.OnClusterClickListener<BusStation> {
 
     private GoogleMap mMap;
+    private ClusterManager<BusStation> mClusterManager;
 
     private LocationRequest mLocationRequest;
     private GoogleApiClient mGoogleApiClient;   // used for reading current location of device
     Location mLastLocation;
 
-    // since we cannot extend markers, we use them as keys and store values for each marker
-    private Map<MarkerOptions, JSONObject> allMarkers = new HashMap();
-    private ClusterManager<BusStation> mClusterManager;
-
-    // just for testing
-    ArrayList<LatLng> stations = new ArrayList();
-
-    private final int INTENT_REQUEST_CODE = 1;
-
+    private String lastDataRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,18 +119,7 @@ public class MapActivity extends AppCompatActivity implements  OnMapReadyCallbac
         LatLng neCords = new LatLng(50.22, 6.57); // northeast
         mMap.setLatLngBoundsForCameraTarget(new LatLngBounds(swCords, neCords));
 
-
-
-        // just testing
-        stations.add(new LatLng(49.612644, 6.112260));
-        stations.add(new LatLng(49.608832,6.116737));
-
-        stations.add(new LatLng(49.624698, 6.115155));
-
-        for(LatLng l : stations){
-            //allMarkers.put(m,new JSONObject(""));
-            //mMap.addMarker(new MarkerOptions().position(l).title("Test").icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("custommarker", 100, 100))));
-        }
+        new DataRetriever(this, RequestFactory.requestBusStations());
     }
 
     @Override
@@ -157,7 +141,7 @@ public class MapActivity extends AppCompatActivity implements  OnMapReadyCallbac
 
         switch (item.getItemId()) {
             case R.id.nav_bus_request:
-                new RetrieveData(this, RequestFactory.requestBusStations());
+                new DataRetriever(this, RequestFactory.requestBusStations());
                 break;
             case R.id.request_near:
                 DialogManager d = new DialogManager(this);
@@ -227,18 +211,15 @@ public class MapActivity extends AppCompatActivity implements  OnMapReadyCallbac
         ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawers();
 
         if(mLastLocation != null) {
-            float dist = Float.valueOf(editTextValue);
+            onDataRetrieved(lastDataRequest);
+            double dist = Double.valueOf(editTextValue);
 
-            for (LatLng l : stations) {
-                Location tmp_l = new Location("");
-                tmp_l.setLatitude(l.latitude);
-                tmp_l.setLongitude(l.longitude);
-
-                float deltaDist = mLastLocation.distanceTo(tmp_l);
-
-                if (deltaDist <= dist)
-                    mMap.addMarker(new MarkerOptions().position(l).title("Test").icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("custommarker_green", 100, 100))));
+            Collection<BusStation> stations = mClusterManager.getAlgorithm().getItems();
+            for(BusStation station :  stations) {
+                if(station.distanceTo(mLastLocation) > dist)
+                    mClusterManager.removeItem(station);
             }
+            mClusterManager.cluster();
         }
     }
 
@@ -248,10 +229,19 @@ public class MapActivity extends AppCompatActivity implements  OnMapReadyCallbac
     }
 
     @Override
-    public void onRetrieve(String response) {
+    public void onDataRetrieved(String result) {
         if(mClusterManager == null) return;
+        lastDataRequest = result;
         mClusterManager.clearItems();
-        mClusterManager.addItems(DataParser.parseBusStations(response));
+        mClusterManager.addItems(DataParser.parseBusStations(result));
         mClusterManager.cluster();
+        mClusterManager.setOnClusterClickListener(this);
+    }
+
+    @Override
+    public boolean onClusterClick(Cluster<BusStation> cluster) {
+        cluster.getSize();
+
+        return false;
     }
 }

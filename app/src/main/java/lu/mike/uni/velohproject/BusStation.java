@@ -5,6 +5,8 @@ package lu.mike.uni.velohproject;
  */
 
 
+import android.location.Location;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
@@ -42,6 +44,25 @@ public class BusStation implements ClusterItem {
 
     }
 
+    public double distanceTo(BusStation s) {
+        Location sLoc = new Location("");
+        sLoc.setLatitude(s.lat);
+        sLoc.setLongitude(s.lng);
+        return distanceTo(sLoc);
+    }
+
+    public double distanceTo(Location sLoc) {
+        Location thisLoc = new Location("");
+        thisLoc.setLatitude(this.lat);
+        thisLoc.setLongitude(this.lng);
+        return thisLoc.distanceTo(sLoc);
+    }
+
+    @Override
+    public LatLng getPosition() {
+        return new LatLng(this.lat, this.lng);
+    }
+
     public String getId() {
         return id;
     }
@@ -72,10 +93,5 @@ public class BusStation implements ClusterItem {
 
     public void setLng(double lng) {
         this.lng = lng;
-    }
-
-    @Override
-    public LatLng getPosition() {
-        return new LatLng(this.lat, this.lng);
     }
 }

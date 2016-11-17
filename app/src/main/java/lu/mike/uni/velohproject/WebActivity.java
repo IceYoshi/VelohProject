@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import java.util.Collection;
 
-public class WebActivity extends AppCompatActivity implements RetrieveDataListener {
+public class WebActivity extends AppCompatActivity implements DataRetrievedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,17 +22,17 @@ public class WebActivity extends AppCompatActivity implements RetrieveDataListen
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
 
-        new RetrieveData(this, RequestFactory.requestBusStations());
+        new DataRetriever(this, RequestFactory.requestBusStations());
     }
 
     @Override
-    public void onRetrieve(String response) {
+    public void onDataRetrieved(String result) {
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
 
         // TODO: This is only temporary for testing purposes
         TextView tv = (TextView) findViewById(R.id.jsonTextView);
-        Collection<BusStation> stationList = new DataParser().parseBusStations(response);
+        Collection<BusStation> stationList = new DataParser().parseBusStations(result);
 
         StringBuilder stringBuilder = new StringBuilder();
 
