@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -47,7 +48,8 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                                                                 GoogleApiClient.ConnectionCallbacks,
                                                                 GoogleApiClient.OnConnectionFailedListener,
                                                                 LocationListener,
-                                                                DataRetrievedListener, ClusterManager.OnClusterClickListener<BusStation> {
+                                                                DataRetrievedListener,
+                                                                ClusterManager.OnClusterItemClickListener<BusStation>, ClusterManager.OnClusterClickListener<BusStation> {
 
     private GoogleMap mMap;
     private ClusterManager<BusStation> mClusterManager;
@@ -92,6 +94,8 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         mMap = googleMap;
 
         mClusterManager = new ClusterManager<BusStation>(this, mMap);
+        mClusterManager.setOnClusterItemClickListener(this);
+        mClusterManager.setOnClusterClickListener(this);
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
 
@@ -202,9 +206,9 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
     @Override
     public void onConnectionSuspended(int i) {}
+
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {}
-
 
     @Override
     public void onInputDialogOKClick(String editTextValue) {
@@ -235,13 +239,17 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         mClusterManager.clearItems();
         mClusterManager.addItems(DataParser.parseBusStations(result));
         mClusterManager.cluster();
-        mClusterManager.setOnClusterClickListener(this);
+    }
+
+    @Override
+    public boolean onClusterItemClick(BusStation busStation) {
+        Toast.makeText(this, busStation.getName(), Toast.LENGTH_SHORT).show();
+        return false;
     }
 
     @Override
     public boolean onClusterClick(Cluster<BusStation> cluster) {
-        cluster.getSize();
-
+        Toast.makeText(this, "Cluster size: " + cluster.getSize(), Toast.LENGTH_SHORT).show();
         return false;
     }
 }
