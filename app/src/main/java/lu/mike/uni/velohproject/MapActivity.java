@@ -96,6 +96,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         mClusterManager = new ClusterManager<BusStation>(this, mMap);
         mClusterManager.setOnClusterItemClickListener(this);
         mClusterManager.setOnClusterClickListener(this);
+        mClusterManager.setRenderer(new MarkerIconRenderer(this, mMap, mClusterManager));
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
 
@@ -111,12 +112,8 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
         // Initial camera position and zoom
         LatLng luxembourg = new LatLng(49.7518, 6.1319);
-        LatLng luxembourg_city = new LatLng(49.6116, 6.1319);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(luxembourg , 9.0f));
         mMap.setMinZoomPreference(9.0f);
-
-        // Add city marker
-        //mMap.addMarker(new MarkerOptions().position(luxembourg_city).title(getResources().getString(R.string.luxembourg_city)));
 
         // Limit camera movement to Luxembourg
         LatLng swCords = new LatLng(49.41, 5.69); // southwest
@@ -165,13 +162,6 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         } else {
             super.onBackPressed();
         }
-    }
-
-    // returns a resized Bitmap (used for custom markers :] )
-    public Bitmap resizeMapIcons(String iconName, int width, int height){
-        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),getResources().getIdentifier(iconName, "drawable", getPackageName()));
-        Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
-        return resizedBitmap;
     }
 
     // called when location permission is granted to create in instance of a GoogleApiClient that is needed for requesting Location updates
