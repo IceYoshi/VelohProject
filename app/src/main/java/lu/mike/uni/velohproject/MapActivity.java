@@ -1,6 +1,5 @@
 package lu.mike.uni.velohproject;
 
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -32,6 +31,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.ClusterManager;
 
 import org.json.JSONObject;
 
@@ -44,7 +44,8 @@ public class MapActivity extends AppCompatActivity implements  OnMapReadyCallbac
                                                                 NavigationView.OnNavigationItemSelectedListener,
                                                                 GoogleApiClient.ConnectionCallbacks,
                                                                 GoogleApiClient.OnConnectionFailedListener,
-                                                                LocationListener {
+                                                                LocationListener,
+                                                                RetrieveDataListener {
 
     private GoogleMap mMap;
 
@@ -54,9 +55,12 @@ public class MapActivity extends AppCompatActivity implements  OnMapReadyCallbac
 
     // since we cannot extend markers, we use them as keys and store values for each marker
     private Map<MarkerOptions, JSONObject> allMarkers = new HashMap();
+    private ClusterManager<BusStation> mClusterManager;
 
     // just for testing
     ArrayList<LatLng> stations = new ArrayList();
+
+    private final int INTENT_REQUEST_CODE = 1;
 
 
     @Override
@@ -92,6 +96,10 @@ public class MapActivity extends AppCompatActivity implements  OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        mClusterManager = new ClusterManager<BusStation>(this, mMap);
+        mMap.setOnCameraIdleListener(mClusterManager);
+        mMap.setOnMarkerClickListener(mClusterManager);
+
         // Show "my location" button if permission granted
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -126,7 +134,7 @@ public class MapActivity extends AppCompatActivity implements  OnMapReadyCallbac
 
         for(LatLng l : stations){
             //allMarkers.put(m,new JSONObject(""));
-            mMap.addMarker(new MarkerOptions().position(l).title("Test").icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("custommarker", 100, 100))));
+            //mMap.addMarker(new MarkerOptions().position(l).title("Test").icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("custommarker", 100, 100))));
         }
     }
 
@@ -145,12 +153,11 @@ public class MapActivity extends AppCompatActivity implements  OnMapReadyCallbac
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawers();
+
         switch (item.getItemId()) {
             case R.id.nav_bus_request:
-            //case R.id.nav_veloh_request:
-                Intent intent = new Intent(this, WebActivity.class);
-                intent.putExtra("test", item.getItemId());
-                startActivity(intent);
+                new RetrieveData(this, RequestFactory.requestBusStations());
                 break;
             case R.id.request_near:
                 DialogManager d = new DialogManager(this);
@@ -240,4 +247,11 @@ public class MapActivity extends AppCompatActivity implements  OnMapReadyCallbac
         ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawers();
     }
 
+    @Override
+    public void onRetrieve(String response) {
+        if(mClusterManager == null) return;
+        mClusterManager.clearItems();
+        mClusterManager.addItems(DataParser.parseBusStations(response));
+        mClusterManager.cluster();
+    }
 }

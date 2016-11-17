@@ -12,6 +12,10 @@ import java.net.URL;
  * Created by Mike on 13.11.2016.
  */
 
+interface RetrieveDataListener {
+    void onRetrieve(String response);
+}
+
 public class RetrieveData extends AsyncTask<Void, Void, String> {
 
     private String address;
