@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import java.util.Collection;
 
+import lu.mike.uni.velohproject.stations.AbstractStation;
+
 /**
  * Note: WebActivity is currently not being used. May be removed later.
  */
@@ -35,7 +37,7 @@ public class WebActivity extends AppCompatActivity implements DataRetrievedListe
 
         // TODO: This is only temporary for testing purposes
         TextView tv = (TextView) findViewById(R.id.jsonTextView);
-        Collection<AbstractStation> stations = new DataParser().parseBusStations(result);
+        Collection<AbstractStation> stations = new StationDataParser().parseBusStations(result);
 
         StringBuilder stringBuilder = new StringBuilder();
 

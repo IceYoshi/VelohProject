@@ -1,4 +1,4 @@
-package lu.mike.uni.velohproject;
+package lu.mike.uni.velohproject.stations;
 
 /**
  * Created by Mike on 17.11.2016.
@@ -11,22 +11,22 @@ package lu.mike.uni.velohproject;
 public class BusStation extends AbstractStation {
 
     public BusStation(String stationID) {
-        this.id = stationID;
+        setId(stationID);
 
-        String[] params = id.split("@");
+        String[] params = getId().split("@");
 
         for(String attrib : params) {
             String[] keyValuePair = attrib.split("=");
 
             switch (keyValuePair[0]) {
                 case "O":
-                    this.name = keyValuePair[1];
+                    setName(keyValuePair[1]);
                     break;
                 case "X":
-                    this.lng = Double.valueOf(keyValuePair[1].replace(",", "."));
+                    setLng(Double.valueOf(keyValuePair[1].replace(",", ".")));
                     break;
                 case "Y":
-                    this.lat = Double.valueOf(keyValuePair[1].replace(",", "."));
+                    setLat(Double.valueOf(keyValuePair[1].replace(",", ".")));
                     break;
             }
         }

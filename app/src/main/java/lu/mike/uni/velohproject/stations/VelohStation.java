@@ -1,4 +1,4 @@
-package lu.mike.uni.velohproject;
+package lu.mike.uni.velohproject.stations;
 
 /**
  * Created by Mike on 19.11.2016.
@@ -28,12 +28,12 @@ public class VelohStation extends AbstractStation {
 
     public VelohStation(JSONObject station) {
         try {
-            this.id = station.getString("number"); // Verify if getString really returns the number
-            this.name = station.getString("name");
+            setId(station.getString("number")); // Verify if getString really returns the number
+            setName(station.getString("name"));
 
             JSONObject position = station.getJSONObject("position");
-            this.lat = position.getDouble("lat");
-            this.lng = position.getDouble("lng");
+            setLat(position.getDouble("lat"));
+            setLng(position.getDouble("lng"));
 
         } catch (JSONException e) {}
 

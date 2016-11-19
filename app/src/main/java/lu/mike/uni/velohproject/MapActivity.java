@@ -33,6 +33,8 @@ import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.Collection;
 
+import lu.mike.uni.velohproject.stations.AbstractStation;
+
 public class MapActivity extends AppCompatActivity implements   OnMapReadyCallback,
                                                                 IDialogManagerInputDialogProtocol,
                                                                 NavigationView.OnNavigationItemSelectedListener,
@@ -40,7 +42,8 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                                                                 GoogleApiClient.OnConnectionFailedListener,
                                                                 LocationListener,
                                                                 DataRetrievedListener,
-                                                                ClusterManager.OnClusterItemClickListener<AbstractStation>, ClusterManager.OnClusterClickListener<AbstractStation> {
+                                                                ClusterManager.OnClusterItemClickListener<AbstractStation>,
+                                                                ClusterManager.OnClusterClickListener<AbstractStation> {
 
     private GoogleMap mMap;
     private ClusterManager<AbstractStation> mClusterManager;
@@ -49,7 +52,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
     private GoogleApiClient mGoogleApiClient;   // used for reading current location of device
     Location mLastLocation;
 
-    private String lastDataRequest;
+    private String mLastDataRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -196,7 +199,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawers();
 
         if(mLastLocation != null) {
-            onDataRetrieved(lastDataRequest);
+            onDataRetrieved(mLastDataRequest);
             double dist = Double.valueOf(editTextValue);
 
             Collection<AbstractStation> stations = mClusterManager.getAlgorithm().getItems();
@@ -216,21 +219,21 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
     @Override
     public void onDataRetrieved(String result) {
         if(mClusterManager == null) return;
-        lastDataRequest = result;
+        mLastDataRequest = result;
         mClusterManager.clearItems();
-        mClusterManager.addItems(DataParser.parseStations(result));
+        mClusterManager.addItems(StationDataParser.parseStations(result));
         mClusterManager.cluster();
     }
 
     @Override
     public boolean onClusterItemClick(AbstractStation station) {
         Toast.makeText(this, station.getName(), Toast.LENGTH_SHORT).show();
-        return false; // False: Center camera on marker
+        return false; // false := Center camera on marker upon click
     }
 
     @Override
     public boolean onClusterClick(Cluster<AbstractStation> cluster) {
         Toast.makeText(this, "Cluster size: " + cluster.getSize(), Toast.LENGTH_SHORT).show();
-        return false; // False: Center camera on marker
+        return false; // false := Center camera on marker upon click
     }
 }

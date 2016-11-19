@@ -6,11 +6,15 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import lu.mike.uni.velohproject.stations.AbstractStation;
+import lu.mike.uni.velohproject.stations.BusStation;
+import lu.mike.uni.velohproject.stations.VelohStation;
+
 /**
  * Created by Mike on 14.11.2016.
  */
 
-public class DataParser {
+public class StationDataParser {
 
     public static Collection<AbstractStation> parseStations(String stations) {
         // TODO: Check if BusStation or VelohStation.

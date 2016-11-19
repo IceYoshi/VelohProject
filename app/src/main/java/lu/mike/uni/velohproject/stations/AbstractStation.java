@@ -1,4 +1,4 @@
-package lu.mike.uni.velohproject;
+package lu.mike.uni.velohproject.stations;
 
 import android.location.Location;
 
@@ -11,60 +11,60 @@ import com.google.maps.android.clustering.ClusterItem;
 
 public abstract class AbstractStation implements ClusterItem {
 
-    protected String id;
-    protected String name;
+    private String id;
+    private String name;
 
-    protected double lat;
-    protected double lng;
+    private double lat;
+    private double lng;
 
     @Override
     public LatLng getPosition() {
         return new LatLng(this.lat, this.lng);
     }
 
-    protected double distanceTo(BusStation s) {
+    public double distanceTo(BusStation s) {
         Location sLoc = new Location("");
-        sLoc.setLatitude(s.lat);
-        sLoc.setLongitude(s.lng);
+        sLoc.setLatitude(s.getLat());
+        sLoc.setLongitude(s.getLng());
         return distanceTo(sLoc);
     }
 
-    protected double distanceTo(Location sLoc) {
+    public double distanceTo(Location sLoc) {
         Location thisLoc = new Location("");
         thisLoc.setLatitude(this.lat);
         thisLoc.setLongitude(this.lng);
         return thisLoc.distanceTo(sLoc);
     }
 
-    protected String getId() {
+    public String getId() {
         return id;
     }
 
-    protected void setId(String id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    protected String getName() {
+    public String getName() {
         return name;
     }
 
-    protected void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    protected double getLat() {
+    public double getLat() {
         return lat;
     }
 
-    protected void setLat(double lat) {
+    public void setLat(double lat) {
         this.lat = lat;
     }
 
-    protected double getLng() {
+    public double getLng() {
         return lng;
     }
 
-    protected void setLng(double lng) {
+    public void setLng(double lng) {
         this.lng = lng;
     }
 
