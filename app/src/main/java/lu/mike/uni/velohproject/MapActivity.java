@@ -1,8 +1,6 @@
 package lu.mike.uni.velohproject;
 
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,19 +26,12 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 public class MapActivity extends AppCompatActivity implements   OnMapReadyCallback,
                                                                 IDialogManagerInputDialogProtocol,
@@ -49,10 +40,10 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                                                                 GoogleApiClient.OnConnectionFailedListener,
                                                                 LocationListener,
                                                                 DataRetrievedListener,
-                                                                ClusterManager.OnClusterItemClickListener<BusStation>, ClusterManager.OnClusterClickListener<BusStation> {
+                                                                ClusterManager.OnClusterItemClickListener<AbstractStation>, ClusterManager.OnClusterClickListener<AbstractStation> {
 
     private GoogleMap mMap;
-    private ClusterManager<BusStation> mClusterManager;
+    private ClusterManager<AbstractStation> mClusterManager;
 
     private LocationRequest mLocationRequest;
     private GoogleApiClient mGoogleApiClient;   // used for reading current location of device
@@ -93,10 +84,10 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        mClusterManager = new ClusterManager<BusStation>(this, mMap);
+        mClusterManager = new ClusterManager<AbstractStation>(this, mMap);
         mClusterManager.setOnClusterItemClickListener(this);
         mClusterManager.setOnClusterClickListener(this);
-        mClusterManager.setRenderer(new MarkerIconRenderer(this, mMap, mClusterManager));
+        mClusterManager.setRenderer(new CustomClusterItemRenderer(this, mMap, mClusterManager));
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
 
@@ -208,8 +199,8 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
             onDataRetrieved(lastDataRequest);
             double dist = Double.valueOf(editTextValue);
 
-            Collection<BusStation> stations = mClusterManager.getAlgorithm().getItems();
-            for(BusStation station :  stations) {
+            Collection<AbstractStation> stations = mClusterManager.getAlgorithm().getItems();
+            for(AbstractStation station :  stations) {
                 if(station.distanceTo(mLastLocation) > dist)
                     mClusterManager.removeItem(station);
             }
@@ -227,19 +218,19 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         if(mClusterManager == null) return;
         lastDataRequest = result;
         mClusterManager.clearItems();
-        mClusterManager.addItems(DataParser.parseBusStations(result));
+        mClusterManager.addItems(DataParser.parseStations(result));
         mClusterManager.cluster();
     }
 
     @Override
-    public boolean onClusterItemClick(BusStation busStation) {
-        Toast.makeText(this, busStation.getName(), Toast.LENGTH_SHORT).show();
-        return false;
+    public boolean onClusterItemClick(AbstractStation station) {
+        Toast.makeText(this, station.getName(), Toast.LENGTH_SHORT).show();
+        return false; // False: Center camera on marker
     }
 
     @Override
-    public boolean onClusterClick(Cluster<BusStation> cluster) {
+    public boolean onClusterClick(Cluster<AbstractStation> cluster) {
         Toast.makeText(this, "Cluster size: " + cluster.getSize(), Toast.LENGTH_SHORT).show();
-        return false;
+        return false; // False: Center camera on marker
     }
 }

@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 import java.util.Collection;
 
+/**
+ * Note: WebActivity is currently not being used. May be removed later.
+ */
 public class WebActivity extends AppCompatActivity implements DataRetrievedListener {
 
     @Override
@@ -32,11 +35,11 @@ public class WebActivity extends AppCompatActivity implements DataRetrievedListe
 
         // TODO: This is only temporary for testing purposes
         TextView tv = (TextView) findViewById(R.id.jsonTextView);
-        Collection<BusStation> stationList = new DataParser().parseBusStations(result);
+        Collection<AbstractStation> stations = new DataParser().parseBusStations(result);
 
         StringBuilder stringBuilder = new StringBuilder();
 
-        for(BusStation station : stationList) {
+        for(AbstractStation station : stations) {
             stringBuilder.append(station.getName() + '\n');
         }
 

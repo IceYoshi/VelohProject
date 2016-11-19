@@ -25,7 +25,7 @@ public class RequestFactory {
 
     public static String requestBusStationInfo(String station) {
         return REQUEST_STATION_INFO
-                .replace("$station$", station.replaceAll(";", ""));
+                .replace("$station$", station);
     }
 
     public static String requestVelohStations() {
