@@ -31,11 +31,10 @@ public class WebActivity extends AppCompatActivity implements DataRetrievedListe
     }
 
     @Override
-    public void onDataRetrieved(String result) {
+    public void onDataRetrieved(String result, RequestObject request) {
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
 
-        // TODO: This is only temporary for testing purposes
         TextView tv = (TextView) findViewById(R.id.jsonTextView);
         Collection<AbstractStation> stations = new StationDataParser().parseBusStations(result);
 

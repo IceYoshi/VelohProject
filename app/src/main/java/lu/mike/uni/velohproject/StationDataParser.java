@@ -16,9 +16,15 @@ import lu.mike.uni.velohproject.stations.VelohStation;
 
 public class StationDataParser {
 
-    public static Collection<AbstractStation> parseStations(String stations) {
-        // TODO: Check if BusStation or VelohStation.
-        return parseBusStations(stations);
+    public static Collection<AbstractStation> parseStations(String stations, RequestObject.RequestType requestType) {
+        switch (requestType) {
+            case REQUEST_ALL_BUS_STATIONS:
+                return parseBusStations(stations);
+            case REQUEST_ALL_VELOH_STATIONS:
+                return parseVelohStations(stations);
+            default:
+                return null;
+        }
     }
 
     public static Collection<AbstractStation> parseBusStations(String stations) {

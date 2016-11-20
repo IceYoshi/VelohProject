@@ -52,7 +52,8 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
     private GoogleApiClient mGoogleApiClient;   // used for reading current location of device
     Location mLastLocation;
 
-    private String mLastDataRequest;
+    private String mLastRequestResult;
+    private RequestObject mLastRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +108,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         // Initial camera position and zoom
         LatLng luxembourg = new LatLng(49.7518, 6.1319);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(luxembourg , 9.0f));
-        mMap.setMinZoomPreference(9.0f);
+        //mMap.setMinZoomPreference(9.0f);
 
         // Limit camera movement to Luxembourg
         LatLng swCords = new LatLng(49.41, 5.69); // southwest
@@ -135,16 +136,46 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawers();
 
         switch (item.getItemId()) {
-            case R.id.nav_bus_request:
+            case R.id.nav_request_all_bus_stations:
                 new DataRetriever(this, RequestFactory.requestBusStations());
                 break;
-            case R.id.request_near:
+            case R.id.request_stations_nearby:
                 DialogManager d = new DialogManager(this);
                 d.showInputDialog("Give a range in meters: ", this);
+                break;
+            case R.id.request_nearest_station:
+                showNearestBusStation();
+                break;
+            case R.id.nav_request_all_veloh_stations:
+                new DataRetriever(this, RequestFactory.requestVelohStations());
                 break;
         }
 
         return true;
+    }
+
+    public void showNearestBusStation() {
+        if(mLastLocation != null) {
+            onDataRetrieved(mLastRequestResult, mLastRequest);
+            double minDistance = Double.MAX_VALUE;
+            AbstractStation nearestStation = null;
+
+            Collection<AbstractStation> stations = mClusterManager.getAlgorithm().getItems();
+            for(AbstractStation station :  stations) {
+                double d = station.distanceTo(mLastLocation);
+                if(d < minDistance) {
+                    minDistance = d;
+                    nearestStation = station;
+                }
+            }
+
+            mClusterManager.clearItems();
+            if(nearestStation != null) {
+                mClusterManager.addItem(nearestStation);
+            }
+            mClusterManager.cluster();
+
+        }
     }
 
     @Override
@@ -196,10 +227,8 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
     @Override
     public void onInputDialogOKClick(String editTextValue) {
-        ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawers();
-
         if(mLastLocation != null) {
-            onDataRetrieved(mLastDataRequest);
+            onDataRetrieved(mLastRequestResult, mLastRequest);
             double dist = Double.valueOf(editTextValue);
 
             Collection<AbstractStation> stations = mClusterManager.getAlgorithm().getItems();
@@ -217,12 +246,21 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
     }
 
     @Override
-    public void onDataRetrieved(String result) {
+    public void onDataRetrieved(String result, RequestObject request) {
         if(mClusterManager == null) return;
-        mLastDataRequest = result;
-        mClusterManager.clearItems();
-        mClusterManager.addItems(StationDataParser.parseStations(result));
-        mClusterManager.cluster();
+
+        switch (request.getRequestType()) {
+            case REQUEST_ALL_BUS_STATIONS:
+            case REQUEST_ALL_VELOH_STATIONS:
+                mLastRequestResult = result;
+                mLastRequest = request;
+                mClusterManager.clearItems();
+                mClusterManager.addItems(StationDataParser.parseStations(result, request.getRequestType()));
+                mClusterManager.cluster();
+                break;
+            case REQUEST_BUS_STATION_INFO:
+                break;
+        }
     }
 
     @Override
