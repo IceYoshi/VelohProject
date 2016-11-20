@@ -1,9 +1,4 @@
-package lu.mike.uni.velohproject;
-
-/**
- * Created by Mike on 17.11.2016.
- */
-
+package lu.mike.uni.velohproject.stations;
 
 import android.location.Location;
 
@@ -11,43 +6,26 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
 /**
- * Example of station: id=A=1@O=Belair, Sacré-Coeur@X=6,113204@Y=49,610280@U=82@L=200403005@B=1@p=1478177594;
- * TODO: requestInfo();
+ * Created by Mike on 19.11.2016.
  */
-public class BusStation implements ClusterItem {
+
+public abstract class AbstractStation implements ClusterItem {
 
     private String id;
     private String name;
+
     private double lat;
     private double lng;
 
-    public BusStation(String stationID) {
-        this.id = stationID;
-
-        String[] params = id.split("@");
-
-        for(String attrib : params) {
-            String[] keyValuePair = attrib.split("=");
-
-            switch (keyValuePair[0]) {
-                case "O":
-                    this.name = keyValuePair[1];
-                    break;
-                case "X":
-                    this.lng = Double.valueOf(keyValuePair[1].replace(",", "."));
-                    break;
-                case "Y":
-                    this.lat = Double.valueOf(keyValuePair[1].replace(",", "."));
-                    break;
-            }
-        }
-
+    @Override
+    public LatLng getPosition() {
+        return new LatLng(this.lat, this.lng);
     }
 
     public double distanceTo(BusStation s) {
         Location sLoc = new Location("");
-        sLoc.setLatitude(s.lat);
-        sLoc.setLongitude(s.lng);
+        sLoc.setLatitude(s.getLat());
+        sLoc.setLongitude(s.getLng());
         return distanceTo(sLoc);
     }
 
@@ -56,11 +34,6 @@ public class BusStation implements ClusterItem {
         thisLoc.setLatitude(this.lat);
         thisLoc.setLongitude(this.lng);
         return thisLoc.distanceTo(sLoc);
-    }
-
-    @Override
-    public LatLng getPosition() {
-        return new LatLng(this.lat, this.lng);
     }
 
     public String getId() {
@@ -94,4 +67,5 @@ public class BusStation implements ClusterItem {
     public void setLng(double lng) {
         this.lng = lng;
     }
+
 }

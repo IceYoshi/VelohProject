@@ -1,8 +1,6 @@
 package lu.mike.uni.velohproject;
 
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,19 +26,14 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+
+import lu.mike.uni.velohproject.stations.AbstractStation;
 
 public class MapActivity extends AppCompatActivity implements   OnMapReadyCallback,
                                                                 IDialogManagerInputDialogProtocol,
@@ -49,16 +42,18 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                                                                 GoogleApiClient.OnConnectionFailedListener,
                                                                 LocationListener,
                                                                 DataRetrievedListener,
-                                                                ClusterManager.OnClusterItemClickListener<BusStation>, ClusterManager.OnClusterClickListener<BusStation> {
+                                                                ClusterManager.OnClusterItemClickListener<AbstractStation>,
+                                                                ClusterManager.OnClusterClickListener<AbstractStation> {
 
     private GoogleMap mMap;
-    private ClusterManager<BusStation> mClusterManager;
+    private ClusterManager<AbstractStation> mClusterManager;
 
     private LocationRequest mLocationRequest;
     private GoogleApiClient mGoogleApiClient;   // used for reading current location of device
     Location mLastLocation;
 
-    private String lastDataRequest;
+    private String mLastRequestResult;
+    private RequestObject mLastRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,10 +88,10 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        mClusterManager = new ClusterManager<BusStation>(this, mMap);
+        mClusterManager = new ClusterManager<AbstractStation>(this, mMap);
         mClusterManager.setOnClusterItemClickListener(this);
         mClusterManager.setOnClusterClickListener(this);
-        mClusterManager.setRenderer(new MarkerIconRenderer(this, mMap, mClusterManager));
+        mClusterManager.setRenderer(new CustomClusterItemRenderer(this, mMap, mClusterManager));
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
 
@@ -113,7 +108,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         // Initial camera position and zoom
         LatLng luxembourg = new LatLng(49.7518, 6.1319);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(luxembourg , 9.0f));
-        mMap.setMinZoomPreference(9.0f);
+        //mMap.setMinZoomPreference(9.0f);
 
         // Limit camera movement to Luxembourg
         LatLng swCords = new LatLng(49.41, 5.69); // southwest
@@ -141,16 +136,46 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawers();
 
         switch (item.getItemId()) {
-            case R.id.nav_bus_request:
+            case R.id.nav_request_all_bus_stations:
                 new DataRetriever(this, RequestFactory.requestBusStations());
                 break;
-            case R.id.request_near:
+            case R.id.request_stations_nearby:
                 DialogManager d = new DialogManager(this);
                 d.showInputDialog("Give a range in meters: ", this);
+                break;
+            case R.id.request_nearest_station:
+                showNearestBusStation();
+                break;
+            case R.id.nav_request_all_veloh_stations:
+                new DataRetriever(this, RequestFactory.requestVelohStations());
                 break;
         }
 
         return true;
+    }
+
+    public void showNearestBusStation() {
+        if(mLastLocation != null) {
+            onDataRetrieved(mLastRequestResult, mLastRequest);
+            double minDistance = Double.MAX_VALUE;
+            AbstractStation nearestStation = null;
+
+            Collection<AbstractStation> stations = mClusterManager.getAlgorithm().getItems();
+            for(AbstractStation station :  stations) {
+                double d = station.distanceTo(mLastLocation);
+                if(d < minDistance) {
+                    minDistance = d;
+                    nearestStation = station;
+                }
+            }
+
+            mClusterManager.clearItems();
+            if(nearestStation != null) {
+                mClusterManager.addItem(nearestStation);
+            }
+            mClusterManager.cluster();
+
+        }
     }
 
     @Override
@@ -202,14 +227,12 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
     @Override
     public void onInputDialogOKClick(String editTextValue) {
-        ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawers();
-
         if(mLastLocation != null) {
-            onDataRetrieved(lastDataRequest);
+            onDataRetrieved(mLastRequestResult, mLastRequest);
             double dist = Double.valueOf(editTextValue);
 
-            Collection<BusStation> stations = mClusterManager.getAlgorithm().getItems();
-            for(BusStation station :  stations) {
+            Collection<AbstractStation> stations = mClusterManager.getAlgorithm().getItems();
+            for(AbstractStation station :  stations) {
                 if(station.distanceTo(mLastLocation) > dist)
                     mClusterManager.removeItem(station);
             }
@@ -223,23 +246,32 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
     }
 
     @Override
-    public void onDataRetrieved(String result) {
+    public void onDataRetrieved(String result, RequestObject request) {
         if(mClusterManager == null) return;
-        lastDataRequest = result;
-        mClusterManager.clearItems();
-        mClusterManager.addItems(DataParser.parseBusStations(result));
-        mClusterManager.cluster();
+
+        switch (request.getRequestType()) {
+            case REQUEST_ALL_BUS_STATIONS:
+            case REQUEST_ALL_VELOH_STATIONS:
+                mLastRequestResult = result;
+                mLastRequest = request;
+                mClusterManager.clearItems();
+                mClusterManager.addItems(StationDataParser.parseStations(result, request.getRequestType()));
+                mClusterManager.cluster();
+                break;
+            case REQUEST_BUS_STATION_INFO:
+                break;
+        }
     }
 
     @Override
-    public boolean onClusterItemClick(BusStation busStation) {
-        Toast.makeText(this, busStation.getName(), Toast.LENGTH_SHORT).show();
-        return false;
+    public boolean onClusterItemClick(AbstractStation station) {
+        Toast.makeText(this, station.getName(), Toast.LENGTH_SHORT).show();
+        return false; // false := Center camera on marker upon click
     }
 
     @Override
-    public boolean onClusterClick(Cluster<BusStation> cluster) {
+    public boolean onClusterClick(Cluster<AbstractStation> cluster) {
         Toast.makeText(this, "Cluster size: " + cluster.getSize(), Toast.LENGTH_SHORT).show();
-        return false;
+        return false; // false := Center camera on marker upon click
     }
 }
