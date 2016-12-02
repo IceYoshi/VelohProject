@@ -1,5 +1,6 @@
 package lu.mike.uni.velohproject;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -51,6 +52,8 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                                                                 DataRetrievedListener,
                                                                 ClusterManager.OnClusterItemClickListener<BusStation>, ClusterManager.OnClusterClickListener<BusStation> {
 
+    private final static int HISTORY_REQUEST_CODE = 42;
+
     private GoogleMap mMap;
     private ClusterManager<BusStation> mClusterManager;
 
@@ -59,6 +62,8 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
     Location mLastLocation;
 
     private String lastDataRequest;
+
+    private HistoryManager hm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +88,10 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
+        hm = new HistoryManager(this);
+        hm.clearHistory();
     }
 
 
@@ -141,16 +150,39 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawers();
 
         switch (item.getItemId()) {
-            case R.id.nav_bus_request:
+            case R.id.menu_nav_bus_request:
                 new DataRetriever(this, RequestFactory.requestBusStations());
                 break;
-            case R.id.request_near:
+            case R.id.menu_request_near:
                 DialogManager d = new DialogManager(this);
                 d.showInputDialog("Give a range in meters: ", this);
+                break;
+            case R.id.menu_history:
+                Intent intent = new Intent(this, HistoryActivity.class);
+                intent.putExtra(getResources().getString(R.string.HISTORY_JSON_STRING),hm.getHistoryString());
+                //startActivity(intent);
+                startActivityForResult(intent, HISTORY_REQUEST_CODE);
+                break;
+            case R.id.menu_preferences:
                 break;
         }
 
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i(""," RETURNED !!!");
+        switch(requestCode){
+            case HISTORY_REQUEST_CODE:
+                if(resultCode == RESULT_OK) {
+                    Log.i("","OK !!!");
+                }
+                else {
+                    Log.i("","CANCELED !!!");
+                }
+                break;
+        }
     }
 
     @Override
@@ -214,6 +246,8 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                     mClusterManager.removeItem(station);
             }
             mClusterManager.cluster();
+
+            hm.appendRangeHistory(mLastLocation,dist);
         }
     }
 

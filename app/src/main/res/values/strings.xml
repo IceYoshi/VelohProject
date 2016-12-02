@@ -7,4 +7,5 @@
 
     <string name="luxembourg_city">Luxembourg City</string>
     <string name="title_activity_web">WebActivity</string>
+    <string name="HISTORY_JSON_STRING">HISTORY_JSON</string>
 </resources>

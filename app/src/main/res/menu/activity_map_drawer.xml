@@ -3,12 +3,20 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_bus_request"
+            android:id="@+id/menu_nav_bus_request"
             android:title="Request all bus stations" />
 
         <item
-            android:id="@+id/request_near"
+            android:id="@+id/menu_request_near"
             android:title="Request bus stations in range" />
+
+        <item
+            android:id="@+id/menu_history"
+            android:title="History" />
+
+        <item
+            android:id="@+id/menu_preferences"
+            android:title="Preferences" />
 
     </group>
 
