@@ -26,7 +26,8 @@ public class MarkerIconRenderer extends DefaultClusterRenderer<BusStation> {
     @Override
     protected void onBeforeClusterItemRendered(BusStation item, MarkerOptions markerOptions) {
         // TODO: Make icon smaller to improve performance.
-        //markerOptions.icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("custommarker", 100, 100)));
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("custommarkergreen", 128, 160)));
+        //markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.custommarkergreen));
     }
 
     // returns a resized Bitmap (used for custom markers :] )
