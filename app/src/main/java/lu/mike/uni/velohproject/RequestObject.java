@@ -9,7 +9,9 @@ public class RequestObject {
     public static enum RequestType {
         REQUEST_ALL_BUS_STATIONS,
         REQUEST_BUS_STATION_INFO,
-        REQUEST_ALL_VELOH_STATIONS
+        REQUEST_ALL_VELOH_STATIONS,
+        REQUEST_ADDRESS_INFO_FOR_BUS_STATION_RANGE,
+        REQUEST_ADDRESS_INFO_FOR_BUS_NEAREST_STATION
     }
 
     private String url;

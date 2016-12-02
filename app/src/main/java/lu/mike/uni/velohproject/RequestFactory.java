@@ -43,10 +43,10 @@ public class RequestFactory {
     }
 
 
-    public static String requestAddressInfo(Location l) {
-        return REQUEST_ADDRESS_INFO
+    public static RequestObject requestAddressInfo(Location l, RequestObject.RequestType type) {
+        return new RequestObject(REQUEST_ADDRESS_INFO
                 .replace("$x$", String.valueOf(l.getLatitude()))
-                .replace("$y$", String.valueOf(l.getLongitude()));
+                .replace("$y$", String.valueOf(l.getLongitude())), type);
     }
 
 }

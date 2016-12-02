@@ -1,5 +1,6 @@
 package lu.mike.uni.velohproject;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -41,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import lu.mike.uni.velohproject.stations.AbstractStation;
+import lu.mike.uni.velohproject.stations.BusStation;
 
 public class MapActivity extends AppCompatActivity implements   OnMapReadyCallback,
                                                                 IDialogManagerInputDialogProtocol,
@@ -49,7 +51,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                                                                 GoogleApiClient.OnConnectionFailedListener,
                                                                 LocationListener,
                                                                 DataRetrievedListener,
-                                                                ClusterManager.OnClusterItemClickListener<BusStation>, ClusterManager.OnClusterClickListener<BusStation> {
+                                                                ClusterManager.OnClusterItemClickListener<AbstractStation>, ClusterManager.OnClusterClickListener<AbstractStation> {
 
     private final static int HISTORY_REQUEST_CODE = 42;
 
@@ -169,8 +171,6 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                 //startActivity(intent);
                 startActivityForResult(intent, HISTORY_REQUEST_CODE);
                 break;
-            case R.id.menu_preferences:
-                break;
         }
 
         return true;
@@ -197,6 +197,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
             }
             mClusterManager.cluster();
 
+            hm.appendNearestBusStationsHistory(mLastLocation);
         }
     }
 
@@ -206,10 +207,11 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         switch(requestCode){
             case HISTORY_REQUEST_CODE:
                 if(resultCode == RESULT_OK) {
-                    Log.i("","OK !!!");
+                    int position = data.getIntExtra("position",-1);
+                    System.out.println("Clicked on position: "+position);
                 }
                 else {
-                    Log.i("","CANCELED !!!");
+                    Log.d("","CANCELED !!!");
                 }
                 break;
         }
@@ -315,4 +317,5 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         Toast.makeText(this, "Cluster size: " + cluster.getSize(), Toast.LENGTH_SHORT).show();
         return false;
     }
+
 }
