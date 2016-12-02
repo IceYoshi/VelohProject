@@ -9,6 +9,11 @@ import android.widget.TextView;
 
 import java.util.Collection;
 
+import lu.mike.uni.velohproject.stations.AbstractStation;
+
+/**
+ * Note: WebActivity is currently not being used. May be removed later.
+ */
 public class WebActivity extends AppCompatActivity implements DataRetrievedListener {
 
     @Override
@@ -26,17 +31,16 @@ public class WebActivity extends AppCompatActivity implements DataRetrievedListe
     }
 
     @Override
-    public void onDataRetrieved(String result) {
+    public void onDataRetrieved(String result, RequestObject request) {
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
 
-        // TODO: This is only temporary for testing purposes
         TextView tv = (TextView) findViewById(R.id.jsonTextView);
-        Collection<BusStation> stationList = new DataParser().parseBusStations(result);
+        Collection<AbstractStation> stations = new StationDataParser().parseBusStations(result);
 
         StringBuilder stringBuilder = new StringBuilder();
 
-        for(BusStation station : stationList) {
+        for(AbstractStation station : stations) {
             stringBuilder.append(station.getName() + '\n');
         }
 

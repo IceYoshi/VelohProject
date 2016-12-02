@@ -5,26 +5,27 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
+
+import lu.mike.uni.velohproject.stations.AbstractStation;
 
 /**
  * Created by Mike on 18.11.2016.
  */
 
-public class MarkerIconRenderer extends DefaultClusterRenderer<BusStation> {
+public class CustomClusterItemRenderer extends DefaultClusterRenderer<AbstractStation> {
 
     private Context context;
 
-    public MarkerIconRenderer(Context context, GoogleMap map, ClusterManager<BusStation> clusterManager) {
+    public CustomClusterItemRenderer(Context context, GoogleMap map, ClusterManager<AbstractStation> clusterManager) {
         super(context, map, clusterManager);
         this.context = context;
     }
 
     @Override
-    protected void onBeforeClusterItemRendered(BusStation item, MarkerOptions markerOptions) {
+    protected void onBeforeClusterItemRendered(AbstractStation item, MarkerOptions markerOptions) {
         // TODO: Make icon smaller to improve performance.
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("custommarkergreen", 128, 160)));
         //markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.custommarkergreen));

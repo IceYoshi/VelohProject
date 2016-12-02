@@ -12,16 +12,16 @@ import java.net.URL;
  */
 
 interface DataRetrievedListener {
-    void onDataRetrieved(String result);
+    void onDataRetrieved(String result, RequestObject request);
 }
 
 public class DataRetriever extends AsyncTask<Void, Void, String> {
 
-    private String address;
+    private RequestObject request;
     private DataRetrievedListener listener;
 
-    public DataRetriever(DataRetrievedListener listener, String address) {
-        this.address = address;
+    public DataRetriever(DataRetrievedListener listener, RequestObject request) {
+        this.request = request;
         this.listener = listener;
         this.execute();
     }
@@ -29,7 +29,7 @@ public class DataRetriever extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... params) {
         try {
-            URL url = new URL(this.address);
+            URL url = new URL(this.request.getUrl());
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             try {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
@@ -52,6 +52,6 @@ public class DataRetriever extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        listener.onDataRetrieved(result);
+        listener.onDataRetrieved(result, this.request);
     }
 }

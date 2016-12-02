@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.support.v4.widget.DrawerLayout;
 import android.text.InputType;
+import android.view.Gravity;
 import android.widget.EditText;
 
 /**
@@ -32,6 +33,7 @@ public class DialogManager {
 
         // Set up the input
         final EditText input = new EditText(context);
+        input.setGravity(Gravity.CENTER_HORIZONTAL);
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
         builder.setView(input);
