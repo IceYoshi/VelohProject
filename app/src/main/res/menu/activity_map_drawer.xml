@@ -31,7 +31,7 @@
     <item android:title="Preferences (WIP)" android:enabled="false">
     </item>
 
-    <item android:title="About (WIP)" android:enabled="false">
+    <item android:title="About (WIP)" android:id="@+id/about" android:enabled="false">
     </item>
 
 </menu>

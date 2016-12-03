@@ -8,6 +8,11 @@ import android.text.InputType;
 import android.view.Gravity;
 import android.widget.EditText;
 
+import java.util.ArrayList;
+import java.util.Map;
+
+import static lu.mike.uni.velohproject.R.id.map;
+
 /**
  * Created by Dren413 on 15.11.16.
  */
@@ -19,6 +24,10 @@ interface IDialogManagerInputDialogProtocol{
 
 interface IDialogManagerAlertDialogProtocol{
     void onAlertDialogCloseClick();
+}
+
+interface IDialogManagerMessageDialogProtocol{
+    void onMessageDialogCloseClick();
 }
 
 public class DialogManager {
@@ -66,6 +75,27 @@ public class DialogManager {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 delegator.onAlertDialogCloseClick();
+            }
+        });
+        builder.show();
+    }
+
+    public void showMessageDialog(String title, ArrayList<String> messages, final IDialogManagerMessageDialogProtocol delegator){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title);
+
+        String finalMessage = "";
+        for (String msg : messages)
+            finalMessage += msg+"\n";
+
+        builder.setMessage(finalMessage);
+
+
+        // Set up the buttons
+        builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                delegator.onMessageDialogCloseClick();
             }
         });
         builder.show();

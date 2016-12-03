@@ -16,7 +16,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Request bus stations in range"
+                android:text="Request stations in range"
                 android:gravity="center_vertical"
                 android:textSize="80px"/>
 
@@ -30,7 +30,7 @@
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Request nearest bus station"
+                android:text="Request nearest station"
                 android:gravity="center_vertical"
                 android:textSize="80px"/>
 

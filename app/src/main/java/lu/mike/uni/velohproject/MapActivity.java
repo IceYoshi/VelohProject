@@ -43,9 +43,11 @@ import java.util.Collection;
 
 import lu.mike.uni.velohproject.stations.AbstractStation;
 import lu.mike.uni.velohproject.stations.BusStation;
+import lu.mike.uni.velohproject.stations.VelohStation;
 
 public class MapActivity extends AppCompatActivity implements   OnMapReadyCallback,
                                                                 IDialogManagerInputDialogProtocol,
+                                                                IDialogManagerMessageDialogProtocol,
                                                                 NavigationView.OnNavigationItemSelectedListener,
                                                                 GoogleApiClient.ConnectionCallbacks,
                                                                 GoogleApiClient.OnConnectionFailedListener,
@@ -66,6 +68,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
     private RequestObject mLastRequest;
 
     private HistoryManager hm;
+    private DialogManager dm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +94,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
+        dm = new DialogManager(this);
         hm = new HistoryManager(this);
         hm.clearHistory();
     }
@@ -156,8 +159,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                 new DataRetriever(this, RequestFactory.requestBusStations());
                 break;
             case R.id.request_stations_nearby:
-                DialogManager d = new DialogManager(this);
-                d.showInputDialog("Give a range in meters: ", this);
+                dm.showInputDialog("Give a range in meters: ", this);
                 break;
             case R.id.request_nearest_station:
                 showNearestBusStation();
@@ -170,6 +172,8 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                 intent.putExtra(getResources().getString(R.string.HISTORY_JSON_STRING),hm.getHistoryString());
                 //startActivity(intent);
                 startActivityForResult(intent, HISTORY_REQUEST_CODE);
+                break;
+            case R.id.about:
                 break;
         }
 
@@ -308,7 +312,19 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
     @Override
     public boolean onClusterItemClick(AbstractStation station) {
-        Toast.makeText(this, station.getName(), Toast.LENGTH_SHORT).show();
+        ArrayList<String> l = new ArrayList<>();
+        l.add("Name: \t"+station.getName());
+        String stationType = "Bus";
+
+        if(station instanceof VelohStation){
+            VelohStation v = (VelohStation)station;
+            l.add("Available bikes: \t"+v.getAvailable_bikes());
+            l.add("Available stands: \t"+v.getAvailable_bikes_stands());
+            l.add("Total stands: \t"+v.getTotal_bikes_stand());
+            stationType = "Veloh";
+        }
+
+        dm.showMessageDialog(stationType+" Station Information", l,this);
         return false; // false := Center camera on marker upon click
     }
 
@@ -318,4 +334,8 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         return false;
     }
 
+    @Override
+    public void onMessageDialogCloseClick() {
+
+    }
 }
