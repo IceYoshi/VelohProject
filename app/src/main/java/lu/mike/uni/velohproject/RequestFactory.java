@@ -15,6 +15,7 @@ public class RequestFactory {
     private static final String VELOH_API_KEY = "8b40b6abc96ba26ea4157be6a3f7c33bc54ca63f";
     private static final String REQUEST_VELOH_STATIONS = "https://api.jcdecaux.com/vls/v1/stations?contract=Luxembourg&apiKey=$api_key$";
 
+
     public static RequestObject requestBusStations() { return requestBusStationsNearby(6112550, 49610700, 150000); }
 
     public static RequestObject requestBusStationsNearby(int x, int y, int dist) {

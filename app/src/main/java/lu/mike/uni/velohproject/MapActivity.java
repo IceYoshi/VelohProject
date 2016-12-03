@@ -2,8 +2,6 @@ package lu.mike.uni.velohproject;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,13 +27,12 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -66,6 +63,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
     private String mLastRequestResult;
     private RequestObject mLastRequest;
+    private AbstractStation currentStationClicked;
 
     private HistoryManager hm;
     private DialogManager dm;
@@ -306,25 +304,43 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                 mClusterManager.cluster();
                 break;
             case REQUEST_BUS_STATION_INFO:
+                showBusstationInfo(result);
                 break;
         }
     }
 
+    private void showBusstationInfo(String jsonString){
+        ArrayList<String> l = new ArrayList<>();
+        l.add("Name: \t"+currentStationClicked.getName());
+
+        try{
+            JSONObject json = new JSONObject(jsonString);
+            JSONArray jarr = json.getJSONArray("Departure");
+
+            for(int i = 0; i<jarr.length(); i++){
+                l.add(jarr.getJSONObject(i).getJSONObject("Product").getString("name") + " --> " + jarr.getJSONObject(i).getString("direction") );
+            }
+        }catch(Exception ex){ex.printStackTrace();}
+
+        dm.showMessageDialog("Bus Station Information", l,this);
+    }
+
     @Override
     public boolean onClusterItemClick(AbstractStation station) {
-        ArrayList<String> l = new ArrayList<>();
-        l.add("Name: \t"+station.getName());
-        String stationType = "Bus";
-
+        currentStationClicked = station;
         if(station instanceof VelohStation){
+            ArrayList<String> l = new ArrayList<>();
+            l.add("Name: \t"+station.getName());
             VelohStation v = (VelohStation)station;
             l.add("Available bikes: \t"+v.getAvailable_bikes());
             l.add("Available stands: \t"+v.getAvailable_bikes_stands());
             l.add("Total stands: \t"+v.getTotal_bikes_stand());
-            stationType = "Veloh";
+            dm.showMessageDialog("Veloh Station Information", l,this);
         }
-
-        dm.showMessageDialog(stationType+" Station Information", l,this);
+        else {
+            System.out.println("id="+station.getId());
+            new DataRetriever(this, RequestFactory.requestBusStationInfo("id=" + station.getId()));
+        }
         return false; // false := Center camera on marker upon click
     }
 
