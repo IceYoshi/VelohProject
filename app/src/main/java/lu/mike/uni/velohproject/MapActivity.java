@@ -125,7 +125,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         // Initial camera position and zoom
         LatLng luxembourg = new LatLng(49.7518, 6.1319);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(luxembourg , 9.0f));
-        //mMap.setMinZoomPreference(9.0f);
+        mMap.setMinZoomPreference(9.0f);
 
         // Limit camera movement to Luxembourg
         LatLng swCords = new LatLng(49.41, 5.69); // southwest
@@ -346,8 +346,8 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
     @Override
     public boolean onClusterClick(Cluster<AbstractStation> cluster) {
-        Toast.makeText(this, "Cluster size: " + cluster.getSize(), Toast.LENGTH_SHORT).show();
-        return false;
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition() , mMap.getCameraPosition().zoom + 1.5f));
+        return true;
     }
 
     @Override
