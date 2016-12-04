@@ -1,5 +1,6 @@
 package lu.mike.uni.velohproject;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
@@ -31,19 +32,27 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.Collection;
 
 import lu.mike.uni.velohproject.stations.AbstractStation;
+import lu.mike.uni.velohproject.stations.BusStation;
+import lu.mike.uni.velohproject.stations.VelohStation;
 
 public class MapActivity extends AppCompatActivity implements   OnMapReadyCallback,
                                                                 IDialogManagerInputDialogProtocol,
+                                                                IDialogManagerMessageDialogProtocol,
                                                                 NavigationView.OnNavigationItemSelectedListener,
                                                                 GoogleApiClient.ConnectionCallbacks,
                                                                 GoogleApiClient.OnConnectionFailedListener,
                                                                 LocationListener,
                                                                 DataRetrievedListener,
-                                                                ClusterManager.OnClusterItemClickListener<AbstractStation>,
-                                                                ClusterManager.OnClusterClickListener<AbstractStation> {
+                                                                ClusterManager.OnClusterItemClickListener<AbstractStation>, ClusterManager.OnClusterClickListener<AbstractStation> {
+
+    private final static int HISTORY_REQUEST_CODE = 42;
 
     private GoogleMap mMap;
     private ClusterManager<AbstractStation> mClusterManager;
@@ -54,6 +63,10 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
     private String mLastRequestResult;
     private RequestObject mLastRequest;
+    private AbstractStation currentStationClicked;
+
+    private HistoryManager hm;
+    private DialogManager dm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +91,10 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        dm = new DialogManager(this);
+        hm = new HistoryManager(this);
+        hm.clearHistory();
     }
 
 
@@ -108,7 +125,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         // Initial camera position and zoom
         LatLng luxembourg = new LatLng(49.7518, 6.1319);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(luxembourg , 9.0f));
-        //mMap.setMinZoomPreference(9.0f);
+        mMap.setMinZoomPreference(9.0f);
 
         // Limit camera movement to Luxembourg
         LatLng swCords = new LatLng(49.41, 5.69); // southwest
@@ -140,14 +157,21 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                 new DataRetriever(this, RequestFactory.requestBusStations());
                 break;
             case R.id.request_stations_nearby:
-                DialogManager d = new DialogManager(this);
-                d.showInputDialog("Give a range in meters: ", this);
+                dm.showInputDialog("Give a range in meters: ", this);
                 break;
             case R.id.request_nearest_station:
                 showNearestBusStation();
                 break;
             case R.id.nav_request_all_veloh_stations:
                 new DataRetriever(this, RequestFactory.requestVelohStations());
+                break;
+            case R.id.menu_history:
+                Intent intent = new Intent(this, HistoryActivity.class);
+                intent.putExtra(getResources().getString(R.string.HISTORY_JSON_STRING),hm.getHistoryString());
+                //startActivity(intent);
+                startActivityForResult(intent, HISTORY_REQUEST_CODE);
+                break;
+            case R.id.about:
                 break;
         }
 
@@ -175,6 +199,23 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
             }
             mClusterManager.cluster();
 
+            hm.appendNearestBusStationsHistory(mLastLocation);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i(""," RETURNED !!!");
+        switch(requestCode){
+            case HISTORY_REQUEST_CODE:
+                if(resultCode == RESULT_OK) {
+                    int position = data.getIntExtra("position",-1);
+                    System.out.println("Clicked on position: "+position);
+                }
+                else {
+                    Log.d("","CANCELED !!!");
+                }
+                break;
         }
     }
 
@@ -227,6 +268,8 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
     @Override
     public void onInputDialogOKClick(String editTextValue) {
+        ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawers();
+
         if(mLastLocation != null) {
             onDataRetrieved(mLastRequestResult, mLastRequest);
             double dist = Double.valueOf(editTextValue);
@@ -237,6 +280,8 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                     mClusterManager.removeItem(station);
             }
             mClusterManager.cluster();
+
+            hm.appendRangeHistory(mLastLocation,dist);
         }
     }
 
@@ -259,19 +304,54 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                 mClusterManager.cluster();
                 break;
             case REQUEST_BUS_STATION_INFO:
+                showBusstationInfo(result);
                 break;
         }
     }
 
+    private void showBusstationInfo(String jsonString){
+        ArrayList<String> l = new ArrayList<>();
+        l.add("Name: \t"+currentStationClicked.getName());
+
+        try{
+            JSONObject json = new JSONObject(jsonString);
+            JSONArray jarr = json.getJSONArray("Departure");
+
+            for(int i = 0; i<jarr.length(); i++){
+                l.add(jarr.getJSONObject(i).getJSONObject("Product").getString("name") + " --> " + jarr.getJSONObject(i).getString("direction") );
+            }
+        }catch(Exception ex){ex.printStackTrace();}
+
+        dm.showMessageDialog("Bus Station Information", l,this);
+    }
+
     @Override
     public boolean onClusterItemClick(AbstractStation station) {
-        Toast.makeText(this, station.getName(), Toast.LENGTH_SHORT).show();
+        currentStationClicked = station;
+        if(station instanceof VelohStation){
+            ArrayList<String> l = new ArrayList<>();
+            l.add("Name: \t"+station.getName());
+            VelohStation v = (VelohStation)station;
+            l.add("Available bikes: \t"+v.getAvailable_bikes());
+            l.add("Available stands: \t"+v.getAvailable_bikes_stands());
+            l.add("Total stands: \t"+v.getTotal_bikes_stand());
+            dm.showMessageDialog("Veloh Station Information", l,this);
+        }
+        else {
+            System.out.println("id="+station.getId());
+            new DataRetriever(this, RequestFactory.requestBusStationInfo("id=" + station.getId()));
+        }
         return false; // false := Center camera on marker upon click
     }
 
     @Override
     public boolean onClusterClick(Cluster<AbstractStation> cluster) {
-        Toast.makeText(this, "Cluster size: " + cluster.getSize(), Toast.LENGTH_SHORT).show();
-        return false; // false := Center camera on marker upon click
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition() , mMap.getCameraPosition().zoom + 1.5f));
+        return true;
+    }
+
+    @Override
+    public void onMessageDialogCloseClick() {
+
     }
 }

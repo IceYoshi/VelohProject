@@ -7,4 +7,19 @@
 
     <string name="luxembourg_city">Luxembourg City</string>
     <string name="title_activity_web">WebActivity</string>
+
+    <!-- *********************** FOR JSON TEMPLATE FILE  *********************** -->
+    <string name="JSON_TEMPLATE_FILENAME">HistoryTemplate.json</string>
+
+    <!-- *********************** FOR SHAREDPREFERENCES FILE  *********************** -->
+    <string name="PREFS_FILENAME">velohproject_prefs</string>
+    <string name="PREFS_HISTORY_KEY">velohproject_history</string>
+
+    <!-- *********************** FOR HISTORY LOG  *********************** -->
+    <string name="HISTORY_JSON_STRING">HISTORY_JSON</string>
+    <string name="HISTORY_RANGE_KEY">range</string>
+    <string name="HISTORY_LOCATION_STREET_KEY">location_street</string>
+    <string name="HISTORY_LOCATION_CITY_KEY">location_city</string>
+    <string name="HISTORY_RANGE_METER_VALUE_KEY">range</string>
+    <string name="HISTORY_NEAREST_BUS_STATION_KEY">neareststation</string>
 </resources>
