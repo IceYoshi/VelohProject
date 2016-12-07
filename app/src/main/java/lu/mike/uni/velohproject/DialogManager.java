@@ -25,7 +25,7 @@ import static lu.mike.uni.velohproject.R.id.map;
  */
 
 interface IDialogManagerInputDialogProtocol{
-    void onInputDialogOKClick(String editTextValue);
+    void onInputDialogOKClick(String editTextValue, DialogManager.InputRequest inputRequest);
     void onInputDialogCancelClick();
 }
 
@@ -38,27 +38,30 @@ interface IDialogManagerMessageDialogProtocol{
 }
 
 public class DialogManager {
+    public static enum InputRequest {
+        REQUEST_INPUT_FOR_STATIONS_IN_RANGE,
+        REQUEST_INPUT_FOR_ADDRESS
+    }
 
     Activity context;
 
     public DialogManager(Activity a){ context = a;}
 
-    public void showInputDialog(String text, final IDialogManagerInputDialogProtocol delegator){
+    public void showInputDialog(String text, final InputRequest inputRequest, int inputType, final IDialogManagerInputDialogProtocol delegator){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(text);
 
         // Set up the input
         final EditText input = new EditText(context);
         input.setGravity(Gravity.CENTER_HORIZONTAL);
-        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        input.setInputType(inputType);
         builder.setView(input);
 
         // Set up the buttons
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                delegator.onInputDialogOKClick(input.getText().toString());
+                delegator.onInputDialogOKClick(input.getText().toString(),inputRequest);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

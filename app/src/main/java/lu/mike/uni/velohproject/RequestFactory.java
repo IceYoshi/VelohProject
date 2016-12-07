@@ -2,6 +2,8 @@ package lu.mike.uni.velohproject;
 
 import android.location.Location;
 
+import com.google.android.gms.maps.model.LatLng;
+
 /**
  * Created by Mike on 13.11.2016.
  */
@@ -10,7 +12,8 @@ public class RequestFactory {
 
     private static final String REQUEST_STATIONS = "http://travelplanner.mobiliteit.lu/hafas/query.exe/dot?performLocating=2&tpl=stop2csv&look_maxdist=$dist$&look_x=$x$&look_y=$y$&stationProxy=yes";
     private static final String REQUEST_STATION_INFO = "http://travelplanner.mobiliteit.lu/restproxy/departureBoard?accessId=cdt&$station$&format=json";
-    private static final String REQUEST_ADDRESS_INFO = "http://maps.googleapis.com/maps/api/geocode/json?latlng=$x$,$y$&sensor=true";
+    private static final String REQUEST_ADDRESS_INFO = "http://maps.googleapis.com/maps/api/geocode/json?latlng=$x$,$y$";
+    private static final String REQUEST_LOCATION_INFO = "http://maps.googleapis.com/maps/api/geocode/json?address=$x$";
 
     private static final String VELOH_API_KEY = "8b40b6abc96ba26ea4157be6a3f7c33bc54ca63f";
     private static final String REQUEST_VELOH_STATIONS = "https://api.jcdecaux.com/vls/v1/stations?contract=Luxembourg&apiKey=$api_key$";
@@ -32,8 +35,15 @@ public class RequestFactory {
     public static RequestObject requestBusStationInfo(String station) {
         return new RequestObject(
                 REQUEST_STATION_INFO
-                    .replace("$station$", station),
+                    .replace("$station$", "id=" + station),
                 RequestObject.RequestType.REQUEST_BUS_STATION_INFO);
+    }
+
+    public static RequestObject requestBusStationInfoForDestination(String station) {
+        return new RequestObject(
+                REQUEST_STATION_INFO
+                        .replace("$station$", "id=" + station),
+                RequestObject.RequestType.REQUEST_BUS_STATION_INFO_FOR_DESTINATION);
     }
 
     public static RequestObject requestVelohStations() {
@@ -50,4 +60,9 @@ public class RequestFactory {
                 .replace("$y$", String.valueOf(l.getLongitude())), type);
     }
 
+
+    public static RequestObject requestLocationForAddress(String address, RequestObject.RequestType type) {
+        return new RequestObject(REQUEST_LOCATION_INFO
+                .replace("$x$", address), type);
+    }
 }

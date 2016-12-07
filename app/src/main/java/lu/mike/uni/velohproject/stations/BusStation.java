@@ -4,11 +4,15 @@ package lu.mike.uni.velohproject.stations;
  * Created by Mike on 17.11.2016.
  */
 
+import java.util.ArrayList;
+
 /**
  * Example of stationID: id=A=1@O=Belair, Sacré-Coeur@X=6,113204@Y=49,610280@U=82@L=200403005@B=1@p=1478177594;
  * TODO: requestInfo() to get additional information about the bus station.
  */
 public class BusStation extends AbstractStation {
+
+    private ArrayList<Bus> busList = new ArrayList<>();
 
     public BusStation(String stationID) {
         setId(stationID);
@@ -33,4 +37,11 @@ public class BusStation extends AbstractStation {
 
     }
 
+    public ArrayList<Bus> getBusList() {
+        return busList;
+    }
+
+    public void setBusList(ArrayList<Bus> busList) {
+        this.busList = busList;
+    }
 }
