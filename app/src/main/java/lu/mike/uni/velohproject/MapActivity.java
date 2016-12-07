@@ -37,6 +37,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 import lu.mike.uni.velohproject.stations.AbstractStation;
 import lu.mike.uni.velohproject.stations.Bus;
@@ -50,6 +51,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                                                                 IDialogManagerInputDialogProtocol,
                                                                 IDialogManagerAlertDialogProtocol,
                                                                 IDialogManagerMessageDialogProtocol,
+                                                                ICountDownTerminatorProtocol,
                                                                 NavigationView.OnNavigationItemSelectedListener,
                                                                 GoogleApiClient.ConnectionCallbacks,
                                                                 GoogleApiClient.OnConnectionFailedListener,
@@ -70,10 +72,9 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
     private RequestObject mLastRequest;
     private AbstractStation currentStationClicked;
 
-    Collection<AbstractStation> stationsDestination;
-    Collection<AbstractStation> stationsUser;
-    private int requestBusInfoDestinationCounter = 0;
-    private int requestBusInfoUserCounter = 0;
+    private Collection<AbstractStation> stationsDestination;
+    private Collection<AbstractStation> stationsUser;
+    private CountDownTerminator cdt;
 
     private HistoryManager hm;
     private DialogManager dm;
@@ -107,6 +108,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
         dm = new DialogManager(this);
         hm = new HistoryManager(this);
+        cdt = new CountDownTerminator(this);
         hm.clearHistory();
     }
 
@@ -338,7 +340,6 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
     private void processBusStationInformatonForDestination(String jsonString){
         ArrayList<Bus> busList = new ArrayList<>();
-
         try{
             JSONObject json = new JSONObject(jsonString);
             JSONArray jarr = json.getJSONArray("Departure");
@@ -350,13 +351,23 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
             for(AbstractStation station  : stationsUser){
                 if(station.getId().contains(jarr.getJSONObject(0).getString("stopExtId"))) {
                     ((BusStation) station).setBusList(busList);
+                    cdt.incProgress("stationsUser");
                 }
             }
 
-            if(++requestBusInfoUserCounter == stationsUser.size()){
-                System.out.println("****** FINISH!!!! after "+requestBusInfoUserCounter);
+            for(AbstractStation station  : stationsDestination){
+                if(station.getId().contains(jarr.getJSONObject(0).getString("stopExtId"))) {
+                    ((BusStation) station).setBusList(busList);
+                    cdt.incProgress("stationsDestination");
+                }
             }
-        }catch(Exception ex){ex.printStackTrace();}
+
+            System.out.println(cdt.getMap());
+        }catch(Exception ex){
+            cdt.incProgress("stationsUser");
+            cdt.incProgress("stationsDestination");
+            ex.printStackTrace();
+        }
     }
 
     private void showBusstationsForDestination(String jsonString){
@@ -366,6 +377,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
             if(results.length() == 0) dm.showAlertDialog("No results found..",this);
             else{
+                cdt.clear();
                 stationsUser.clear();
                 stationsDestination.clear();
 
@@ -384,14 +396,15 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                 Collection<AbstractStation> stations = mClusterManager.getAlgorithm().getItems();
 
                 for(AbstractStation station :  stations) {
-                    /*if(station.distanceTo(loc) <= 500)
+                    if(station.distanceTo(loc) <= 500)
                         stationsDestination.add(station);
-                    else mClusterManager.removeItem(station);*/
 
                     if(station.distanceTo(mLastLocation) <= 500)
                         stationsUser.add(station);
-                    else mClusterManager.removeItem(station);
                 }
+
+                cdt.addCounter("stationsUser",stationsUser.size());
+                cdt.addCounter("stationsDestination",stationsDestination.size());
 /*
                 for(AbstractStation station :  mClusterManager.getAlgorithm().getItems()) {
                     if(station instanceof DestinationLocation)
@@ -405,7 +418,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                     new DataRetriever(this, RequestFactory.requestBusStationInfoForDestination(station.getId()));
                 }
 
-                //mClusterManager.clearItems();
+                mClusterManager.clearItems();
                 mClusterManager.addItem(dl);
                 mClusterManager.cluster();
             }
@@ -460,5 +473,28 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
     @Override
     public void onMessageDialogCloseClick() {
 
+    }
+
+    @Override
+    public void didFinishCountdown() {
+        // only allows distinct elements
+        HashSet<BusStation> intersectionSet = new HashSet<>();
+
+        for(AbstractStation destinationStation :  stationsUser) {
+            for(AbstractStation userStation :  stationsUser) {
+                for(Bus b_user : ((BusStation)userStation).getBusList()){
+                    for(Bus b_destination : ((BusStation)destinationStation).getBusList()){
+                        if(b_user.getName().equals(b_destination.getName()))
+                            intersectionSet.add((BusStation) userStation);
+                    }
+                }
+            }
+        }
+
+        for(BusStation b : intersectionSet){
+            mClusterManager.addItem(b);
+            System.out.println(b.getName());
+            mClusterManager.cluster();
+        }
     }
 }
