@@ -19,10 +19,17 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -45,6 +52,7 @@ import lu.mike.uni.velohproject.stations.BusStation;
 import lu.mike.uni.velohproject.stations.DestinationLocation;
 import lu.mike.uni.velohproject.stations.VelohStation;
 
+import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_ALL_BUS_STATIONS;
 import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_BUS_STATION_INFO_FOR_DESTINATION;
 import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_BUS_STATION_INFO_FOR_USER_LOCATION;
 
@@ -331,8 +339,6 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                 onItemClickShowBusstationInfo(result);
                 break;
             case REQUEST_BUS_STATION_INFO_FOR_DESTINATION:
-                processBusStationInformatonForDestination(result,request.getRequestType());
-                break;
             case REQUEST_BUS_STATION_INFO_FOR_USER_LOCATION:
                 processBusStationInformatonForDestination(result, request.getRequestType());
                 break;
@@ -353,14 +359,17 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
             }
 
             if(requestType.equals(REQUEST_BUS_STATION_INFO_FOR_USER_LOCATION)){
-                for(AbstractStation station  : stationsUser)
+                for(AbstractStation station  : stationsUser) {
                     ((BusStation) station).setBusList(busList);
-
+                    //System.out.println("USER: "+busList);
+                }
                 cdt.incProgress("stationsUser");
             }
             else if(requestType.equals(REQUEST_BUS_STATION_INFO_FOR_DESTINATION)){
-                for(AbstractStation station  : stationsDestination)
+                for(AbstractStation station  : stationsDestination){
                     ((BusStation) station).setBusList(busList);
+                    //System.out.println("DEST: "+busList);
+                }
 
                 cdt.incProgress("stationsDestination");
             }
@@ -373,12 +382,15 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
     }
 
     private void showBusstationsForDestination(String jsonString){
+        //new DataRetriever(this, RequestFactory.requestBusStations());
+        onDataRetrieved(mLastRequestResult, mLastRequest);
         try{
             JSONObject json = new JSONObject(jsonString);
             JSONArray results = json.getJSONArray("results");
 
             if(results.length() == 0) dm.showAlertDialog("No results found..",this);
             else{
+                //dm.showAlertDialog("Loading...",this);
                 cdt.clear();
                 stationsUser.clear();
                 stationsDestination.clear();
@@ -398,11 +410,13 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                 Collection<AbstractStation> stations = mClusterManager.getAlgorithm().getItems();
 
                 for(AbstractStation station :  stations) {
-                    if(station.distanceTo(loc) <= 1000)
-                        stationsDestination.add(station);
+                    if(!(station instanceof DestinationLocation)){
+                        if(station.distanceTo(loc) <= 500)
+                            stationsDestination.add(station);
 
-                    if(station.distanceTo(mLastLocation) <= 1000)
-                        stationsUser.add(station);
+                        if(station.distanceTo(mLastLocation) <= 500)
+                            stationsUser.add(station);
+                    }
                 }
 
                 cdt.addCounter("stationsUser",stationsUser.size());
@@ -474,6 +488,13 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
     @Override
     public void didFinishCountdown() {
+/*
+        System.out.println("******* FINISH \n");
+        for(AbstractStation userStation :  stationsUser)
+            System.out.println("**** USER: \n"+((BusStation)userStation).getBusList());
+        for(AbstractStation destinationStation :  stationsDestination)
+            System.out.println("**** DEST: \n"+((BusStation)destinationStation).getBusList());
+*/
         // allows only distinct elements
         HashSet<BusStation> intersectionSet = new HashSet<>();
 
@@ -488,6 +509,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                 }
             }
         }
+
         if(intersectionSet.isEmpty()){
             dm.showAlertDialog("No busstations found for your location...",this);
             mClusterManager.clearItems();
@@ -498,5 +520,40 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                 mClusterManager.addItem(bs);
                 mClusterManager.cluster();
             }
+
+        stationsUser.clear();
+        stationsDestination.clear();
+        cdt.clear();
     }
+
+    public void test(){
+
+
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
+                .build();
+        autocompleteFragment.setFilter(typeFilter);
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+
+                String placeDetailsStr = place.getName() + "\n"
+                        + place.getId() + "\n"
+                        + place.getLatLng().toString() + "\n"
+                        + place.getAddress() + "\n"
+                        + place.getAttributions();
+            }
+
+            @Override
+            public void onError(Status status) {
+            }
+        });
+
+
+
+    }
+
 }

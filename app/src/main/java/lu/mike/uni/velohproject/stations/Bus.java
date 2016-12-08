@@ -7,8 +7,8 @@ package lu.mike.uni.velohproject.stations;
 public class Bus {
     private String name;
     private String direction;
+    private String rtTime;
 
-    public Bus(){}
     public Bus(String name, String direction){
         setName(name);
         setDirection(direction);
