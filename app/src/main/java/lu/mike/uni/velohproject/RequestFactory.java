@@ -46,6 +46,13 @@ public class RequestFactory {
                 RequestObject.RequestType.REQUEST_BUS_STATION_INFO_FOR_DESTINATION);
     }
 
+    public static RequestObject requestBusStationInfoForUserLocation(String station) {
+        return new RequestObject(
+                REQUEST_STATION_INFO
+                        .replace("$station$", "id=" + station),
+                RequestObject.RequestType.REQUEST_BUS_STATION_INFO_FOR_USER_LOCATION);
+    }
+
     public static RequestObject requestVelohStations() {
         return new RequestObject(
                 REQUEST_VELOH_STATIONS

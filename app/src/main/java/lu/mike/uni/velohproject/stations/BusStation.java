@@ -41,6 +41,10 @@ public class BusStation extends AbstractStation {
         return busList;
     }
 
+    public void appendBusList(ArrayList<Bus> busList) {
+
+    }
+
     public void setBusList(ArrayList<Bus> busList) {
         this.busList = busList;
     }

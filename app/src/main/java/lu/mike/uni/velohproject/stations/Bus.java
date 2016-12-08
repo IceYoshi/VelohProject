@@ -29,4 +29,9 @@ public class Bus {
     public void setDirection(String direction) {
         this.direction = direction;
     }
+
+    @Override
+    public String toString() {
+        return this.getName();
+    }
 }
