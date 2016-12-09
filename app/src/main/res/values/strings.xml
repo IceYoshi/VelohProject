@@ -32,10 +32,10 @@
     <string name="DIALOG_TITLE_BUSSTATION_INFO">Bus Station Information</string>
     <string name="DIALOG_BUSSTATION_NAME_COLOR_HEX">#CD5C5C"</string>
     <string name="DIALOG_TITLE_VELOHSTATION_INFO">Veloh Station Information</string>
-    <string name="DIALOG_NO_BUSSES">No Busses at the moment...</string>
-    <string name="DIALOG_NO_BUSSSTATIONS_FOUND_FOR_LOCATION">No busstations found for your location...</string>
+    <string name="DIALOG_NO_BUSSES">No Busses at the moment…</string>
+    <string name="DIALOG_NO_BUSSSTATIONS_FOUND_FOR_LOCATION">No busstations found for your location…</string>
     <string name="DIALOG_ASK_USER_FOR_RANGE">Give a range in meter: </string>
-    <string name="DIALOG_UNKNOWN_USER_LOCATION">Unknown user location...</string>
+    <string name="DIALOG_UNKNOWN_USER_LOCATION">Unknown user location…</string>
 
     <string-array name="history_spinner_array">
         <item>Bus</item>
