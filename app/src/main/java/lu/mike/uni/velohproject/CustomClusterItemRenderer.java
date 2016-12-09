@@ -22,6 +22,7 @@ import lu.mike.uni.velohproject.stations.VelohStation;
 public class CustomClusterItemRenderer extends DefaultClusterRenderer<AbstractStation> {
 
     private Context context;
+    private BitmapDescriptor bmdRedMarker;
     private BitmapDescriptor bmdGreenMarker;
     private BitmapDescriptor bmdBlueMarker;
 
@@ -30,15 +31,18 @@ public class CustomClusterItemRenderer extends DefaultClusterRenderer<AbstractSt
         this.context = context;
 
         // preload for better performance
-        bmdBlueMarker = BitmapDescriptorFactory.fromBitmap(resizeMapIcons("custommarkerblue", 106, 160));
+        bmdRedMarker = BitmapDescriptorFactory.fromBitmap(resizeMapIcons("custommarkerred", 106, 160));
         bmdGreenMarker = BitmapDescriptorFactory.fromBitmap(resizeMapIcons("custommarkergreen", 106, 160));
+        bmdBlueMarker = BitmapDescriptorFactory.fromBitmap(resizeMapIcons("custommarkerblue", 106, 160));
     }
 
     @Override
     protected void onBeforeClusterItemRendered(AbstractStation item, MarkerOptions markerOptions) {
         if(item instanceof VelohStation)
                 markerOptions.icon(bmdBlueMarker);
-        else    markerOptions.icon(bmdGreenMarker);
+        else if(item instanceof BusStation)
+                markerOptions.icon(bmdGreenMarker);
+        else    markerOptions.icon(bmdRedMarker);
     }
 
     // returns a resized Bitmap (used for custom markers :] )

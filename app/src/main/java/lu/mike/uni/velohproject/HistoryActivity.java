@@ -80,7 +80,7 @@ public class HistoryActivity extends AppCompatActivity {
             listviewBusstationInRange.setAdapter(adapter_bustations_in_range);
             listviewNearestBusstation.setAdapter(adapter_nearest_busstation);
 
-            /*
+
             listviewBusstationInRange.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -90,7 +90,7 @@ public class HistoryActivity extends AppCompatActivity {
                     setResult(RESULT_OK, returnIntend);
                     finish();
                 }
-            });*/
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
