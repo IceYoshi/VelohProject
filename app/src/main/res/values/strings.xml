@@ -15,13 +15,17 @@
     <string name="PREFS_FILENAME">velohproject_prefs</string>
     <string name="PREFS_HISTORY_KEY">velohproject_history</string>
 
-    <!-- *********************** FOR HISTORY LOG  *********************** -->
+    <!-- *********************** FOR HISTORY JSON  *********************** -->
     <string name="HISTORY_JSON_STRING">HISTORY_JSON</string>
     <string name="HISTORY_RANGE_KEY">range</string>
+    <string name="HISTORY_DATE_KEY">date</string>
     <string name="HISTORY_LOCATION_STREET_KEY">location_street</string>
     <string name="HISTORY_LOCATION_CITY_KEY">location_city</string>
     <string name="HISTORY_RANGE_METER_VALUE_KEY">range</string>
     <string name="HISTORY_NEAREST_BUS_STATION_KEY">neareststation</string>
+    <string name="HISTORY_ALLBUSSTAIONS_KEY">allbusstations</string>
+    <string name="HISTORY_ALLVELOHSTATIONS_KEY">allvelohstations</string>
+    <string name="HISTORY_STATIONS_BY_PLACE_KEY">stationsbyplace</string>
 
 
     <!-- *********************** DIALOGS *********************** -->
@@ -33,5 +37,9 @@
     <string name="DIALOG_ASK_USER_FOR_RANGE">Give a range in meter: </string>
     <string name="DIALOG_UNKNOWN_USER_LOCATION">Unknown user location...</string>
 
+    <string-array name="history_spinner_array">
+        <item>Bus</item>
+        <item>Veloh</item>
+    </string-array>
 
 </resources>
