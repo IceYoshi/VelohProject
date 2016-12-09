@@ -9,9 +9,6 @@
             <item
                 android:id="@+id/nav_request_all_veloh_stations"
                 android:title="Veloh stations" />
-            <item
-                android:id="@+id/nav_request_address"
-                android:title="Bus stations by address" />
         </menu>
     </item>
 
@@ -24,6 +21,10 @@
             <item
                 android:id="@+id/request_nearest_station"
                 android:title="Request nearest station" />
+
+            <item
+                android:id="@+id/nav_request_stations_by_place"
+                android:title="Request stations by place" />
         </menu>
     </item>
 

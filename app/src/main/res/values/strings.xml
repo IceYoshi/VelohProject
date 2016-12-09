@@ -22,4 +22,16 @@
     <string name="HISTORY_LOCATION_CITY_KEY">location_city</string>
     <string name="HISTORY_RANGE_METER_VALUE_KEY">range</string>
     <string name="HISTORY_NEAREST_BUS_STATION_KEY">neareststation</string>
+
+
+    <!-- *********************** DIALOGS *********************** -->
+    <string name="DIALOG_TITLE_BUSSTATION_INFO">Bus Station Information</string>
+    <string name="DIALOG_BUSSTATION_NAME_COLOR_HEX">#CD5C5C"</string>
+    <string name="DIALOG_TITLE_VELOHSTATION_INFO">Veloh Station Information</string>
+    <string name="DIALOG_NO_BUSSES">No Busses at the moment...</string>
+    <string name="DIALOG_NO_BUSSSTATIONS_FOUND_FOR_LOCATION">No busstations found for your location...</string>
+    <string name="DIALOG_ASK_USER_FOR_RANGE">Give a range in meter: </string>
+    <string name="DIALOG_UNKNOWN_USER_LOCATION">Unknown user location...</string>
+
+
 </resources>

@@ -9,7 +9,7 @@ public class Bus {
     private String direction;
     private String rtTime;
 
-    public Bus(String name, String direction, String rtTime){
+    public Bus(String name,  String rtTime, String direction){
         setName(name);
         setDirection(direction);
         setRtTime(rtTime);

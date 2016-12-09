@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import lu.mike.uni.velohproject.stations.AbstractStation;
+import lu.mike.uni.velohproject.stations.Bus;
 import lu.mike.uni.velohproject.stations.BusStation;
 import lu.mike.uni.velohproject.stations.VelohStation;
 
@@ -111,24 +112,21 @@ public class DialogManager {
 
         final LinearLayout layout = new LinearLayout(context);
         layout.setOrientation(LinearLayout.VERTICAL);
-
-        //String finalMessage = "";
+        layout.setPadding(75,30,75,0);
         Boolean first = true;
         for (String msg : messages) {
-            //finalMessage += msg+"\n";
             TextView et = new TextView(context);
-            et.setText("\t\t"+msg);
+            et.setText(msg);
             et.setTextSize(16);
 
             if(first){
                 first = false;
-                et.setTextColor(Color.parseColor("#CD5C5C"));
+                et.setTextColor(Color.parseColor(context.getResources().getString(R.string.DIALOG_BUSSTATION_NAME_COLOR_HEX)));
+                et.setTextSize(18);
+                et.setGravity(Gravity.CENTER_HORIZONTAL);
             }
             layout.addView(et);
         }
-
-        //builder.setMessage(finalMessage);
-
         // Set up the buttons
         builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
             @Override
@@ -152,7 +150,7 @@ public class DialogManager {
             l.add("Available bikes: \t"+v.getAvailable_bikes());
             l.add("Available stands: \t"+v.getAvailable_bikes_stands());
             l.add("Total stands: \t"+v.getTotal_bikes_stand());
-            this.showMessageDialog("Veloh Station Information", l,context);
+            this.showMessageDialog(context.getResources().getString(R.string.DIALOG_TITLE_VELOHSTATION_INFO), l,context);
         }
         else if(station instanceof BusStation)
             new DataRetriever(context, RequestFactory.requestBusStationInfo(station.getId())); // then, showFetchedBusStationInfo
@@ -163,17 +161,25 @@ public class DialogManager {
 
     public void showFetchedBusStationInfo(BusStation station, String jsonString) {
         ArrayList<String> l = new ArrayList<>();
-        l.add("Name: \t"+station.getName());
+        ArrayList<Bus> l_bus = new ArrayList<>();
+
 
         try{
             JSONObject json = new JSONObject(jsonString);
             JSONArray jarr = json.getJSONArray("Departure");
 
             for(int i = 0; i<jarr.length(); i++){
-                l.add(jarr.getJSONObject(i).getJSONObject("Product").getString("name") + " ("+jarr.getJSONObject(i).getString("rtTime").substring(0,jarr.getJSONObject(i).getString("rtTime").length()-3) +")" + " --> " + jarr.getJSONObject(i).getString("direction") );
+                l_bus.add(new Bus(jarr.getJSONObject(i).getJSONObject("Product").getString("name"),jarr.getJSONObject(i).getString("rtTime").substring(0,jarr.getJSONObject(i).getString("rtTime").length()-3),jarr.getJSONObject(i).getString("direction")));
             }
-        }catch(Exception ex){}
-        this.showMessageDialog("Bus Station Information", l,context);
+        }catch(Exception ex){
+        }
+
+        l.add(station.getName());
+        if(l_bus.isEmpty()) l.add(context.getResources().getString(R.string.DIALOG_NO_BUSSES));
+        else for(Bus b : l_bus)
+            l.add(b.getName() + " ("+b.getRtTime()+") --> " + b.getDirection());
+
+        this.showMessageDialog(context.getResources().getString(R.string.DIALOG_TITLE_BUSSTATION_INFO), l,context);
     }
 
 }

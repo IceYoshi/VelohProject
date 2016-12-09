@@ -182,12 +182,11 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
             case R.id.nav_request_all_bus_stations:
                 new DataRetriever(this, RequestFactory.requestBusStations());
                 break;
-            case R.id.nav_request_address:
-                //dm.showInputDialog("Give an address: ", DialogManager.InputRequest.REQUEST_INPUT_FOR_ADDRESS, InputType.TYPE_CLASS_TEXT, this);
+            case R.id.nav_request_stations_by_place:
                 showGooglePlaceAutoComplete();
                 break;
             case R.id.request_stations_nearby:
-                dm.showInputDialog("Give a range in meters: ", DialogManager.InputRequest.REQUEST_INPUT_FOR_STATIONS_IN_RANGE, InputType.TYPE_CLASS_NUMBER, this);
+                dm.showInputDialog(getResources().getString(R.string.DIALOG_ASK_USER_FOR_RANGE), DialogManager.InputRequest.REQUEST_INPUT_FOR_STATIONS_IN_RANGE, InputType.TYPE_CLASS_NUMBER, this);
                 break;
             case R.id.request_nearest_station:
                 showNearestBusStation();
@@ -301,9 +300,6 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
     @Override
     public void onInputDialogOKClick(String editTextValue, DialogManager.InputRequest inputRequest) {
-        /*if(inputRequest.equals(DialogManager.InputRequest.REQUEST_INPUT_FOR_ADDRESS)){
-            new DataRetriever(this, RequestFactory.requestLocationForAddress(editTextValue , RequestObject.RequestType.REQUEST_LATLNG_FOR_ADDRESS));
-        }*/
         if(inputRequest.equals(inputRequest.REQUEST_INPUT_FOR_STATIONS_IN_RANGE)){
             ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawers();
 
@@ -363,14 +359,12 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
             if(requestType.equals(REQUEST_BUS_STATION_INFO_FOR_USER_LOCATION)){
                 for(AbstractStation station  : stationsUser) {
                     ((BusStation) station).setBusList(busList);
-                    //System.out.println("USER: "+busList);
                 }
                 cdt.incProgress("stationsUser");
             }
             else if(requestType.equals(REQUEST_BUS_STATION_INFO_FOR_DESTINATION)){
                 for(AbstractStation station  : stationsDestination){
                     ((BusStation) station).setBusList(busList);
-                    //System.out.println("DEST: "+busList);
                 }
 
                 cdt.incProgress("stationsDestination");
@@ -379,7 +373,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         }catch(Exception ex){
             if(requestType.equals(REQUEST_BUS_STATION_INFO_FOR_USER_LOCATION)) cdt.incProgress("stationsUser");
             if(requestType.equals(REQUEST_BUS_STATION_INFO_FOR_DESTINATION)) cdt.incProgress("stationsDestination");
-            ex.printStackTrace();
+            //ex.printStackTrace();
         }
     }
 
@@ -459,23 +453,34 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
     @Override
     public void didFinishCountdown() {
-        HashSet<BusStation> intersectionSet = new HashSet<>();
+        HashSet<AbstractStation> intersectionSet = new HashSet<>();
 
-        for(AbstractStation destinationStation :  stationsDestination)
-            for(AbstractStation userStation :  stationsUser)
-                for(Bus b_user : ((BusStation)userStation).getBusList())
-                    for(Bus b_destination : ((BusStation)destinationStation).getBusList())
-                        if(b_user.getName().equals(b_destination.getName()))
-                            intersectionSet.add((BusStation) userStation);
+        for(AbstractStation destinationStation :  stationsDestination) {
+            for (AbstractStation userStation : stationsUser) {
+                if(userStation instanceof BusStation){
+                    for (Bus b_user : ((BusStation) userStation).getBusList()) {
+                        for (Bus b_destination : ((BusStation) destinationStation).getBusList()) {
+                            if (b_user.getName().equals(b_destination.getName())) {
+                                intersectionSet.add(userStation);
+                            }
+                        }
+                    }
+                }
+                else{
+                    intersectionSet.add(userStation);
+                    intersectionSet.add(destinationStation);
+                }
+            }
+        }
 
         if(intersectionSet.isEmpty()){
-            dm.showAlertDialog("No busstations found for your location...",this);
+            dm.showAlertDialog(getResources().getString(R.string.DIALOG_NO_BUSSSTATIONS_FOUND_FOR_LOCATION),this);
             mClusterManager.clearItems();
             mClusterManager.cluster();
         }
         else
-            for(BusStation bs : intersectionSet){
-                mClusterManager.addItem(bs);
+            for(AbstractStation a : intersectionSet){
+                mClusterManager.addItem(a);
                 mClusterManager.cluster();
             }
 
@@ -500,7 +505,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
     public Boolean isLocationKnown(){
         if(mLastLocation==null){
-            dm.showAlertDialog("User location unknown...",this);
+            dm.showAlertDialog(getResources().getString(R.string.DIALOG_UNKNOWN_USER_LOCATION),this);
             return false;
         }
         return true;
