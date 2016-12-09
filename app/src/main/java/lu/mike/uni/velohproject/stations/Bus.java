@@ -34,4 +34,8 @@ public class Bus {
     public String toString() {
         return this.getName();
     }
+
+    public String getRtTime() {return rtTime;}
+
+    public void setRtTime(String rtTime) {this.rtTime = rtTime;}
 }

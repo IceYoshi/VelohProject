@@ -15,9 +15,16 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+
 import java.util.ArrayList;
 import java.util.Map;
 
+import static lu.mike.uni.velohproject.R.id.auto;
 import static lu.mike.uni.velohproject.R.id.map;
 
 /**
@@ -128,4 +135,5 @@ public class DialogManager {
         builder.setView(scrollView);
         builder.show();
     }
+
 }

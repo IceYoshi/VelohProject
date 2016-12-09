@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
@@ -69,6 +70,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                                                                 ClusterManager.OnClusterItemClickListener<AbstractStation>, ClusterManager.OnClusterClickListener<AbstractStation> {
 
     private final static int HISTORY_REQUEST_CODE = 42;
+    private final static int GOOGLE_PLACE_AUTO_COMPLETE_CODE = 413;
 
     private GoogleMap mMap;
     private ClusterManager<AbstractStation> mClusterManager;
@@ -181,7 +183,8 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                 new DataRetriever(this, RequestFactory.requestBusStations());
                 break;
             case R.id.nav_request_address:
-                dm.showInputDialog("Give an address: ", DialogManager.InputRequest.REQUEST_INPUT_FOR_ADDRESS, InputType.TYPE_CLASS_TEXT, this);
+                //dm.showInputDialog("Give an address: ", DialogManager.InputRequest.REQUEST_INPUT_FOR_ADDRESS, InputType.TYPE_CLASS_TEXT, this);
+                showGooglePlaceAutoComplete();
                 break;
             case R.id.request_stations_nearby:
                 dm.showInputDialog("Give a range in meters: ", DialogManager.InputRequest.REQUEST_INPUT_FOR_STATIONS_IN_RANGE, InputType.TYPE_CLASS_NUMBER, this);
@@ -243,6 +246,9 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                     Log.d("","CANCELED !!!");
                 }
                 break;
+            case GOOGLE_PLACE_AUTO_COMPLETE_CODE:
+                showBusstationsForDestination(PlaceAutocomplete.getPlace(this, data));
+                break;
         }
     }
 
@@ -295,13 +301,13 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
     @Override
     public void onInputDialogOKClick(String editTextValue, DialogManager.InputRequest inputRequest) {
-        if(inputRequest.equals(DialogManager.InputRequest.REQUEST_INPUT_FOR_ADDRESS)){
-            new DataRetriever(this, RequestFactory.requestLocationForAddress(editTextValue /*+ " Luxembourg"*/, RequestObject.RequestType.REQUEST_LATLNG_FOR_ADDRESS));
-        }
-        else if(inputRequest.equals(inputRequest.REQUEST_INPUT_FOR_STATIONS_IN_RANGE)){
+        /*if(inputRequest.equals(DialogManager.InputRequest.REQUEST_INPUT_FOR_ADDRESS)){
+            new DataRetriever(this, RequestFactory.requestLocationForAddress(editTextValue , RequestObject.RequestType.REQUEST_LATLNG_FOR_ADDRESS));
+        }*/
+        if(inputRequest.equals(inputRequest.REQUEST_INPUT_FOR_STATIONS_IN_RANGE)){
             ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawers();
 
-            if(mLastLocation != null) {
+            if(!isLocationKnown()) return;
                 onDataRetrieved(mLastRequestResult, mLastRequest);
                 double dist = Double.valueOf(editTextValue);
 
@@ -313,7 +319,6 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                 mClusterManager.cluster();
 
                 hm.appendRangeHistory(mLastLocation,dist);
-            }
         }
     }
 
@@ -341,9 +346,6 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
             case REQUEST_BUS_STATION_INFO_FOR_DESTINATION:
             case REQUEST_BUS_STATION_INFO_FOR_USER_LOCATION:
                 processBusStationInformatonForDestination(result, request.getRequestType());
-                break;
-            case REQUEST_LATLNG_FOR_ADDRESS:
-                showBusstationsForDestination(result);
                 break;
         }
     }
@@ -381,27 +383,22 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         }
     }
 
-    private void showBusstationsForDestination(String jsonString){
-        //new DataRetriever(this, RequestFactory.requestBusStations());
+    private void showBusstationsForDestination(Place place){
+        if(!isLocationKnown()) return;
+        if(place == null) return;
+
         onDataRetrieved(mLastRequestResult, mLastRequest);
         try{
-            JSONObject json = new JSONObject(jsonString);
-            JSONArray results = json.getJSONArray("results");
 
-            if(results.length() == 0) dm.showAlertDialog("No results found..",this);
-            else{
-                //dm.showAlertDialog("Loading...",this);
                 cdt.clear();
                 stationsUser.clear();
                 stationsDestination.clear();
 
-                JSONObject geometry = results.getJSONObject(0).getJSONObject("geometry");
                 DestinationLocation dl = new DestinationLocation();
-                dl.setLat(geometry.getJSONObject("location").getDouble("lat"));
-                dl.setLng(geometry.getJSONObject("location").getDouble("lng"));
+                dl.setLat(place.getLatLng().latitude);
+                dl.setLng(place.getLatLng().longitude);
 
-                dl.setName(results.getJSONObject(0).getJSONArray("address_components").getJSONObject(0).getString("short_name"));
-
+                dl.setName(place.getName().toString());
 
                 Location loc = new Location("");
                 loc.setLongitude(dl.getLng());
@@ -432,8 +429,6 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                 mClusterManager.clearItems();
                 mClusterManager.addItem(dl);
                 mClusterManager.cluster();
-            }
-
         }catch(Exception e){e.printStackTrace();}
     }
 
@@ -526,34 +521,25 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         cdt.clear();
     }
 
-    public void test(){
-
-
-        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
-                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+    public void showGooglePlaceAutoComplete(){
+        try {  AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
                 .build();
-        autocompleteFragment.setFilter(typeFilter);
+            Intent intent =  new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
+                            .setFilter(typeFilter)
+                            .build(this);
 
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-
-                String placeDetailsStr = place.getName() + "\n"
-                        + place.getId() + "\n"
-                        + place.getLatLng().toString() + "\n"
-                        + place.getAddress() + "\n"
-                        + place.getAttributions();
-            }
-
-            @Override
-            public void onError(Status status) {
-            }
-        });
-
-
-
+            startActivityForResult(intent, GOOGLE_PLACE_AUTO_COMPLETE_CODE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
+    public Boolean isLocationKnown(){
+        if(mLastLocation==null){
+            dm.showAlertDialog("User location unknown...",this);
+            return false;
+        }
+        return true;
+    }
 }
