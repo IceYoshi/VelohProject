@@ -36,7 +36,6 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -47,9 +46,8 @@ import lu.mike.uni.velohproject.stations.AbstractStation;
 import lu.mike.uni.velohproject.stations.Bus;
 import lu.mike.uni.velohproject.stations.BusStation;
 import lu.mike.uni.velohproject.stations.DestinationLocation;
+import lu.mike.uni.velohproject.stations.VelohStation;
 
-import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_BUS_STATION_INFO_FOR_DESTINATION;
-import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_BUS_STATION_INFO_FOR_USER_LOCATION;
 import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_ALL_BUS_STATIONS;
 import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_ALL_VELOH_STATIONS;
 import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_STATION_INFO_FOR_DESTINATION;
@@ -375,14 +373,14 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                 busList.add(new Bus(name, time, dest));
             }
 
-            if(requestType.equals(REQUEST_BUS_STATION_INFO_FOR_USER_LOCATION)){
+            if(requestType.equals(REQUEST_STATION_INFO_FOR_USER_LOCATION)){
                 for(AbstractStation station  : stationsUser) {
                     if(station.getName().equals(jarr.getJSONObject(0).getString("stop")))
                         ((BusStation) station).setBusList(busList);
                 }
                 cdt.incProgress("stationsUser");
             }
-            else if(requestType.equals(REQUEST_BUS_STATION_INFO_FOR_DESTINATION)){
+            else if(requestType.equals(REQUEST_STATION_INFO_FOR_DESTINATION)){
                 for(AbstractStation station  : stationsDestination){
                     if(station.getName().equals(jarr.getJSONObject(0).getString("stop")))
                         ((BusStation) station).setBusList(busList);

@@ -42,14 +42,14 @@ public class RequestFactory {
         return new RequestObject(
                 REQUEST_STATION_INFO
                         .replace("$station$", station.replace(" ", "%20")),
-                RequestObject.RequestType.REQUEST_BUS_STATION_INFO_FOR_DESTINATION);
+                RequestObject.RequestType.REQUEST_STATION_INFO_FOR_DESTINATION);
     }
 
     public static RequestObject requestBusStationInfoForUserLocation(String station) {
         return new RequestObject(
                 REQUEST_STATION_INFO
                         .replace("$station$", station.replace(" ", "%20")),
-                RequestObject.RequestType.REQUEST_BUS_STATION_INFO_FOR_USER_LOCATION);
+                RequestObject.RequestType.REQUEST_STATION_INFO_FOR_USER_LOCATION);
     }
 
     public static RequestObject requestVelohStations() {
