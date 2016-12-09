@@ -19,18 +19,13 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -51,9 +46,7 @@ import lu.mike.uni.velohproject.stations.AbstractStation;
 import lu.mike.uni.velohproject.stations.Bus;
 import lu.mike.uni.velohproject.stations.BusStation;
 import lu.mike.uni.velohproject.stations.DestinationLocation;
-import lu.mike.uni.velohproject.stations.VelohStation;
 
-import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_ALL_BUS_STATIONS;
 import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_BUS_STATION_INFO_FOR_DESTINATION;
 import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_BUS_STATION_INFO_FOR_USER_LOCATION;
 
@@ -402,10 +395,10 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
                 for(AbstractStation station :  stations) {
                     if(!(station instanceof DestinationLocation)){
-                        if(station.distanceTo(loc) <= 500)
+                        if(station.distanceTo(loc) <= 1500)
                             stationsDestination.add(station);
 
-                        if(station.distanceTo(mLastLocation) <= 500)
+                        if(station.distanceTo(mLastLocation) <= 1500)
                             stationsUser.add(station);
                     }
                 }
@@ -413,11 +406,11 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                 cdt.addCounter("stationsUser",stationsUser.size());
                 cdt.addCounter("stationsDestination",stationsDestination.size());
 
-                for(AbstractStation station  : stationsUser)
-                    new DataRetriever(this, RequestFactory.requestBusStationInfoForUserLocation(station.getId()));
+            for(AbstractStation station  : stationsUser)
+                new DataRetriever(this, RequestFactory.requestBusStationInfoForUserLocation(station.getId()));
 
-                for(AbstractStation station  : stationsDestination)
-                    new DataRetriever(this, RequestFactory.requestBusStationInfoForDestination(station.getId()));
+            for(AbstractStation station  : stationsDestination)
+                new DataRetriever(this, RequestFactory.requestBusStationInfoForDestination(station.getId()));
 
 
                 mClusterManager.clearItems();
@@ -491,7 +484,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
     public void showGooglePlaceAutoComplete(){
         try {  AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
-                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
+                //.setTypeFilter(AutocompleteFilter.TYPE_FILTER_NONE)
                 .build();
             Intent intent =  new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
                             .setFilter(typeFilter)

@@ -22,6 +22,7 @@ import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -163,15 +164,22 @@ public class DialogManager {
         ArrayList<String> l = new ArrayList<>();
         ArrayList<Bus> l_bus = new ArrayList<>();
 
-
         try{
             JSONObject json = new JSONObject(jsonString);
             JSONArray jarr = json.getJSONArray("Departure");
 
             for(int i = 0; i<jarr.length(); i++){
-                l_bus.add(new Bus(jarr.getJSONObject(i).getJSONObject("Product").getString("name"),jarr.getJSONObject(i).getString("rtTime").substring(0,jarr.getJSONObject(i).getString("rtTime").length()-3),jarr.getJSONObject(i).getString("direction")));
+                JSONObject bus_obj = jarr.getJSONObject(i);
+
+                String name = bus_obj.getJSONObject("Product").getString("name");
+                String time = bus_obj.has("rtTime") ? bus_obj.getString("rtTime") : bus_obj.getString("time");
+                time = time.substring(0,time.length()-3);
+                String dest = bus_obj.getString("direction");
+
+                l_bus.add(new Bus(name, time, dest));
             }
-        }catch(Exception ex){
+        }catch(JSONException ex){
+            Log.e("DialogManager", "showFetchedBusStationInfo: " + ex);
         }
 
         l.add(station.getName());
