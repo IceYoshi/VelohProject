@@ -7,12 +7,12 @@ package lu.mike.uni.velohproject.stations;
 public class Bus {
     private String name;
     private String direction;
-    private String rtTime;
+    private String time;
 
-    public Bus(String name,  String rtTime, String direction){
+    public Bus(String name, String time, String direction){
         setName(name);
         setDirection(direction);
-        setRtTime(rtTime);
+        setTime(time);
     }
 
     public String getName() {
@@ -36,7 +36,7 @@ public class Bus {
         return this.getName();
     }
 
-    public String getRtTime() {return rtTime;}
+    public String getRtTime() {return this.time;}
 
-    public void setRtTime(String rtTime) {this.rtTime = rtTime;}
+    public void setTime(String rtTime) {this.time = rtTime;}
 }

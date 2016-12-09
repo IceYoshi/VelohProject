@@ -171,9 +171,9 @@ public class DialogManager {
             for(int i = 0; i<jarr.length(); i++){
                 JSONObject bus_obj = jarr.getJSONObject(i);
 
-                String name = bus_obj.getJSONObject("Product").getString("name");
+                String name = bus_obj.getString("name");
                 String time = bus_obj.has("rtTime") ? bus_obj.getString("rtTime") : bus_obj.getString("time");
-                time = time.substring(0,time.length()-3);
+                time = time.substring(0, time.length()-3);
                 String dest = bus_obj.getString("direction");
 
                 l_bus.add(new Bus(name, time, dest));
