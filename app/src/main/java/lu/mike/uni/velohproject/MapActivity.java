@@ -341,7 +341,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                 mClusterManager.cluster();
                 break;
             case REQUEST_BUS_STATION_INFO:
-                onItemClickShowBusstationInfo(result);
+                showFetchedBusStationInfo(result);
                 break;
             case REQUEST_BUS_STATION_INFO_FOR_DESTINATION:
             case REQUEST_BUS_STATION_INFO_FOR_USER_LOCATION:
@@ -357,7 +357,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
             JSONArray jarr = json.getJSONArray("Departure");
 
             for(int i = 0; i<jarr.length(); i++){
-                busList.add(new Bus(jarr.getJSONObject(i).getJSONObject("Product").getString("name"),jarr.getJSONObject(i).getString("direction")));
+                busList.add(new Bus(jarr.getJSONObject(i).getJSONObject("Product").getString("name"),jarr.getJSONObject(i).getString("direction"), jarr.getJSONObject(i).getString("rtTime").substring(0,jarr.getJSONObject(i).getString("rtTime").length()-3)));
             }
 
             if(requestType.equals(REQUEST_BUS_STATION_INFO_FOR_USER_LOCATION)){
@@ -432,19 +432,8 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         }catch(Exception e){e.printStackTrace();}
     }
 
-    private void onItemClickShowBusstationInfo(String jsonString){
-        ArrayList<String> l = new ArrayList<>();
-        l.add("Name: \t"+currentStationClicked.getName());
-
-        try{
-            JSONObject json = new JSONObject(jsonString);
-            JSONArray jarr = json.getJSONArray("Departure");
-
-            for(int i = 0; i<jarr.length(); i++){
-                l.add(jarr.getJSONObject(i).getJSONObject("Product").getString("name") + " --> " + jarr.getJSONObject(i).getString("direction") );
-            }
-        }catch(Exception ex){ex.printStackTrace();}
-        dm.showMessageDialog("Bus Station Information", l,this);
+    private void showFetchedBusStationInfo(String jsonString){
+        dm.showFetchedBusStationInfo((BusStation) currentStationClicked, jsonString);
     }
 
     @Override
@@ -453,20 +442,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
     @Override
     public boolean onClusterItemClick(AbstractStation station) {
         currentStationClicked = station;
-        if(station instanceof VelohStation){
-            ArrayList<String> l = new ArrayList<>();
-            l.add("Name: \t"+station.getName());
-            VelohStation v = (VelohStation)station;
-            l.add("Available bikes: \t"+v.getAvailable_bikes());
-            l.add("Available stands: \t"+v.getAvailable_bikes_stands());
-            l.add("Total stands: \t"+v.getTotal_bikes_stand());
-            dm.showMessageDialog("Veloh Station Information", l,this);
-        }
-        else if(station instanceof BusStation)
-            new DataRetriever(this, RequestFactory.requestBusStationInfo(station.getId()));
-        else{
-            dm.showAlertDialog(station.getName(),this);
-        }
+        dm.showStationInformation(station);
         return false; // false := Center camera on marker upon click
     }
 
@@ -483,27 +459,14 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
     @Override
     public void didFinishCountdown() {
-/*
-        System.out.println("******* FINISH \n");
-        for(AbstractStation userStation :  stationsUser)
-            System.out.println("**** USER: \n"+((BusStation)userStation).getBusList());
-        for(AbstractStation destinationStation :  stationsDestination)
-            System.out.println("**** DEST: \n"+((BusStation)destinationStation).getBusList());
-*/
-        // allows only distinct elements
         HashSet<BusStation> intersectionSet = new HashSet<>();
 
-        for(AbstractStation destinationStation :  stationsDestination) {
-            for(AbstractStation userStation :  stationsUser) {
-                for(Bus b_user : ((BusStation)userStation).getBusList()){
-                    for(Bus b_destination : ((BusStation)destinationStation).getBusList()){
-                        if(b_user.getName().equals(b_destination.getName())){
+        for(AbstractStation destinationStation :  stationsDestination)
+            for(AbstractStation userStation :  stationsUser)
+                for(Bus b_user : ((BusStation)userStation).getBusList())
+                    for(Bus b_destination : ((BusStation)destinationStation).getBusList())
+                        if(b_user.getName().equals(b_destination.getName()))
                             intersectionSet.add((BusStation) userStation);
-                        }
-                    }
-                }
-            }
-        }
 
         if(intersectionSet.isEmpty()){
             dm.showAlertDialog("No busstations found for your location...",this);

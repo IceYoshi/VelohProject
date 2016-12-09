@@ -21,8 +21,15 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Map;
+
+import lu.mike.uni.velohproject.stations.AbstractStation;
+import lu.mike.uni.velohproject.stations.BusStation;
+import lu.mike.uni.velohproject.stations.VelohStation;
 
 import static lu.mike.uni.velohproject.R.id.auto;
 import static lu.mike.uni.velohproject.R.id.map;
@@ -45,14 +52,15 @@ interface IDialogManagerMessageDialogProtocol{
 }
 
 public class DialogManager {
+
     public static enum InputRequest {
         REQUEST_INPUT_FOR_STATIONS_IN_RANGE,
         REQUEST_INPUT_FOR_ADDRESS
     }
 
-    Activity context;
+    private MapActivity context;
 
-    public DialogManager(Activity a){ context = a;}
+    public DialogManager(MapActivity a){ context = a;}
 
     public void showInputDialog(String text, final InputRequest inputRequest, int inputType, final IDialogManagerInputDialogProtocol delegator){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -134,6 +142,38 @@ public class DialogManager {
 
         builder.setView(scrollView);
         builder.show();
+    }
+
+    public void showStationInformation(AbstractStation station) {
+        if(station instanceof VelohStation){
+            ArrayList<String> l = new ArrayList<>();
+            l.add("Name: \t"+station.getName());
+            VelohStation v = (VelohStation)station;
+            l.add("Available bikes: \t"+v.getAvailable_bikes());
+            l.add("Available stands: \t"+v.getAvailable_bikes_stands());
+            l.add("Total stands: \t"+v.getTotal_bikes_stand());
+            this.showMessageDialog("Veloh Station Information", l,context);
+        }
+        else if(station instanceof BusStation)
+            new DataRetriever(context, RequestFactory.requestBusStationInfo(station.getId())); // then, showFetchedBusStationInfo
+        else{
+            this.showAlertDialog(station.getName(),context);
+        }
+    }
+
+    public void showFetchedBusStationInfo(BusStation station, String jsonString) {
+        ArrayList<String> l = new ArrayList<>();
+        l.add("Name: \t"+station.getName());
+
+        try{
+            JSONObject json = new JSONObject(jsonString);
+            JSONArray jarr = json.getJSONArray("Departure");
+
+            for(int i = 0; i<jarr.length(); i++){
+                l.add(jarr.getJSONObject(i).getJSONObject("Product").getString("name") + " ("+jarr.getJSONObject(i).getString("rtTime").substring(0,jarr.getJSONObject(i).getString("rtTime").length()-3) +")" + " --> " + jarr.getJSONObject(i).getString("direction") );
+            }
+        }catch(Exception ex){}
+        this.showMessageDialog("Bus Station Information", l,context);
     }
 
 }
