@@ -2,8 +2,6 @@ package lu.mike.uni.velohproject;
 
 import android.location.Location;
 
-import com.google.android.gms.maps.model.LatLng;
-
 /**
  * Created by Mike on 13.11.2016.
  */
@@ -11,7 +9,8 @@ import com.google.android.gms.maps.model.LatLng;
 public class RequestFactory {
 
     private static final String REQUEST_STATIONS = "http://travelplanner.mobiliteit.lu/hafas/query.exe/dot?performLocating=2&tpl=stop2csv&look_maxdist=$dist$&look_x=$x$&look_y=$y$&stationProxy=yes";
-    private static final String REQUEST_STATION_INFO = "http://travelplanner.mobiliteit.lu/restproxy/departureBoard?accessId=cdt&$station$&format=json";
+    private static final String REQUEST_STATION_INFO = "http://travelplanner.mobiliteit.lu/restproxy/departureBoard?accessId=cdt&id=$station$&format=json";
+
     private static final String REQUEST_ADDRESS_INFO = "http://maps.googleapis.com/maps/api/geocode/json?latlng=$x$,$y$";
     private static final String REQUEST_LOCATION_INFO = "http://maps.googleapis.com/maps/api/geocode/json?address=$x$";
 
@@ -35,22 +34,22 @@ public class RequestFactory {
     public static RequestObject requestBusStationInfo(String station) {
         return new RequestObject(
                 REQUEST_STATION_INFO
-                    .replace("$station$", "id=" + station),
+                        .replace("$station$", station.replace(" ", "%20")),
                 RequestObject.RequestType.REQUEST_BUS_STATION_INFO);
     }
 
     public static RequestObject requestBusStationInfoForDestination(String station) {
         return new RequestObject(
                 REQUEST_STATION_INFO
-                        .replace("$station$", "id=" + station),
-                RequestObject.RequestType.REQUEST_STATION_INFO_FOR_DESTINATION);
+                        .replace("$station$", station.replace(" ", "%20")),
+                RequestObject.RequestType.REQUEST_BUS_STATION_INFO_FOR_DESTINATION);
     }
 
     public static RequestObject requestBusStationInfoForUserLocation(String station) {
         return new RequestObject(
                 REQUEST_STATION_INFO
-                        .replace("$station$", "id=" + station),
-                RequestObject.RequestType.REQUEST_STATION_INFO_FOR_USER_LOCATION);
+                        .replace("$station$", station.replace(" ", "%20")),
+                RequestObject.RequestType.REQUEST_BUS_STATION_INFO_FOR_USER_LOCATION);
     }
 
     public static RequestObject requestVelohStations() {

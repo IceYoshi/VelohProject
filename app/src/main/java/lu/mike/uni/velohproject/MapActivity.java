@@ -36,6 +36,7 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -46,8 +47,9 @@ import lu.mike.uni.velohproject.stations.AbstractStation;
 import lu.mike.uni.velohproject.stations.Bus;
 import lu.mike.uni.velohproject.stations.BusStation;
 import lu.mike.uni.velohproject.stations.DestinationLocation;
-import lu.mike.uni.velohproject.stations.VelohStation;
 
+import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_BUS_STATION_INFO_FOR_DESTINATION;
+import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_BUS_STATION_INFO_FOR_USER_LOCATION;
 import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_ALL_BUS_STATIONS;
 import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_ALL_VELOH_STATIONS;
 import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_STATION_INFO_FOR_DESTINATION;
@@ -362,19 +364,28 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
             JSONObject json = new JSONObject(jsonString);
             JSONArray jarr = json.getJSONArray("Departure");
 
-            for(int i = 0; i<jarr.length(); i++){
-                busList.add(new Bus(jarr.getJSONObject(i).getJSONObject("Product").getString("name"),jarr.getJSONObject(i).getString("direction"), jarr.getJSONObject(i).getString("rtTime").substring(0,jarr.getJSONObject(i).getString("rtTime").length()-3)));
+            for(int i = 0; i<jarr.length(); i++) {
+                JSONObject bus_obj = jarr.getJSONObject(i);
+
+                String name = bus_obj.getString("name");
+                String time = bus_obj.has("rtTime") ? bus_obj.getString("rtTime") : bus_obj.getString("time");
+                time = time.substring(0, time.length() - 3);
+                String dest = bus_obj.getString("direction");
+
+                busList.add(new Bus(name, time, dest));
             }
 
-            if(requestType.equals(REQUEST_STATION_INFO_FOR_USER_LOCATION)){
+            if(requestType.equals(REQUEST_BUS_STATION_INFO_FOR_USER_LOCATION)){
                 for(AbstractStation station  : stationsUser) {
-                    ((BusStation) station).setBusList(busList);
+                    if(station.getName().equals(jarr.getJSONObject(0).getString("stop")))
+                        ((BusStation) station).setBusList(busList);
                 }
                 cdt.incProgress("stationsUser");
             }
-            else if(requestType.equals(REQUEST_STATION_INFO_FOR_DESTINATION)){
+            else if(requestType.equals(REQUEST_BUS_STATION_INFO_FOR_DESTINATION)){
                 for(AbstractStation station  : stationsDestination){
-                    ((BusStation) station).setBusList(busList);
+                    if(station.getName().equals(jarr.getJSONObject(0).getString("stop")))
+                        ((BusStation) station).setBusList(busList);
                 }
 
                 cdt.incProgress("stationsDestination");
@@ -471,9 +482,12 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
         for(AbstractStation destinationStation :  stationsDestination) {
             for (AbstractStation userStation : stationsUser) {
-                if(userStation instanceof BusStation){
-                    for (Bus b_user : ((BusStation) userStation).getBusList()) {
-                        for (Bus b_destination : ((BusStation) destinationStation).getBusList()) {
+                if(userStation instanceof BusStation) {
+                    ArrayList<Bus> busListUser = ((BusStation) userStation).getBusList();
+                    ArrayList<Bus> busListDest = ((BusStation) destinationStation).getBusList();
+
+                    for (Bus b_user : busListUser) {
+                        for (Bus b_destination : busListDest) {
                             if (b_user.getName().equals(b_destination.getName())) {
                                 intersectionSet.add(userStation);
                             }
@@ -490,13 +504,12 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         if(intersectionSet.isEmpty()){
             dm.showAlertDialog(getResources().getString(R.string.DIALOG_NO_BUSSSTATIONS_FOUND_FOR_LOCATION),this);
             mClusterManager.clearItems();
-            mClusterManager.cluster();
-        }
-        else
+        } else {
             for(AbstractStation a : intersectionSet){
                 mClusterManager.addItem(a);
-                mClusterManager.cluster();
             }
+        }
+        mClusterManager.cluster();
 
         stationsUser.clear();
         stationsDestination.clear();
@@ -505,7 +518,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
     public void showGooglePlaceAutoComplete(){
         try {  AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
-                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS)
+                //.setTypeFilter(AutocompleteFilter.TYPE_FILTER_NONE)
                 .build();
             Intent intent =  new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
                             .setFilter(typeFilter)
