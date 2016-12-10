@@ -398,48 +398,62 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         if(place == null || !isLocationKnown()) return;
 
         onDataRetrieved(mLastRequestResult, mLastRequest);
-        try{
+        try {
+            cdt.clear();
+            stationsUser.clear();
+            stationsDestination.clear();
 
-                cdt.clear();
-                stationsUser.clear();
-                stationsDestination.clear();
+            DestinationLocation dl = new DestinationLocation();
+            dl.setLat(place.getLatLng().latitude);
+            dl.setLng(place.getLatLng().longitude);
 
-                DestinationLocation dl = new DestinationLocation();
-                dl.setLat(place.getLatLng().latitude);
-                dl.setLng(place.getLatLng().longitude);
+            dl.setName(place.getName().toString());
 
-                dl.setName(place.getName().toString());
+            Location loc = new Location("");
+            loc.setLongitude(dl.getLng());
+            loc.setLatitude(dl.getLat());
 
-                Location loc = new Location("");
-                loc.setLongitude(dl.getLng());
-                loc.setLatitude(dl.getLat());
+            Collection<AbstractStation> stations = mClusterManager.getAlgorithm().getItems();
+            LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+            boundsBuilder.include(place.getLatLng());
+            boundsBuilder.include(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
 
-                Collection<AbstractStation> stations = mClusterManager.getAlgorithm().getItems();
-
-                for(AbstractStation station :  stations) {
-                    if(!(station instanceof DestinationLocation)){
-                        if(station.distanceTo(loc) <= 500)
-                            stationsDestination.add(station);
-
-                        if(station.distanceTo(mLastLocation) <= 500)
-                            stationsUser.add(station);
+            for (AbstractStation station : stations) {
+                if (!(station instanceof DestinationLocation)) {
+                    if (station.distanceTo(loc) <= 500) {
+                        stationsDestination.add(station);
+                        boundsBuilder.include(station.getPosition());
                     }
+
+                    if (station.distanceTo(mLastLocation) <= 500) {
+                        stationsUser.add(station);
+                        boundsBuilder.include(station.getPosition());
+                    }
+
                 }
+            }
 
-                cdt.addCounter("stationsUser",stationsUser.size());
-                cdt.addCounter("stationsDestination",stationsDestination.size());
+            cdt.addCounter("stationsUser", stationsUser.size());
+            cdt.addCounter("stationsDestination", stationsDestination.size());
 
-                for(AbstractStation station  : stationsUser)
-                    new DataRetriever(this, RequestFactory.requestBusStationInfoForUserLocation(station.getId()));
+            for (AbstractStation station : stationsUser)
+                new DataRetriever(this, RequestFactory.requestBusStationInfoForUserLocation(station.getId()));
 
-                for(AbstractStation station  : stationsDestination)
-                    new DataRetriever(this, RequestFactory.requestBusStationInfoForDestination(station.getId()));
+            for (AbstractStation station : stationsDestination)
+                new DataRetriever(this, RequestFactory.requestBusStationInfoForDestination(station.getId()));
 
 
-                mClusterManager.clearItems();
-                mClusterManager.addItem(dl);
-                mClusterManager.cluster();
-        }catch(Exception e){e.printStackTrace();}
+            mClusterManager.clearItems();
+            mClusterManager.addItem(dl);
+            mClusterManager.cluster();
+
+            LatLngBounds markerBounds = boundsBuilder.build();
+            int padding = 150;
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(markerBounds, padding));
+
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void showFetchedBusStationInfo(String jsonString){
