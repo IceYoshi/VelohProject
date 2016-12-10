@@ -65,26 +65,26 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                                                                 DataRetrievedListener,
                                                                 ClusterManager.OnClusterItemClickListener<AbstractStation>, ClusterManager.OnClusterClickListener<AbstractStation> {
 
-    private final static int HISTORY_REQUEST_CODE = 42;
-    private final static int GOOGLE_PLACE_AUTO_COMPLETE_CODE = 413;
+    final static int HISTORY_REQUEST_CODE = 42;
+    final static int GOOGLE_PLACE_AUTO_COMPLETE_CODE = 413;
 
-    private GoogleMap mMap;
-    private ClusterManager<AbstractStation> mClusterManager;
+    GoogleMap mMap;
+    ClusterManager<AbstractStation> mClusterManager;
 
-    private LocationRequest mLocationRequest;
-    private GoogleApiClient mGoogleApiClient;   // used for reading current location of device
+    LocationRequest mLocationRequest;
+    GoogleApiClient mGoogleApiClient;   // used for reading current location of device
     Location mLastLocation;
 
-    private String mLastRequestResult;
-    private RequestObject mLastRequest;
-    private AbstractStation currentStationClicked;
+    String mLastRequestResult;
+    RequestObject mLastRequest;
+    AbstractStation currentStationClicked;
 
-    private Collection<AbstractStation> stationsDestination;
-    private Collection<AbstractStation> stationsUser;
-    private CountDownTerminator cdt;
+    Collection<AbstractStation> stationsDestination;
+    Collection<AbstractStation> stationsUser;
+    CountDownTerminator cdt;
 
-    private HistoryManager hm;
-    private DialogManager dm;
+    HistoryManager hm;
+    DialogManager dm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
