@@ -27,4 +27,9 @@
     <string name="VELOH_STATIONS_ALL">Alle Veloh Stationen</string>
     <string name="NEAREST">am nächsten</string>
     <string name="BUS_STATIONS_ALL">Alle Bus Stationen</string>
+
+    <string-array name="history_spinner_array">
+        <item>Bus</item>
+        <item>Veloh</item>
+    </string-array>
 </resources>
