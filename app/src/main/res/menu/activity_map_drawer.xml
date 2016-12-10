@@ -16,7 +16,7 @@
         <menu>
             <item
                 android:id="@+id/request_stations_in_range"
-                android:title="Request stations in range" />
+                android:title="" />
 
             <item
                 android:id="@+id/request_nearest_station"

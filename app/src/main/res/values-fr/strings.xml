@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">VelohProject</string>
-    <string name="title_activity_map">Map</string>
+    <string name="title_activity_map">MapActivity</string>
 
     <string name="luxembourg_city">Ville de Luxembourg</string>
+    <string name="nav_drawer_open">Ouvrir menu de navigation</string>
+    <string name="nav_drawer_close">Fermer menu de navigation</string>
+    <string name="DIALOG_UNKNOWN_USER_LOCATION">Localisation inconnu</string>
+    <string name="DIALOG_TITLE_VELOHSTATION_INFO">Informations station Veloh</string>
+    <string name="DIALOG_TITLE_BUSSTATION_INFO">Informations station Bus</string>
+    <string name="DIALOG_NO_BUSSSTATIONS_FOUND_FOR_LOCATION">Aucun résultat trouvé…</string>
+    <string name="DIALOG_ASK_USER_FOR_RANGE">Indiquer distance en mètre:</string>
+    <string name="DIALOG_NO_BUSSES">Actuellement aucune ligne de bus disponible…</string>
 </resources>

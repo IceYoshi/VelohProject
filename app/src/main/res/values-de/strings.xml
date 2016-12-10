@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">VelohProject</string>
-    <string name="title_activity_map">Map</string>
+    <string name="title_activity_map">MapActivity</string>
 
     <string name="luxembourg_city">Luxemburg-Stadt</string>
+    <string name="nav_drawer_open">Navigationsmenü öffnen</string>
+    <string name="nav_drawer_close">Navigationsmenü schließen</string>
+    <string name="DIALOG_UNKNOWN_USER_LOCATION">Unbekannter Standort</string>
+    <string name="DIALOG_TITLE_VELOHSTATION_INFO">Velohstation Informationen</string>
+    <string name="DIALOG_TITLE_BUSSTATION_INFO">Busstation Informationen</string>
+    <string name="DIALOG_NO_BUSSSTATIONS_FOUND_FOR_LOCATION">Keine Treffer gefunden…</string>
+    <string name="DIALOG_NO_BUSSES">Aktuell keine Buslinien verfügbar…</string>
+    <string name="DIALOG_ASK_USER_FOR_RANGE">Reichweite in meter eingeben:</string>
 </resources>
