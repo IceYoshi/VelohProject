@@ -6,10 +6,12 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.util.Log;
 
-import com.google.android.gms.location.places.Place;
+import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -22,6 +24,7 @@ import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_USER_LO
  */
 
 public class HistoryManager implements DataRetrievedListener{
+    private static HistoryManager singleton = null;
     private Activity context;
     private JSONObject history;
     private final String HISTORY_KEY = "velohproject_history";
@@ -30,7 +33,19 @@ public class HistoryManager implements DataRetrievedListener{
     // current history record for storage
     private JSONObject current_record;
 
-    public HistoryManager(Activity context){
+    private HistoryManager(){}
+
+    public static HistoryManager getInstance(){
+        if(singleton == null) doSync();             // first locking check
+        return singleton;
+    }
+
+    public static synchronized  void doSync(){      // second locking check
+        if(singleton == null)
+            singleton = new HistoryManager();
+    }
+
+    public void init(Activity context){
         this.context = context;
         loadHistory();
         if(history==null){
@@ -39,7 +54,7 @@ public class HistoryManager implements DataRetrievedListener{
         }
     }
 
-    public synchronized void appendStationByPlaceHistory(Location userLocation, Place place, RequestObject.RequestType requestType){
+    public synchronized void appendStationByPlaceHistory(Location userLocation, String destinationName, LatLng latlngDestination, RequestStationType requestStationType){
         if(this.shouldLogHistory){
             try {
                 int id = history.getInt("id") + 1;
@@ -49,21 +64,22 @@ public class HistoryManager implements DataRetrievedListener{
                 current_record.put("id",id);
                 current_record.put("date",new Date());
 
-                JSONObject latlng = new JSONObject();
-                latlng.put("lat",userLocation.getLatitude());
-                latlng.put("lng",userLocation.getLongitude());
-                current_record.put("user_location",latlng);
+                JSONObject tmp_latlng = new JSONObject();
+                tmp_latlng.put("lat",userLocation.getLatitude());
+                tmp_latlng.put("lng",userLocation.getLongitude());
+                current_record.put("user_location",tmp_latlng);
 
-                latlng.put("lat",place.getLatLng().latitude);
-                latlng.put("lng",place.getLatLng().longitude);
-                current_record.put("destination_location",latlng);
-                current_record.put("destination_name",place.getName());
+                tmp_latlng = new JSONObject();
+                tmp_latlng.put("lat",latlngDestination.latitude);
+                tmp_latlng.put("lng",latlngDestination.longitude);
+                current_record.put("destination_location",tmp_latlng);
+                current_record.put("destination_name",destinationName);
 
-                switch(requestType){
-                    case REQUEST_BUS_STATIONS_BY_PLACE:
+                switch(requestStationType){
+                    case BUS:
                         current_record.put("type","bus");
                         break;
-                    case REQUEST_VELOH_STATIONS_BY_PLACE:
+                    case VELOH:
                         current_record.put("type","veloh");
                         break;
                 }
@@ -243,9 +259,29 @@ public class HistoryManager implements DataRetrievedListener{
                     current_record.put("user_location_street",street);
                     current_record.put("user_location_city",city);
                     history.getJSONArray(context.getResources().getString(R.string.HISTORY_STATIONS_BY_PLACE_KEY)).put(current_record);
+                    System.out.println(current_record.toString());
                     saveHistory();
                 }catch(Exception e){e.printStackTrace();}
                 break;
         }
+    }
+
+    public String getHistoryRecordById(String id){
+        try{
+            ArrayList<String> historyKeys = new ArrayList<>();
+            historyKeys.add("allbusstations");historyKeys.add("allvelohstations");historyKeys.add("range");historyKeys.add("neareststation");historyKeys.add("stationsbyplace");
+
+            for(String key : historyKeys){
+                JSONArray jarr = history.getJSONArray(key);
+                for(int i = 0; i<jarr.length(); ++i){
+                    if(jarr.getJSONObject(i).getString("id").equals(id)){
+                        JSONObject tmp = jarr.getJSONObject(i);
+                        tmp.put("querykey",key);
+                        return tmp.toString();
+                    }
+                }
+            }
+        }catch(Exception e){}
+        return null;
     }
 }

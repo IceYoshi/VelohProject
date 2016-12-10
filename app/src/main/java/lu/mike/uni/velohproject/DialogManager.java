@@ -154,7 +154,7 @@ public class DialogManager {
             this.showMessageDialog(context.getResources().getString(R.string.DIALOG_TITLE_VELOHSTATION_INFO), l,context);
         }
         else if(station instanceof BusStation)
-            new DataRetriever(context, RequestFactory.requestBusStationInfo(station.getId())); // then, showFetchedBusStationInfo
+            new DataRetriever(context, RequestFactory.requestBusStationInfo(station.getId(),RequestObject.RequestType.REQUEST_BUS_STATION_INFO)); // then, showFetchedBusStationInfo
         else{
             this.showAlertDialog(station.getName(),context);
         }
