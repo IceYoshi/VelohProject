@@ -205,7 +205,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
     }
 
     public void showNearestBusStation() {
-        if(mLastLocation != null) {
+        if(isLocationKnown()) {
             onDataRetrieved(mLastRequestResult, mLastRequest);
             double minDistance = Double.MAX_VALUE;
             AbstractStation nearestStation = null;
@@ -309,7 +309,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         if(inputRequest.equals(inputRequest.REQUEST_INPUT_FOR_STATIONS_IN_RANGE)){
             ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawers();
 
-            if(!isLocationKnown()) return;
+            if(editTextValue.isEmpty() || !isLocationKnown()) return;
                 onDataRetrieved(mLastRequestResult, mLastRequest);
                 double dist = Double.valueOf(editTextValue);
 
@@ -329,9 +329,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
     }
 
     @Override
-    public void onInputDialogCancelClick() {
-        ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawers();
-    }
+    public void onInputDialogCancelClick() {}
 
     @Override
     public void onDataRetrieved(String result, RequestObject request) {
@@ -397,8 +395,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
     }
 
     private void showBusstationsForDestination(Place place){
-        if(!isLocationKnown()) return;
-        if(place == null) return;
+        if(place == null || !isLocationKnown()) return;
 
         onDataRetrieved(mLastRequestResult, mLastRequest);
         try{
