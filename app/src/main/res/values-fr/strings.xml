@@ -6,9 +6,25 @@
     <string name="nav_drawer_open">Ouvrir menu de navigation</string>
     <string name="nav_drawer_close">Fermer menu de navigation</string>
     <string name="DIALOG_UNKNOWN_USER_LOCATION">Localisation inconnu</string>
-    <string name="DIALOG_TITLE_VELOHSTATION_INFO">Informations station Veloh</string>
-    <string name="DIALOG_TITLE_BUSSTATION_INFO">Informations station Bus</string>
+    <string name="DIALOG_TITLE_VELOHSTATION_INFO">Informations sur la station Veloh</string>
+    <string name="DIALOG_TITLE_BUSSTATION_INFO">Informations sur la station de bus</string>
     <string name="DIALOG_NO_BUSSSTATIONS_FOUND_FOR_LOCATION">Aucun résultat trouvé…</string>
     <string name="DIALOG_ASK_USER_FOR_RANGE">Indiquer distance en mètre:</string>
     <string name="DIALOG_NO_BUSSES">Actuellement aucune ligne de bus disponible…</string>
+    <string name="NAV_MENU_SHOW">Montrer</string>
+    <string name="NAV_MENU_FILTER">Filtre</string>
+    <string name="NAV_ITEM_STATIONS_VELOH">Stations Veloh</string>
+    <string name="NAV_ITEM_STATIONS_BUS">Stations de bus</string>
+    <string name="NAV_ITEM_PREF">Préférences</string>
+    <string name="NAV_ITEM_FILTER_PLACE">Chercher stations par lieu</string>
+    <string name="NAV_ITEM_ABOUT">À propos</string>
+    <string name="NAV_ITEM_FILTER_NEAREST">Chercher station la plus proche</string>
+    <string name="NAV_ITEM_HISTORY">Histoire</string>
+    <string name="NAV_ITEM_FILTER_RANGE">Chercher stations aux alentours</string>
+    <string name="TITLE_HISTORY">Histoire</string>
+    <string name="STATION_TYPE">Type:</string>
+    <string name="RANGE">aux alentours de</string>
+    <string name="NEAREST">le plus proche</string>
+    <string name="VELOH_STATIONS_ALL">Tous les stations Veloh</string>
+    <string name="BUS_STATIONS_ALL">Tous les stations de bus</string>
 </resources>

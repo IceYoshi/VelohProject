@@ -11,4 +11,20 @@
     <string name="DIALOG_NO_BUSSSTATIONS_FOUND_FOR_LOCATION">Keine Treffer gefunden…</string>
     <string name="DIALOG_NO_BUSSES">Aktuell keine Buslinien verfügbar…</string>
     <string name="DIALOG_ASK_USER_FOR_RANGE">Reichweite in meter eingeben:</string>
+    <string name="NAV_MENU_SHOW">Anzeigen</string>
+    <string name="NAV_MENU_FILTER">Filter</string>
+    <string name="NAV_ITEM_STATIONS_VELOH">Veloh Stationen</string>
+    <string name="NAV_ITEM_STATIONS_BUS">Bus Stationen</string>
+    <string name="NAV_ITEM_PREF">Einstellungen</string>
+    <string name="NAV_ITEM_HISTORY">Verlauf</string>
+    <string name="NAV_ITEM_FILTER_PLACE">Stationen nach Ort anfordern</string>
+    <string name="NAV_ITEM_ABOUT">Über</string>
+    <string name="NAV_ITEM_FILTER_NEAREST">Nächste Station anfordern</string>
+    <string name="NAV_ITEM_FILTER_RANGE">Stationen im Umkreis anfordern</string>
+    <string name="STATION_TYPE">Typ:</string>
+    <string name="TITLE_HISTORY">Verlauf</string>
+    <string name="RANGE">im Umkreis von</string>
+    <string name="VELOH_STATIONS_ALL">Alle Veloh Stationen</string>
+    <string name="NEAREST">am nächsten</string>
+    <string name="BUS_STATIONS_ALL">Alle Bus Stationen</string>
 </resources>

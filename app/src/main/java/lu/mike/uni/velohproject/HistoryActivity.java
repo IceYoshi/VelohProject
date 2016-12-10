@@ -74,7 +74,7 @@ public class HistoryActivity extends AppCompatActivity {
             for(int i = 0; i<jarr.length(); ++i){
                 JSONObject record = jarr.getJSONObject(i);
                 if(record.getString("type").equals(stationType)){
-                    list.add(record.getString(this.getResources().getString(R.string.HISTORY_LOCATION_STREET_KEY)) + "  -  "+record.getString(this.getResources().getString(R.string.HISTORY_LOCATION_CITY_KEY)) + " with range "+record.getDouble(this.getResources().getString(R.string.HISTORY_RANGE_METER_VALUE_KEY))+"m" + "\n("+formatStringDate(record.getString(this.getResources().getString(R.string.HISTORY_DATE_KEY)))+")");
+                    list.add(record.getString(this.getResources().getString(R.string.HISTORY_LOCATION_STREET_KEY)) + "  -  "+record.getString(this.getResources().getString(R.string.HISTORY_LOCATION_CITY_KEY)) + " " + this.getResources().getString(R.string.RANGE) + " " + record.getDouble(this.getResources().getString(R.string.HISTORY_RANGE_METER_VALUE_KEY))+"m" + "\n("+formatStringDate(record.getString(this.getResources().getString(R.string.HISTORY_DATE_KEY)))+")");
                     list_ids.add(record.getString("id"));
                 }
             }
@@ -83,7 +83,7 @@ public class HistoryActivity extends AppCompatActivity {
             for(int i = 0; i<jarr.length(); ++i){
                 JSONObject record = jarr.getJSONObject(i);
                 if(record.getString("type").equals(stationType)){
-                    list.add(record.getString(this.getResources().getString(R.string.HISTORY_LOCATION_STREET_KEY)) + "  -  "+record.getString(this.getResources().getString(R.string.HISTORY_LOCATION_CITY_KEY)) + " / nearest \n("+formatStringDate(record.getString(this.getResources().getString(R.string.HISTORY_DATE_KEY)))+")");
+                    list.add(record.getString(this.getResources().getString(R.string.HISTORY_LOCATION_STREET_KEY)) + "  -  "+record.getString(this.getResources().getString(R.string.HISTORY_LOCATION_CITY_KEY)) + " / " + this.getResources().getString(R.string.NEAREST) + "\n("+formatStringDate(record.getString(this.getResources().getString(R.string.HISTORY_DATE_KEY)))+")");
                     list_ids.add(record.getString("id"));
                 }
             }
@@ -92,7 +92,7 @@ public class HistoryActivity extends AppCompatActivity {
             for(int i = 0; i<jarr.length(); ++i){
                 JSONObject record = jarr.getJSONObject(i);
                 if(record.getString("type").equals(stationType)){
-                    list.add("All bus stations \n(" +formatStringDate(record.getString(this.getResources().getString(R.string.HISTORY_DATE_KEY)))+ ")");
+                    list.add(this.getResources().getString(R.string.BUS_STATIONS_ALL) + " \n(" +formatStringDate(record.getString(this.getResources().getString(R.string.HISTORY_DATE_KEY)))+ ")");
                     list_ids.add(record.getString("id"));
                 }
             }
@@ -101,7 +101,7 @@ public class HistoryActivity extends AppCompatActivity {
             for(int i = 0; i<jarr.length(); ++i){
                 JSONObject record = jarr.getJSONObject(i);
                 if(record.getString("type").equals(stationType)){
-                    list.add("All veloh stations \n(" +formatStringDate(record.getString(this.getResources().getString(R.string.HISTORY_DATE_KEY)))+ ")");
+                    list.add(this.getResources().getString(R.string.BUS_STATIONS_ALL) + " \n(" +formatStringDate(record.getString(this.getResources().getString(R.string.HISTORY_DATE_KEY)))+ ")");
                     list_ids.add(record.getString("id"));
                 }
             }

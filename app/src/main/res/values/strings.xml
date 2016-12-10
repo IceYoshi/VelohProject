@@ -26,7 +26,6 @@
     <string name="HISTORY_ALLVELOHSTATIONS_KEY" translatable="false">allvelohstations</string>
     <string name="HISTORY_STATIONS_BY_PLACE_KEY" translatable="false">stationsbyplace</string>
 
-
     <!-- *********************** DIALOGS *********************** -->
     <string name="DIALOG_TITLE_BUSSTATION_INFO">Bus Station Information</string>
     <string name="DIALOG_BUSSTATION_NAME_COLOR_HEX" translatable="false">#CD5C5C"</string>
@@ -35,6 +34,27 @@
     <string name="DIALOG_NO_BUSSSTATIONS_FOUND_FOR_LOCATION">No matching busstations found…</string>
     <string name="DIALOG_ASK_USER_FOR_RANGE">Give a range in meter: </string>
     <string name="DIALOG_UNKNOWN_USER_LOCATION">Unknown user location…</string>
+
+    <!-- *********************** NAVIGATION MENU ITEMS *********************** -->
+    <string name="NAV_MENU_SHOW">Show</string>
+    <string name="NAV_MENU_FILTER">Filter</string>
+    <string name="NAV_ITEM_HISTORY">History</string>
+    <string name="NAV_ITEM_PREF">Preferences</string>
+    <string name="NAV_ITEM_ABOUT">About</string>
+    <string name="NAV_ITEM_STATIONS_BUS">Bus stations</string>
+    <string name="NAV_ITEM_STATIONS_VELOH">Veloh stations</string>
+    <string name="NAV_ITEM_FILTER_RANGE">Request stations in range</string>
+    <string name="NAV_ITEM_FILTER_NEAREST">Request nearest station</string>
+    <string name="NAV_ITEM_FILTER_PLACE">Request stations by place</string>
+
+    <!-- *********************** HISTORY ACTIVITY *********************** -->
+    <string name="TITLE_HISTORY">History</string>
+    <string name="STATION_TYPE">Type:</string>
+    <string name="BUS_STATIONS_ALL">All bus stations</string>
+    <string name="VELOH_STATIONS_ALL">All veloh stations</string>
+    <string name="NEAREST">nearest</string>
+    <string name="RANGE">with range</string>
+
 
     <string-array name="history_spinner_array">
         <item>Bus</item>
