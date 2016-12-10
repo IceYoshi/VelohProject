@@ -36,7 +36,6 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -47,9 +46,12 @@ import lu.mike.uni.velohproject.stations.AbstractStation;
 import lu.mike.uni.velohproject.stations.Bus;
 import lu.mike.uni.velohproject.stations.BusStation;
 import lu.mike.uni.velohproject.stations.DestinationLocation;
+import lu.mike.uni.velohproject.stations.VelohStation;
 
-import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_BUS_STATION_INFO_FOR_DESTINATION;
-import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_BUS_STATION_INFO_FOR_USER_LOCATION;
+import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_ALL_BUS_STATIONS;
+import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_ALL_VELOH_STATIONS;
+import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_STATION_INFO_FOR_DESTINATION;
+import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_STATION_INFO_FOR_USER_LOCATION;
 
 public class MapActivity extends AppCompatActivity implements   OnMapReadyCallback,
                                                                 IDialogManagerInputDialogProtocol,
@@ -63,26 +65,26 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                                                                 DataRetrievedListener,
                                                                 ClusterManager.OnClusterItemClickListener<AbstractStation>, ClusterManager.OnClusterClickListener<AbstractStation> {
 
-    private final static int HISTORY_REQUEST_CODE = 42;
-    private final static int GOOGLE_PLACE_AUTO_COMPLETE_CODE = 413;
+    final static int HISTORY_REQUEST_CODE = 42;
+    final static int GOOGLE_PLACE_AUTO_COMPLETE_CODE = 413;
 
-    private GoogleMap mMap;
-    private ClusterManager<AbstractStation> mClusterManager;
+    GoogleMap mMap;
+    ClusterManager<AbstractStation> mClusterManager;
 
-    private LocationRequest mLocationRequest;
-    private GoogleApiClient mGoogleApiClient;   // used for reading current location of device
+    LocationRequest mLocationRequest;
+    GoogleApiClient mGoogleApiClient;   // used for reading current location of device
     Location mLastLocation;
 
-    private String mLastRequestResult;
-    private RequestObject mLastRequest;
-    private AbstractStation currentStationClicked;
+    String mLastRequestResult;
+    RequestObject mLastRequest;
+    AbstractStation currentStationClicked;
 
-    private Collection<AbstractStation> stationsDestination;
-    private Collection<AbstractStation> stationsUser;
-    private CountDownTerminator cdt;
+    Collection<AbstractStation> stationsDestination;
+    Collection<AbstractStation> stationsUser;
+    CountDownTerminator cdt;
 
-    private HistoryManager hm;
-    private DialogManager dm;
+    HistoryManager hm;
+    DialogManager dm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,24 +176,25 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
         switch (item.getItemId()) {
             case R.id.nav_request_all_bus_stations:
+                hm.appendAllStationsHistory(REQUEST_ALL_BUS_STATIONS);
                 new DataRetriever(this, RequestFactory.requestBusStations());
                 break;
-            case R.id.nav_request_stations_by_place:
-                showGooglePlaceAutoComplete();
+            case R.id.nav_request_all_veloh_stations:
+                hm.appendAllStationsHistory(REQUEST_ALL_VELOH_STATIONS);
+                new DataRetriever(this, RequestFactory.requestVelohStations());
                 break;
-            case R.id.request_stations_nearby:
+            case R.id.request_stations_in_range:
                 dm.showInputDialog(getResources().getString(R.string.DIALOG_ASK_USER_FOR_RANGE), DialogManager.InputRequest.REQUEST_INPUT_FOR_STATIONS_IN_RANGE, InputType.TYPE_CLASS_NUMBER, this);
                 break;
             case R.id.request_nearest_station:
                 showNearestBusStation();
                 break;
-            case R.id.nav_request_all_veloh_stations:
-                new DataRetriever(this, RequestFactory.requestVelohStations());
+            case R.id.nav_request_stations_by_place:
+                showGooglePlaceAutoComplete();
                 break;
             case R.id.menu_history:
                 Intent intent = new Intent(this, HistoryActivity.class);
                 intent.putExtra(getResources().getString(R.string.HISTORY_JSON_STRING),hm.getHistoryString());
-                //startActivity(intent);
                 startActivityForResult(intent, HISTORY_REQUEST_CODE);
                 break;
             case R.id.about:
@@ -202,7 +205,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
     }
 
     public void showNearestBusStation() {
-        if(mLastLocation != null) {
+        if(isLocationKnown()) {
             onDataRetrieved(mLastRequestResult, mLastRequest);
             double minDistance = Double.MAX_VALUE;
             AbstractStation nearestStation = null;
@@ -222,7 +225,11 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
             }
             mClusterManager.cluster();
 
-            hm.appendNearestBusStationsHistory(mLastLocation);
+            if(!stations.isEmpty())
+                if((stations.toArray()[0]) instanceof BusStation)
+                    hm.appendNearestStationsHistory(mLastLocation, RequestObject.RequestType.REQUEST_NEAREST_BUS_STATION);
+                else if((stations.toArray()[0]) instanceof VelohStation)
+                    hm.appendNearestStationsHistory(mLastLocation, RequestObject.RequestType.REQUEST_NEAREST_VELOH_STATION);
         }
     }
 
@@ -232,14 +239,19 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         switch(requestCode){
             case HISTORY_REQUEST_CODE:
                 if(resultCode == RESULT_OK) {
-                    int position = data.getIntExtra("position",-1);
-                    System.out.println("Clicked on position: "+position);
+                    String id = data.getStringExtra("id");
+                    System.out.println("Clicked on id: "+id);
                 }
                 else {
                     Log.d("","CANCELED !!!");
                 }
                 break;
             case GOOGLE_PLACE_AUTO_COMPLETE_CODE:
+                if(!mClusterManager.getAlgorithm().getItems().isEmpty())
+                    if((mClusterManager.getAlgorithm().getItems().toArray()[0]) instanceof BusStation)
+                        hm.appendStationByPlaceHistory(mLastLocation, PlaceAutocomplete.getPlace(this,data), RequestObject.RequestType.REQUEST_BUS_STATIONS_BY_PLACE);
+                    else if((mClusterManager.getAlgorithm().getItems().toArray()[0]) instanceof VelohStation)
+                        hm.appendStationByPlaceHistory(mLastLocation, PlaceAutocomplete.getPlace(this,data), RequestObject.RequestType.REQUEST_VELOH_STATIONS_BY_PLACE);
                 showBusstationsForDestination(PlaceAutocomplete.getPlace(this, data));
                 break;
         }
@@ -297,7 +309,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         if(inputRequest.equals(inputRequest.REQUEST_INPUT_FOR_STATIONS_IN_RANGE)){
             ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawers();
 
-            if(!isLocationKnown()) return;
+            if(editTextValue.isEmpty() || !isLocationKnown()) return;
                 onDataRetrieved(mLastRequestResult, mLastRequest);
                 double dist = Double.valueOf(editTextValue);
 
@@ -308,14 +320,16 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                 }
                 mClusterManager.cluster();
 
-                hm.appendRangeHistory(mLastLocation,dist);
+            if(!stations.isEmpty())
+                if((stations.toArray()[0]) instanceof BusStation)
+                    hm.appendRangeHistory(mLastLocation, dist, RequestObject.RequestType.REQUEST_ALL_BUS_STATIONS_IN_RANGE);
+                else if((stations.toArray()[0]) instanceof VelohStation)
+                    hm.appendRangeHistory(mLastLocation, dist, RequestObject.RequestType.REQUEST_ALL_VELOH_STATIONS_IN_RANGE);
         }
     }
 
     @Override
-    public void onInputDialogCancelClick() {
-        ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawers();
-    }
+    public void onInputDialogCancelClick() {}
 
     @Override
     public void onDataRetrieved(String result, RequestObject request) {
@@ -333,8 +347,8 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
             case REQUEST_BUS_STATION_INFO:
                 showFetchedBusStationInfo(result);
                 break;
-            case REQUEST_BUS_STATION_INFO_FOR_DESTINATION:
-            case REQUEST_BUS_STATION_INFO_FOR_USER_LOCATION:
+            case REQUEST_STATION_INFO_FOR_DESTINATION:
+            case REQUEST_STATION_INFO_FOR_USER_LOCATION:
                 processBusStationInformatonForDestination(result, request.getRequestType());
                 break;
         }
@@ -357,74 +371,89 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                 busList.add(new Bus(name, time, dest));
             }
 
-            if(requestType.equals(REQUEST_BUS_STATION_INFO_FOR_USER_LOCATION)){
+            if(requestType.equals(REQUEST_STATION_INFO_FOR_USER_LOCATION)){
                 for(AbstractStation station  : stationsUser) {
                     if(station.getName().equals(jarr.getJSONObject(0).getString("stop")))
                         ((BusStation) station).setBusList(busList);
                 }
                 cdt.incProgress("stationsUser");
             }
-            else if(requestType.equals(REQUEST_BUS_STATION_INFO_FOR_DESTINATION)){
+            else if(requestType.equals(REQUEST_STATION_INFO_FOR_DESTINATION)){
                 for(AbstractStation station  : stationsDestination){
                     if(station.getName().equals(jarr.getJSONObject(0).getString("stop")))
                         ((BusStation) station).setBusList(busList);
                 }
+
                 cdt.incProgress("stationsDestination");
             }
 
-        }catch(JSONException ex){
-            if(requestType.equals(REQUEST_BUS_STATION_INFO_FOR_USER_LOCATION)) cdt.incProgress("stationsUser");
-            if(requestType.equals(REQUEST_BUS_STATION_INFO_FOR_DESTINATION)) cdt.incProgress("stationsDestination");
+        }catch(Exception ex){
+            if(requestType.equals(REQUEST_STATION_INFO_FOR_USER_LOCATION)) cdt.incProgress("stationsUser");
+            if(requestType.equals(REQUEST_STATION_INFO_FOR_DESTINATION)) cdt.incProgress("stationsDestination");
+            //ex.printStackTrace();
         }
     }
 
     private void showBusstationsForDestination(Place place){
-        if(!isLocationKnown()) return;
-        if(place == null) return;
+        if(place == null || !isLocationKnown()) return;
 
         onDataRetrieved(mLastRequestResult, mLastRequest);
-        try{
+        try {
+            cdt.clear();
+            stationsUser.clear();
+            stationsDestination.clear();
 
-                cdt.clear();
-                stationsUser.clear();
-                stationsDestination.clear();
+            DestinationLocation dl = new DestinationLocation();
+            dl.setLat(place.getLatLng().latitude);
+            dl.setLng(place.getLatLng().longitude);
 
-                DestinationLocation dl = new DestinationLocation();
-                dl.setLat(place.getLatLng().latitude);
-                dl.setLng(place.getLatLng().longitude);
+            dl.setName(place.getName().toString());
 
-                dl.setName(place.getName().toString());
+            Location loc = new Location("");
+            loc.setLongitude(dl.getLng());
+            loc.setLatitude(dl.getLat());
 
-                Location loc = new Location("");
-                loc.setLongitude(dl.getLng());
-                loc.setLatitude(dl.getLat());
+            Collection<AbstractStation> stations = mClusterManager.getAlgorithm().getItems();
+            LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+            boundsBuilder.include(place.getLatLng());
+            boundsBuilder.include(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
 
-                Collection<AbstractStation> stations = mClusterManager.getAlgorithm().getItems();
-
-                for(AbstractStation station :  stations) {
-                    if(!(station instanceof DestinationLocation)){
-                        if(station.distanceTo(loc) <= 1500)
-                            stationsDestination.add(station);
-
-                        if(station.distanceTo(mLastLocation) <= 1500)
-                            stationsUser.add(station);
+            for (AbstractStation station : stations) {
+                if (!(station instanceof DestinationLocation)) {
+                    if (station.distanceTo(loc) <= 500) {
+                        stationsDestination.add(station);
+                        boundsBuilder.include(station.getPosition());
                     }
+
+                    if (station.distanceTo(mLastLocation) <= 500) {
+                        stationsUser.add(station);
+                        boundsBuilder.include(station.getPosition());
+                    }
+
                 }
+            }
 
-                cdt.addCounter("stationsUser",stationsUser.size());
-                cdt.addCounter("stationsDestination",stationsDestination.size());
+            cdt.addCounter("stationsUser", stationsUser.size());
+            cdt.addCounter("stationsDestination", stationsDestination.size());
 
-            for(AbstractStation station  : stationsUser)
+            for (AbstractStation station : stationsUser)
                 new DataRetriever(this, RequestFactory.requestBusStationInfoForUserLocation(station.getId()));
 
-            for(AbstractStation station  : stationsDestination)
+            for (AbstractStation station : stationsDestination)
                 new DataRetriever(this, RequestFactory.requestBusStationInfoForDestination(station.getId()));
 
 
-                mClusterManager.clearItems();
-                mClusterManager.addItem(dl);
-                mClusterManager.cluster();
-        }catch(Exception e){e.printStackTrace();}
+            mClusterManager.clearItems();
+            mClusterManager.addItem(dl);
+            mClusterManager.cluster();
+
+            LatLngBounds markerBounds = boundsBuilder.build();
+            int padding = 150;
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(markerBounds, padding));
+
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void showFetchedBusStationInfo(String jsonString){
@@ -454,10 +483,11 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
     @Override
     public void didFinishCountdown() {
+        didFinishRequestByPlace();
+    }
 
-
+    public void didFinishRequestByPlace(){
         HashSet<AbstractStation> intersectionSet = new HashSet<>();
-
 
         for(AbstractStation destinationStation :  stationsDestination) {
             for (AbstractStation userStation : stationsUser) {
@@ -473,7 +503,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                         }
                     }
                 }
-                else{
+                else{   // for veloh stations there is no criteria for intersection
                     intersectionSet.add(userStation);
                     intersectionSet.add(destinationStation);
                 }

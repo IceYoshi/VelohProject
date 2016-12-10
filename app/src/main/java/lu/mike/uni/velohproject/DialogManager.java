@@ -114,6 +114,7 @@ public class DialogManager {
         final LinearLayout layout = new LinearLayout(context);
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setPadding(75,30,75,0);
+
         Boolean first = true;
         for (String msg : messages) {
             TextView et = new TextView(context);
