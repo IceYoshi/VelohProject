@@ -565,4 +565,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         }
         return true;
     }
+
+    public GoogleMap getMap(){return mMap;}
+    public ClusterManager getClusterManager(){return mClusterManager;}
 }

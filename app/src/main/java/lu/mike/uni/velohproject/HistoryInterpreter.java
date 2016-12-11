@@ -57,10 +57,10 @@ public class HistoryInterpreter {
             location.setLongitude(json.getJSONObject("location").getDouble("lng"));
             location.setLatitude(json.getJSONObject("location").getDouble("lat"));
 
-            if(json.getString("type").equals("bus"))
+            /*if(json.getString("type").equals("bus"))
                 map.onItemRequestAllBusStationsClick();
             else if(json.getString("type").equals("veloh"))
-                map.onItemRequestAllVelohStationsClick();
+                map.onItemRequestAllVelohStationsClick();*/
 
             map.onItemRequestNearestBusStationClick(location);
         }catch(Exception e){e.printStackTrace();}
@@ -73,10 +73,10 @@ public class HistoryInterpreter {
             location.setLongitude(json.getJSONObject("location").getDouble("lng"));
             location.setLatitude(json.getJSONObject("location").getDouble("lat"));
 
-            if(json.getString("type").equals("bus"))
+            /*if(json.getString("type").equals("bus"))
                 map.onItemRequestAllBusStationsClick();
             else if(json.getString("type").equals("veloh"))
-                map.onItemRequestAllVelohStationsClick();
+                map.onItemRequestAllVelohStationsClick();*/
 
             map.doRequestStationsInRange(dist, location);
         }catch(Exception e){e.printStackTrace();}
