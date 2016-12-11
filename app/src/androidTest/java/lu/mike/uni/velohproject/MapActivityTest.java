@@ -29,7 +29,7 @@ public class MapActivityTest {
     public void initial_config_test() {
         MapActivity activity = activityTest.getActivity();
 
-        assertNotNull("mMap initialized", activity.mMap);
-        assertNotNull("mClusterManager initialized", activity.mClusterManager);
+        assertNotNull("mMap initialized", activity.getMap());
+        assertNotNull("mClusterManager initialized", activity.getClusterManager());
     }
 }

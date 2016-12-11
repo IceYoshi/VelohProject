@@ -12,7 +12,6 @@ public class RequestFactory {
     private static final String REQUEST_STATION_INFO = "http://travelplanner.mobiliteit.lu/restproxy/departureBoard?accessId=cdt&id=$station$&format=json";
 
     private static final String REQUEST_ADDRESS_INFO = "http://maps.googleapis.com/maps/api/geocode/json?latlng=$x$,$y$";
-    private static final String REQUEST_LOCATION_INFO = "http://maps.googleapis.com/maps/api/geocode/json?address=$x$";
 
     private static final String VELOH_API_KEY = "8b40b6abc96ba26ea4157be6a3f7c33bc54ca63f";
     private static final String REQUEST_VELOH_STATIONS = "https://api.jcdecaux.com/vls/v1/stations?contract=Luxembourg&apiKey=$api_key$";

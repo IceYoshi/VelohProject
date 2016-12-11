@@ -32,4 +32,10 @@
         <item>Bus</item>
         <item>Veloh</item>
     </string-array>
+    <string name="DIALOG_CANCEL">Annuler</string>
+    <string name="DIALOG_OK">OK</string>
+    <string name="DIALOG_CLOSE">Fermer</string>
+    <string name="VELOH_AVAILABLE_BIKES">Vélos disponibles:</string>
+    <string name="VELOH_EMPTY_STANDS">Points d\'attache disponibles:</string>
+    <string name="VELOH_TOTAL_STANDS">Points d\'attache opérationnels:</string>
 </resources>

@@ -75,13 +75,13 @@ public class DialogManager {
         builder.setView(input);
 
         // Set up the buttons
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(context.getResources().getString(R.string.DIALOG_OK), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 delegator.onInputDialogOKClick(input.getText().toString(),inputRequest);
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(context.getResources().getString(R.string.DIALOG_CANCEL), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -98,7 +98,7 @@ public class DialogManager {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(text);
 
-        builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(context.getResources().getString(R.string.DIALOG_CLOSE), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 delegator.onAlertDialogCloseClick();
@@ -130,7 +130,7 @@ public class DialogManager {
             layout.addView(et);
         }
         // Set up the buttons
-        builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(context.getResources().getString(R.string.DIALOG_CLOSE), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 delegator.onMessageDialogCloseClick();
@@ -146,13 +146,13 @@ public class DialogManager {
 
     public void showStationInformation(AbstractStation station) {
         if(station instanceof VelohStation){
-            ArrayList<String> l = new ArrayList<>();
-            l.add("Name: \t"+station.getName());
             VelohStation v = (VelohStation)station;
-            l.add("Available bikes: \t"+v.getAvailable_bikes());
-            l.add("Available stands: \t"+v.getAvailable_bikes_stands());
-            l.add("Total stands: \t"+v.getTotal_bikes_stand());
-            this.showMessageDialog(context.getResources().getString(R.string.DIALOG_TITLE_VELOHSTATION_INFO), l,context);
+            ArrayList<String> l = new ArrayList<>();
+            l.add(station.getName());
+            l.add(context.getResources().getString(R.string.VELOH_AVAILABLE_BIKES) + " \t"+v.getAvailable_bikes());
+            l.add(context.getResources().getString(R.string.VELOH_EMPTY_STANDS) + " \t"+v.getAvailable_bikes_stands());
+            l.add(context.getResources().getString(R.string.VELOH_TOTAL_STANDS) + " \t"+v.getTotal_bikes_stand());
+            this.showMessageDialog(context.getResources().getString(R.string.DIALOG_TITLE_VELOHSTATION_INFO), l, context);
         }
         else if(station instanceof BusStation)
             new DataRetriever(context, RequestFactory.requestBusStationInfo(station.getId(),RequestObject.RequestType.REQUEST_BUS_STATION_INFO)); // then, showFetchedBusStationInfo
