@@ -437,17 +437,25 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                 destinationLocation.setLongitude(dl.getLng());
                 destinationLocation.setLatitude(dl.getLat());
 
-                Collection<AbstractStation> stations = mClusterManager.getAlgorithm().getItems();
+            Collection<AbstractStation> stations = mClusterManager.getAlgorithm().getItems();
+            LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+            boundsBuilder.include(place.getLatLng());
+            boundsBuilder.include(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
 
-                for(AbstractStation station :  stations) {
-                    if(!(station instanceof DestinationLocation)){
-                        if(station.distanceTo(destinationLocation) <= 500)
-                            stationsDestination.add(station);
-
-                        if(station.distanceTo(userLocation) <= 500)
-                            stationsUser.add(station);
+            for (AbstractStation station : stations) {
+                if (!(station instanceof DestinationLocation)) {
+                    if (station.distanceTo(loc) <= 500) {
+                        stationsDestination.add(station);
+                        boundsBuilder.include(station.getPosition());
                     }
+
+                    if (station.distanceTo(mLastLocation) <= 500) {
+                        stationsUser.add(station);
+                        boundsBuilder.include(station.getPosition());
+                    }
+
                 }
+            }
 
                 countDownTerminator.addCounter("stationsUser",stationsUser.size());
                 countDownTerminator.addCounter("stationsDestination",stationsDestination.size());
@@ -461,8 +469,13 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                 mClusterManager.clearItems();
                 mClusterManager.addItem(dl);
                 mClusterManager.cluster();
+                LatLngBounds markerBounds = boundsBuilder.build();
+                int padding = 150;
+                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(markerBounds, padding));
                 historyManager.appendStationByPlaceHistory(userLocation, destinationName, latlngDestination, requestStationType);
-        }catch(Exception e){e.printStackTrace();}
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void showFetchedBusStationInfo(String jsonString){
