@@ -7,7 +7,7 @@ import java.util.HashMap;
  */
 
 interface ICountDownTerminatorProtocol{
-    public void didFinishCountdown();
+    void didFinishCountdown();
 }
 
 public class CountDownTerminator {

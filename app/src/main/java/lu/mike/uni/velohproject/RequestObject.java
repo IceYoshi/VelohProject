@@ -6,7 +6,7 @@ package lu.mike.uni.velohproject;
 
 public class RequestObject {
 
-    public static enum RequestType {
+    public enum RequestType {
         REQUEST_ALL_BUS_STATIONS,                       /* for http request */
         REQUEST_ALL_VELOH_STATIONS,                     /* for http request */
         REQUEST_ALL_BUS_STATIONS_IN_RANGE,              /* for differentiating in history */
@@ -20,7 +20,7 @@ public class RequestObject {
         REQUEST_STATION_INFO_FOR_USER_LOCATION,     /* for stations by place feature */
         REQUEST_USER_LOCATION_FOR_STATION_RANGE,    /* for http request & differentiating in history */
         REQUEST_USER_LOCATION_FOR_NEAREST_STATION,   /* for http request & differentiating in history */
-        REQUEST_STATIONS_BY_PLACE,
+        //REQUEST_STATIONS_BY_PLACE,
         REQUEST_USER_LOCATION_BY_PLACE   /* for http request & differentiating in history */
     }
 

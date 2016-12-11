@@ -31,25 +31,10 @@ public class RequestFactory {
                 RequestObject.RequestType.REQUEST_ALL_BUS_STATIONS);
     }
 
-    public static RequestObject requestBusStationInfo(String station) {
+    public static RequestObject requestBusStationInfo(String station, RequestObject.RequestType requestType) {
         return new RequestObject(
                 REQUEST_STATION_INFO
-                        .replace("$station$", station.replace(" ", "%20")),
-                RequestObject.RequestType.REQUEST_BUS_STATION_INFO);
-    }
-
-    public static RequestObject requestBusStationInfoForDestination(String station) {
-        return new RequestObject(
-                REQUEST_STATION_INFO
-                        .replace("$station$", station.replace(" ", "%20")),
-                RequestObject.RequestType.REQUEST_STATION_INFO_FOR_DESTINATION);
-    }
-
-    public static RequestObject requestBusStationInfoForUserLocation(String station) {
-        return new RequestObject(
-                REQUEST_STATION_INFO
-                        .replace("$station$", station.replace(" ", "%20")),
-                RequestObject.RequestType.REQUEST_STATION_INFO_FOR_USER_LOCATION);
+                        .replace("$station$", station),requestType);
     }
 
     public static RequestObject requestVelohStations() {
@@ -66,9 +51,10 @@ public class RequestFactory {
                 .replace("$y$", String.valueOf(l.getLongitude())), type);
     }
 
-
+/*
     public static RequestObject requestLocationForAddress(String address, RequestObject.RequestType type) {
         return new RequestObject(REQUEST_LOCATION_INFO
                 .replace("$x$", address), type);
     }
+    */
 }
