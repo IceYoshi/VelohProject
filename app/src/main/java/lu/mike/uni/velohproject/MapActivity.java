@@ -423,28 +423,28 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
         try{
 
-                countDownTerminator.clear();
-                stationsUser.clear();
-                stationsDestination.clear();
+            countDownTerminator.clear();
+            stationsUser.clear();
+            stationsDestination.clear();
 
-                DestinationLocation dl = new DestinationLocation(); // red marker
-                dl.setLat(latlngDestination.latitude);
-                dl.setLng(latlngDestination.longitude);
+            DestinationLocation dl = new DestinationLocation(); // red marker
+            dl.setLat(latlngDestination.latitude);
+            dl.setLng(latlngDestination.longitude);
 
-                dl.setName(destinationName);
+            dl.setName(destinationName);
 
-                Location destinationLocation = new Location("");    // Location object
-                destinationLocation.setLongitude(dl.getLng());
-                destinationLocation.setLatitude(dl.getLat());
+            Location destinationLocation = new Location("");    // Location object
+            destinationLocation.setLongitude(dl.getLng());
+            destinationLocation.setLatitude(dl.getLat());
 
             Collection<AbstractStation> stations = mClusterManager.getAlgorithm().getItems();
             LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
-            boundsBuilder.include(place.getLatLng());
-            boundsBuilder.include(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+            boundsBuilder.include(latlngDestination);
+            boundsBuilder.include(new LatLng(userLocation.getLatitude(), userLocation.getLongitude()));
 
             for (AbstractStation station : stations) {
                 if (!(station instanceof DestinationLocation)) {
-                    if (station.distanceTo(loc) <= 500) {
+                    if (station.distanceTo(destinationLocation) <= 500) {
                         stationsDestination.add(station);
                         boundsBuilder.include(station.getPosition());
                     }
