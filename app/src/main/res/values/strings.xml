@@ -34,6 +34,9 @@
     <string name="DIALOG_NO_BUSSSTATIONS_FOUND_FOR_LOCATION">No matching busstations found…</string>
     <string name="DIALOG_ASK_USER_FOR_RANGE">Give a range in meter: </string>
     <string name="DIALOG_UNKNOWN_USER_LOCATION">Unknown user location…</string>
+    <string name="DIALOG_OK">OK</string>
+    <string name="DIALOG_CLOSE">Close</string>
+    <string name="DIALOG_CANCEL">Cancel</string>
 
     <!-- *********************** NAVIGATION MENU ITEMS *********************** -->
     <string name="NAV_MENU_SHOW">Show</string>
@@ -55,6 +58,10 @@
     <string name="NEAREST">nearest</string>
     <string name="RANGE">with range</string>
 
+    <!-- *********************** STATION VELOH *********************** -->
+    <string name="VELOH_AVAILABLE_BIKES">Available bikes:</string>
+    <string name="VELOH_EMPTY_STANDS">Empty stands:</string>
+    <string name="VELOH_TOTAL_STANDS">Total stands:</string>
 
     <string-array name="history_spinner_array">
         <item>Bus</item>

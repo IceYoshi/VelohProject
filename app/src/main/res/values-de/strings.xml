@@ -10,7 +10,7 @@
     <string name="DIALOG_TITLE_BUSSTATION_INFO">Busstation Informationen</string>
     <string name="DIALOG_NO_BUSSSTATIONS_FOUND_FOR_LOCATION">Keine Treffer gefunden…</string>
     <string name="DIALOG_NO_BUSSES">Aktuell keine Buslinien verfügbar…</string>
-    <string name="DIALOG_ASK_USER_FOR_RANGE">Reichweite in meter eingeben:</string>
+    <string name="DIALOG_ASK_USER_FOR_RANGE">Reichweite in Meter eingeben:</string>
     <string name="NAV_MENU_SHOW">Anzeigen</string>
     <string name="NAV_MENU_FILTER">Filter</string>
     <string name="NAV_ITEM_STATIONS_VELOH">Veloh Stationen</string>
@@ -26,10 +26,16 @@
     <string name="RANGE">im Umkreis von</string>
     <string name="VELOH_STATIONS_ALL">Alle Veloh Stationen</string>
     <string name="NEAREST">am nächsten</string>
-    <string name="BUS_STATIONS_ALL">Alle Bus Stationen</string>
+    <string name="BUS_STATIONS_ALL">Alle Busstationen</string>
 
     <string-array name="history_spinner_array">
         <item>Bus</item>
         <item>Veloh</item>
     </string-array>
+    <string name="DIALOG_CANCEL">Abbrechen</string>
+    <string name="DIALOG_OK">OK</string>
+    <string name="DIALOG_CLOSE">Schließen</string>
+    <string name="VELOH_AVAILABLE_BIKES">Verfügbare Fahrräder:</string>
+    <string name="VELOH_EMPTY_STANDS">Leere Stände:</string>
+    <string name="VELOH_TOTAL_STANDS">Gesamtanzahl an Stände:</string>
 </resources>
