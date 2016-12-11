@@ -67,8 +67,8 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
     private final static int HISTORY_REQUEST_CODE = 42;
     private final static int GOOGLE_PLACE_AUTO_COMPLETE_CODE = 413;
 
-    private GoogleMap mMap;
-    private ClusterManager<AbstractStation> mClusterManager;
+    GoogleMap mMap;
+    ClusterManager<AbstractStation> mClusterManager;
 
     private LocationRequest mLocationRequest;
     private GoogleApiClient mGoogleApiClient;   // used for reading current location of device
@@ -217,7 +217,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
     }
 
     public void onItemRequestNearestBusStationClick(Location location) {
-        if(location != null) {
+        if(isLocationKnown()) {
             onDataRetrieved(mLastRequestResult, mLastRequest);
             double minDistance = Double.MAX_VALUE;
             AbstractStation nearestStation = null;
@@ -317,7 +317,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
     @Override
     public void onInputDialogOKClick(String editTextValue, DialogManager.InputRequest inputRequest) {
-        if(inputRequest.equals(inputRequest.REQUEST_INPUT_FOR_STATIONS_IN_RANGE)){
+        if(!editTextValue.isEmpty() && inputRequest.equals(inputRequest.REQUEST_INPUT_FOR_STATIONS_IN_RANGE)){
             doRequestStationsInRange(Double.valueOf(editTextValue), mLastLocation);
         }
     }
@@ -343,9 +343,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
     }
 
     @Override
-    public void onInputDialogCancelClick() {
-        ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawers();
-    }
+    public void onInputDialogCancelClick() {}
 
     @Override
     public void onDataRetrieved(String result, RequestObject request) {
@@ -416,8 +414,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
     }
 
     public void doRequestStationByPlace(Location userLocation, String destinationName, LatLng latlngDestination, RequestStationType requestStationType){
-        if(!isLocationKnown()) return;
-        if(destinationName==null) return;
+        if(destinationName == null || !isLocationKnown()) return;
 
         onDataRetrieved(mLastRequestResult, mLastRequest);
 
