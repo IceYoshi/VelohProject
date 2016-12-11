@@ -32,10 +32,11 @@
         android:id="@+id/menu_history"
         android:title="@string/NAV_ITEM_HISTORY" />
 
-    <item android:title="@string/NAV_ITEM_PREF" android:enabled="false">
-    </item>
+    <item
+        android:id="@+id/menu_preferences"
+        android:title="@string/NAV_ITEM_PREF" />
 
-    <item android:title="@string/NAV_ITEM_ABOUT" android:id="@+id/about" android:enabled="false">
-    </item>
-
+    <item
+        android:id="@+id/menu_about"
+        android:title="@string/NAV_ITEM_ABOUT" />
 </menu>
