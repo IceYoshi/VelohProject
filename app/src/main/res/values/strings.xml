@@ -69,6 +69,18 @@
     <string name="VELOH_EMPTY_STANDS">Empty stands:</string>
     <string name="VELOH_TOTAL_STANDS">Total stands:</string>
 
+    <!-- *********************** ABOUT *********************** -->
+    <string name="ABOUT_GITHUB">IceYoshi/VelohProject</string>
+
+    <string name="ABOUT_MIKE_NAME">Mike Pereira Gonçalves (0130898735)</string>
+    <string name="ABOUT_MIKE_EMAIL">mike.pereira.001@student.uni.lu</string>
+
+    <string name="ABOUT_DREN_NAME">Dren Gashi (0130732528)</string>
+    <string name="ABOUT_DREN_EMAIL">dren.gashi.001@student.uni.lu</string>
+
+    <string name="ABOUT_AUTHORS">Authors:</string>
+    <string name="ABOUT_DESCRIPTION">Project Description... Test Test Test</string>
+
     <!-- *********************** PREFERENCES *********************** -->
 
     <!-- GENERAL -->

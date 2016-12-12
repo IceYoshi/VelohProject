@@ -51,5 +51,6 @@ dependencies {
     compile 'com.google.maps.android:android-maps-utils:0.4.+'
     compile 'com.android.support:support-v4:24.2.1'
     compile 'com.android.support:support-vector-drawable:24.2.1'
+    compile 'com.github.medyo:android-about-page:1.1.1'
     testCompile 'junit:junit:4.12'
 }
