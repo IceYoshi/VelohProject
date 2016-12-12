@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -47,6 +48,7 @@ import lu.mike.uni.velohproject.stations.Bus;
 import lu.mike.uni.velohproject.stations.BusStation;
 import lu.mike.uni.velohproject.stations.DestinationLocation;
 import lu.mike.uni.velohproject.stations.VelohStation;
+import mehdi.sakout.aboutpage.AboutPage;
 
 import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_ALL_BUS_STATIONS;
 import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_ALL_VELOH_STATIONS;
