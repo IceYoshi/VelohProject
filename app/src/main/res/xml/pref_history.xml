@@ -1,0 +1,20 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:icon="@drawable/ic_sync"
+        android:defaultValue="true"
+        android:key="@string/PREF_REQUEST_LOGGING_KEY"
+        android:title="@string/PREF_REQUEST_LOGGING" />
+
+    <ListPreference
+        android:icon="@drawable/ic_storage"
+        android:defaultValue="-1"
+        android:entries="@array/PREF_HISTORY_SIZE_NAMES"
+        android:entryValues="@array/PREF_HISTORY_SIZE_VALUES"
+        android:key="@string/PREF_HISTORY_SIZE_KEY"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/PREF_HISTORY_SIZE"
+        android:dependency="@string/PREF_REQUEST_LOGGING_KEY"/>
+
+</PreferenceScreen>
