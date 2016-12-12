@@ -5,16 +5,16 @@
     <header
         android:fragment="lu.mike.uni.velohproject.PreferencesActivity$GeneralPreferenceFragment"
         android:icon="@drawable/ic_info"
-        android:title="@string/pref_header_general" />
+        android:title="@string/PREF_HEADER_GENERAL" />
 
     <header
         android:fragment="lu.mike.uni.velohproject.PreferencesActivity$MapPreferenceFragment"
         android:icon="@drawable/ic_map"
-        android:title="@string/pref_header_map" />
+        android:title="@string/PREF_HEADER_MAP" />
 
     <header
         android:fragment="lu.mike.uni.velohproject.PreferencesActivity$HistoryPreferenceFragment"
         android:icon="@drawable/ic_restore"
-        android:title="@string/pref_header_history" />
+        android:title="@string/PREF_HEADER_HISTORY" />
 
 </preference-headers>

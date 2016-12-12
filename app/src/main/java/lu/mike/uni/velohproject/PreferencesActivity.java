@@ -146,11 +146,6 @@ public class PreferencesActivity extends AppCompatPreferenceActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_general);
             setHasOptionsMenu(true);
-
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
         }
 
         @Override
@@ -172,10 +167,9 @@ public class PreferencesActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_map);
             setHasOptionsMenu(true);
 
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
+            bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.PREF_BUS_MARKER_COLOR_KEY)));
+            bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.PREF_VELOH_MARKER_COLOR_KEY)));
+            bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.PREF_DEST_MARKER_COLOR_KEY)));
         }
 
         @Override
@@ -197,11 +191,7 @@ public class PreferencesActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_history);
             setHasOptionsMenu(true);
 
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            bindPreferenceSummaryToValue(findPreference("qwe_qwe"));
+            bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.PREF_HISTORY_SIZE_KEY)));
         }
 
         @Override

@@ -72,13 +72,76 @@
     <!-- *********************** PREFERENCES *********************** -->
 
     <!-- GENERAL -->
-    <string name="pref_header_general">General</string>
+    <string name="PREF_HEADER_GENERAL">General</string>
+    <string name="PREF_LOCALE">Change language</string>
 
     <!-- MAP -->
-    <string name="pref_header_map">Map</string>
+    <string name="PREF_HEADER_MAP">Map</string>
 
-    <!-- NOTIFICATIONS -->
-    <string name="pref_header_history">History</string>
+    <string name="PREF_BUS_MARKER_COLOR">Bus station marker color</string>
+    <string name="PREF_BUS_MARKER_COLOR_KEY">pref_bus_marker_color_key</string>
 
+    <string name="PREF_VELOH_MARKER_COLOR">Veloh station marker color</string>
+    <string name="PREF_VELOH_MARKER_COLOR_KEY">pref_veloh_marker_color_key</string>
 
+    <string name="PREF_DEST_MARKER_COLOR">Destination marker color</string>
+    <string name="PREF_DEST_MARKER_COLOR_KEY">pref_dest_marker_color_key</string>
+
+    <string-array name="PREF_MARKER_COLOR_NAMES">
+        <item>Black</item>
+        <item>Blue</item>
+        <item>Green</item>
+        <item>Grey</item>
+        <item>Orange</item>
+        <item>Pink</item>
+        <item>Purple</item>
+        <item>Red</item>
+        <item>Turkis</item>
+        <item>White</item>
+        <item>Yellow</item>
+    </string-array>
+    <string-array name="PREF_MARKER_COLOR_VALUES">
+        <item>custommarkerblack</item>
+        <item>custommarkerblue</item>
+        <item>custommarkergreen</item>
+        <item>custommarkergrey</item>
+        <item>custommarkerorange</item>
+        <item>custommarkerpink</item>
+        <item>custommarkerpurple</item>
+        <item>custommarkerred</item>
+        <item>custommarkerturkis</item>
+        <item>custommarkerwhite</item>
+        <item>custommarkeryellow</item>
+    </string-array>
+
+    <!-- HISTORY -->
+    <string name="PREF_HEADER_HISTORY">History</string>
+
+    <string name="PREF_REQUEST_LOGGING">Log requests in history</string>
+    <string name="PREF_REQUEST_LOGGING_KEY">pref_request_logging_key</string>
+
+    <string name="PREF_HISTORY_SIZE">History size</string>
+    <string name="PREF_HISTORY_SIZE_KEY">pref_history_size_key</string>
+
+    <string-array name="PREF_HISTORY_SIZE_NAMES">
+        <item>Unlimited</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>30</item>
+        <item>50</item>
+        <item>100</item>
+        <item>500</item>
+    </string-array>
+
+    <string-array name="PREF_HISTORY_SIZE_VALUES">
+        <item>-1</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>30</item>
+        <item>50</item>
+        <item>100</item>
+        <item>500</item>
+    </string-array>
 </resources>

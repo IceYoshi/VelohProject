@@ -1,16 +1,20 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <SwitchPreference
+        android:icon="@drawable/ic_sync"
         android:defaultValue="true"
-        android:key="asd_asd"
-        android:summary="asd"
-        android:title="Log requests in history" />
+        android:key="@string/PREF_REQUEST_LOGGING_KEY"
+        android:title="@string/PREF_REQUEST_LOGGING" />
 
-    <EditTextPreference
-        android:defaultValue="10"
-        android:dialogTitle="History size:"
-        android:inputType="number"
-        android:key="qwe_qwe"
-        android:title="History size:" />
+    <ListPreference
+        android:icon="@drawable/ic_storage"
+        android:defaultValue="-1"
+        android:entries="@array/PREF_HISTORY_SIZE_NAMES"
+        android:entryValues="@array/PREF_HISTORY_SIZE_VALUES"
+        android:key="@string/PREF_HISTORY_SIZE_KEY"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/PREF_HISTORY_SIZE"
+        android:dependency="@string/PREF_REQUEST_LOGGING_KEY"/>
 
 </PreferenceScreen>
