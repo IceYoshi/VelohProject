@@ -19,9 +19,9 @@
     <string name="NAV_ITEM_FILTER_PLACE">Chercher stations par lieu</string>
     <string name="NAV_ITEM_ABOUT">À propos</string>
     <string name="NAV_ITEM_FILTER_NEAREST">Chercher station la plus proche</string>
-    <string name="NAV_ITEM_HISTORY">Histoire</string>
+    <string name="NAV_ITEM_HISTORY">Registre</string>
     <string name="NAV_ITEM_FILTER_RANGE">Chercher stations aux alentours</string>
-    <string name="TITLE_HISTORY">Histoire</string>
+    <string name="TITLE_HISTORY">Registre</string>
     <string name="STATION_TYPE">Type:</string>
     <string name="RANGE">aux alentours de</string>
     <string name="NEAREST">le plus proche</string>
@@ -32,15 +32,46 @@
         <item>Bus</item>
         <item>Veloh</item>
     </string-array>
+
     <string name="DIALOG_CANCEL">Annuler</string>
     <string name="DIALOG_OK">OK</string>
     <string name="DIALOG_CLOSE">Fermer</string>
     <string name="VELOH_AVAILABLE_BIKES">Vélos disponibles:</string>
     <string name="VELOH_EMPTY_STANDS">Points d\'attache disponibles:</string>
     <string name="VELOH_TOTAL_STANDS">Points d\'attache opérationnels:</string>
-    <string name="pref_locale">Changer de langue</string>
-    <string name="pref_header_general">Général</string>
-    <string name="pref_header_history">Histoire</string>
-    <string name="pref_header_map">Carte</string>
     <string name="title_activity_preferences">Paramètres</string>
+    <string name="PREF_HEADER_MAP">Carte</string>
+    <string name="PREF_HEADER_HISTORY">Registre</string>
+    <string name="PREF_HEADER_GENERAL">Général</string>
+    <string name="PREF_LOCALE">Changer language</string>
+    <string name="PREF_HISTORY_SIZE">Taille du registre</string>
+    <string name="PREF_VELOH_MARKER_COLOR">Couleur des cible pour les stations Veloh</string>
+    <string name="PREF_BUS_MARKER_COLOR">Couleur des cibles pour les stations de bus</string>
+    <string name="PREF_REQUEST_LOGGING">Enregistrement du registre</string>
+    <string name="PREF_DEST_MARKER_COLOR">Couleur des cibles pour les stations de bus</string>
+
+    <string-array name="PREF_HISTORY_SIZE_NAMES">
+        <item>Illimité</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>30</item>
+        <item>50</item>
+        <item>100</item>
+        <item>500</item>
+    </string-array>
+
+    <string-array name="PREF_MARKER_COLOR_NAMES">
+        <item>Noir</item>
+        <item>Bleu</item>
+        <item>Vert</item>
+        <item>Gris</item>
+        <item>Orange</item>
+        <item>Rose</item>
+        <item>Violet</item>
+        <item>Rouge</item>
+        <item>Turquoise</item>
+        <item>Blanc</item>
+        <item>Jaune</item>
+    </string-array>
 </resources>

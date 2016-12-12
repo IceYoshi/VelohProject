@@ -79,13 +79,13 @@
     <string name="PREF_HEADER_MAP">Map</string>
 
     <string name="PREF_BUS_MARKER_COLOR">Bus station marker color</string>
-    <string name="PREF_BUS_MARKER_COLOR_KEY">pref_bus_marker_color_key</string>
+    <string name="PREF_BUS_MARKER_COLOR_KEY" translatable="false">pref_bus_marker_color_key</string>
 
     <string name="PREF_VELOH_MARKER_COLOR">Veloh station marker color</string>
-    <string name="PREF_VELOH_MARKER_COLOR_KEY">pref_veloh_marker_color_key</string>
+    <string name="PREF_VELOH_MARKER_COLOR_KEY" translatable="false">pref_veloh_marker_color_key</string>
 
     <string name="PREF_DEST_MARKER_COLOR">Destination marker color</string>
-    <string name="PREF_DEST_MARKER_COLOR_KEY">pref_dest_marker_color_key</string>
+    <string name="PREF_DEST_MARKER_COLOR_KEY" translatable="false">pref_dest_marker_color_key</string>
 
     <string-array name="PREF_MARKER_COLOR_NAMES">
         <item>Black</item>
@@ -96,10 +96,11 @@
         <item>Pink</item>
         <item>Purple</item>
         <item>Red</item>
-        <item>Turkis</item>
+        <item>Turquoise</item>
         <item>White</item>
         <item>Yellow</item>
     </string-array>
+
     <string-array name="PREF_MARKER_COLOR_VALUES">
         <item>custommarkerblack</item>
         <item>custommarkerblue</item>
@@ -118,10 +119,10 @@
     <string name="PREF_HEADER_HISTORY">History</string>
 
     <string name="PREF_REQUEST_LOGGING">Log requests in history</string>
-    <string name="PREF_REQUEST_LOGGING_KEY">pref_request_logging_key</string>
+    <string name="PREF_REQUEST_LOGGING_KEY" translatable="false">pref_request_logging_key</string>
 
     <string name="PREF_HISTORY_SIZE">History size</string>
-    <string name="PREF_HISTORY_SIZE_KEY">pref_history_size_key</string>
+    <string name="PREF_HISTORY_SIZE_KEY" translatable="false">pref_history_size_key</string>
 
     <string-array name="PREF_HISTORY_SIZE_NAMES">
         <item>Unlimited</item>

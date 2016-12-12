@@ -32,15 +32,46 @@
         <item>Bus</item>
         <item>Veloh</item>
     </string-array>
+
     <string name="DIALOG_CANCEL">Abbrechen</string>
     <string name="DIALOG_OK">OK</string>
     <string name="DIALOG_CLOSE">Schließen</string>
     <string name="VELOH_AVAILABLE_BIKES">Verfügbare Fahrräder:</string>
     <string name="VELOH_EMPTY_STANDS">Leere Stände:</string>
     <string name="VELOH_TOTAL_STANDS">Gesamtanzahl an Stände:</string>
-    <string name="pref_locale">Sprache ändern</string>
-    <string name="pref_header_general">Allgemein</string>
-    <string name="pref_header_history">Verlauf</string>
-    <string name="pref_header_map">Karte</string>
     <string name="title_activity_preferences">Einstellungen</string>
+    <string name="PREF_HEADER_MAP">Karte</string>
+    <string name="PREF_HEADER_HISTORY">Verlauf</string>
+    <string name="PREF_HEADER_GENERAL">Allgemein</string>
+    <string name="PREF_LOCALE">Sprache ändern</string>
+    <string name="PREF_HISTORY_SIZE">Verlaufgröße</string>
+    <string name="PREF_REQUEST_LOGGING">Verlauf aufzeichnen</string>
+    <string name="PREF_VELOH_MARKER_COLOR">Markerfarbe für Veloh Stationen</string>
+    <string name="PREF_BUS_MARKER_COLOR">Markerfarbe für Busstationen</string>
+    <string name="PREF_DEST_MARKER_COLOR">Markerfarbe für Zieladresse</string>
+
+    <string-array name="PREF_HISTORY_SIZE_NAMES">
+        <item>Unbegrenzt</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>30</item>
+        <item>50</item>
+        <item>100</item>
+        <item>500</item>
+    </string-array>
+
+    <string-array name="PREF_MARKER_COLOR_NAMES">
+        <item>Schwarz</item>
+        <item>Blau</item>
+        <item>Grün</item>
+        <item>Grau</item>
+        <item>Orange</item>
+        <item>Rosa</item>
+        <item>Lila</item>
+        <item>Rot</item>
+        <item>Türkis</item>
+        <item>Weiß</item>
+        <item>Gelb</item>
+    </string-array>
 </resources>
