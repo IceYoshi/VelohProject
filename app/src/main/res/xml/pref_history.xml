@@ -1,0 +1,16 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="asd_asd"
+        android:summary="asd"
+        android:title="Log requests in history" />
+
+    <EditTextPreference
+        android:defaultValue="10"
+        android:dialogTitle="History size:"
+        android:inputType="number"
+        android:key="qwe_qwe"
+        android:title="History size:" />
+
+</PreferenceScreen>

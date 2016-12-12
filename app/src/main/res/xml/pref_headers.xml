@@ -4,17 +4,17 @@
 
     <header
         android:fragment="lu.mike.uni.velohproject.PreferencesActivity$GeneralPreferenceFragment"
-        android:icon="@drawable/ic_info_black_24dp"
+        android:icon="@drawable/ic_info"
         android:title="@string/pref_header_general" />
 
     <header
-        android:fragment="lu.mike.uni.velohproject.PreferencesActivity$NotificationPreferenceFragment"
-        android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="@string/pref_header_notifications" />
+        android:fragment="lu.mike.uni.velohproject.PreferencesActivity$MapPreferenceFragment"
+        android:icon="@drawable/ic_map"
+        android:title="@string/pref_header_map" />
 
     <header
-        android:fragment="lu.mike.uni.velohproject.PreferencesActivity$DataSyncPreferenceFragment"
-        android:icon="@drawable/ic_sync_black_24dp"
-        android:title="@string/pref_header_data_sync" />
+        android:fragment="lu.mike.uni.velohproject.PreferencesActivity$HistoryPreferenceFragment"
+        android:icon="@drawable/ic_restore"
+        android:title="@string/pref_header_history" />
 
 </preference-headers>
