@@ -8,7 +8,7 @@
     <string name="DIALOG_UNKNOWN_USER_LOCATION">Unbekannter Standort</string>
     <string name="DIALOG_TITLE_VELOHSTATION_INFO">Velohstation Informationen</string>
     <string name="DIALOG_TITLE_BUSSTATION_INFO">Busstation Informationen</string>
-    <string name="DIALOG_NO_BUSSSTATIONS_FOUND_FOR_LOCATION">Keine Treffer gefunden…</string>
+    <string name="DIALOG_NO_BUS_STATIONS_FOUND_FOR_LOCATION">Keine Treffer gefunden…</string>
     <string name="DIALOG_NO_BUSSES">Aktuell keine Buslinien verfügbar…</string>
     <string name="DIALOG_ASK_USER_FOR_RANGE">Reichweite in Meter eingeben:</string>
     <string name="NAV_MENU_SHOW">Anzeigen</string>
@@ -77,4 +77,6 @@
     <string name="ABOUT_AUTHORS">Autoren</string>
     <string name="PREF_DEFAULT_STATION_TYPE">Standard Stationtyp beim Start</string>
     <string name="ABOUT_DESCRIPTION">"VelohProject ist unser Eintrag zu den \"Luxembourg City Bus and Bike\" Projekt beim Kurs \"Principles of Software Development\". Die App soll dem Benutzer helfen, Veloh- und Busstationen schnell und effizient zu finden. Sie wird mit einer effizienten Suchmaschine geliefert, die dem Benutzer nur für ihn relevalte Stationen anzeigt."</string>
+    <string name="DIALOG_NO_VELOH_STATIONS_FOUND_FOR_LOCATION">Keine Treffer gefunden…</string>
+    <string name="PREF_HISTORY_CLEAR">Verlauf beim Start leeren</string>
 </resources>

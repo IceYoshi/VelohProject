@@ -8,7 +8,7 @@
     <string name="DIALOG_UNKNOWN_USER_LOCATION">Localisation inconnu</string>
     <string name="DIALOG_TITLE_VELOHSTATION_INFO">Informations sur la station Veloh</string>
     <string name="DIALOG_TITLE_BUSSTATION_INFO">Informations sur la station de bus</string>
-    <string name="DIALOG_NO_BUSSSTATIONS_FOUND_FOR_LOCATION">Aucun résultat trouvé…</string>
+    <string name="DIALOG_NO_BUS_STATIONS_FOUND_FOR_LOCATION">Aucun résultat trouvé…</string>
     <string name="DIALOG_ASK_USER_FOR_RANGE">Indiquer distance en mètre:</string>
     <string name="DIALOG_NO_BUSSES">Actuellement aucune ligne de bus disponible…</string>
     <string name="NAV_MENU_SHOW">Montrer</string>
@@ -77,4 +77,6 @@
     <string name="ABOUT_AUTHORS">Auteurs</string>
     <string name="PREF_DEFAULT_STATION_TYPE">Defaut type de station au démarrage</string>
     <string name="ABOUT_DESCRIPTION">"VelohProject est notre soumission du projet \"Luxembourg City Bus and Bike\" pour le cours \"Principles of Software Development\". L'application guide l'utilisateur à retrouver des stations de bus et de Veloh tout autour de Luxembourg. Il propose un système de recherche performant qui ne montre que des stations relevants pour l'utilisateur."</string>
+    <string name="DIALOG_NO_VELOH_STATIONS_FOUND_FOR_LOCATION">Aucun résultat trouvé…</string>
+    <string name="PREF_HISTORY_CLEAR">Vider le registre au démarrage</string>
 </resources>

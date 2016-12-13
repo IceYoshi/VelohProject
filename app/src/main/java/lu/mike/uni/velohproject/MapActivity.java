@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -20,7 +19,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -49,8 +47,6 @@ import lu.mike.uni.velohproject.stations.AbstractStation;
 import lu.mike.uni.velohproject.stations.Bus;
 import lu.mike.uni.velohproject.stations.BusStation;
 import lu.mike.uni.velohproject.stations.DestinationLocation;
-import lu.mike.uni.velohproject.stations.VelohStation;
-import mehdi.sakout.aboutpage.AboutPage;
 
 import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_ALL_BUS_STATIONS;
 import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_ALL_VELOH_STATIONS;
@@ -128,7 +124,11 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         historyManager.init(this);
         historyInterpreter = new HistoryInterpreter(this,historyManager);
         countDownTerminator = new CountDownTerminator(this);
-        historyManager.clearHistory();
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        if(pref.getBoolean(getResources().getString(R.string.PREF_HISTORY_CLEAR_KEY), false)) {
+            historyManager.clearHistory();
+        }
 
     }
 
@@ -573,7 +573,10 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         }
 
         if(intersectionSet.isEmpty()){
-            dialogManager.showAlertDialog(getResources().getString(R.string.DIALOG_NO_BUSSSTATIONS_FOUND_FOR_LOCATION),this);
+            if(requestedStationType == RequestStationType.BUS)
+                dialogManager.showAlertDialog(getResources().getString(R.string.DIALOG_NO_BUS_STATIONS_FOUND_FOR_LOCATION),this);
+            else
+                dialogManager.showAlertDialog(getResources().getString(R.string.DIALOG_NO_VELOH_STATIONS_FOUND_FOR_LOCATION),this);
             mClusterManager.clearItems();
         } else {
             for(AbstractStation a : intersectionSet){

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -142,7 +143,7 @@ public class HistoryManager implements DataRetrievedListener{
     }
 
     public void appendStationByPlaceHistory(RequestByPlaceObject p){
-        if(this.shouldLogHistory){
+        if(getShouldLogHistory()){
             try {
                 preBuildRecord();
                 appendAllStationLocations(p.getStations());
@@ -175,7 +176,7 @@ public class HistoryManager implements DataRetrievedListener{
     }
 
     public void appendAllStationsHistory(RequestObject.RequestType requestType){
-        if(this.shouldLogHistory){
+        if(getShouldLogHistory()){
             try {
                 preBuildRecord();
 
@@ -198,7 +199,7 @@ public class HistoryManager implements DataRetrievedListener{
     }
 
     public void appendRangeHistory(Location l, double range, RequestObject.RequestType requestType, Collection<AbstractStation> stations){
-        if(this.shouldLogHistory){
+        if(getShouldLogHistory()){
             try {
                 preBuildRecord();
                 appendAllStationLocations(stations);
@@ -222,7 +223,7 @@ public class HistoryManager implements DataRetrievedListener{
     }
 
     public void appendNearestStationsHistory(Location l, RequestObject.RequestType requestType, Collection<AbstractStation> stations){
-        if(shouldLogHistory){
+        if(getShouldLogHistory()){
             try {
                 preBuildRecord();
                 appendAllStationLocations(stations);
@@ -291,13 +292,23 @@ public class HistoryManager implements DataRetrievedListener{
     public void dontLogHistory(){
         shouldLogHistory = false;
     }
+
     public void logHistory(){
         shouldLogHistory = true;
     }
 
+    public boolean getShouldLogHistory() {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        if(pref.getBoolean(context.getResources().getString(R.string.PREF_REQUEST_LOGGING_KEY), true)) {
+            return this.shouldLogHistory;
+        } else {
+            return false;
+        }
+    }
+
     @Override
     public void onDataRetrieved(String result, RequestObject request) {
-        if(shouldLogHistory) {
+        if(getShouldLogHistory()) {
             try {
                 JSONObject results = new JSONObject(result);
                 String street = ((JSONObject) (((JSONObject) results.getJSONArray("results").get(0)).getJSONArray("address_components").get(1))).getString("short_name");
