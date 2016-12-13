@@ -2,9 +2,17 @@ package lu.mike.uni.velohproject;
 
 import android.location.Location;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import lu.mike.uni.velohproject.stations.AbstractStation;
+import lu.mike.uni.velohproject.stations.BusStation;
+import lu.mike.uni.velohproject.stations.DestinationLocation;
+import lu.mike.uni.velohproject.stations.VelohStation;
 
 /**
  * Created by Dren413 on 09.12.16.
@@ -21,72 +29,59 @@ public class HistoryInterpreter {
 
     public void executeHistoryQuery(String jsonHistoryRecord){
         try{
-            JSONObject json = new JSONObject(jsonHistoryRecord);
             hm.dontLogHistory();
-            switch(json.getString("querykey")){
-                case "allbusstations":       map.onItemRequestAllBusStationsClick();       break;
-                case "allvelohstations":     map.onItemRequestAllVelohStationsClick();     break;
-                case "range":                doRequestStationsInRange(json);               break;
-                case "neareststation":       doRequestNearestStations(json);               break;
-                case "stationsbyplace":      doRequestStationByPlace(json);                break;
-            }
+
+            JSONObject json = new JSONObject(jsonHistoryRecord);
+            String record_type = json.getString(map.getResources().getString(R.string.HISTORY_JSON_RECORD_TYPE_KEY));
+
+            if(record_type.equals(map.getResources().getString(R.string.HISTORY_JSON_ALLBUSSTAIONS_VALUE)))
+                map.onItemRequestAllBusStationsClick();
+            else if(record_type.equals(map.getResources().getString(R.string.HISTORY_JSON_ALLVELOHSTATIONS_VALUE)))
+                map.onItemRequestAllVelohStationsClick();
+            else replayRequest(json);
+
             hm.logHistory();
+
         }catch(Exception ex){
             ex.printStackTrace();
         }
     }
 
-    private void doRequestStationByPlace(JSONObject json) {
-        try{
-            LatLng latlng = new LatLng(json.getJSONObject("destination_location").getDouble("lat"),json.getJSONObject("destination_location").getDouble("lng"));
-            Location userLocation = new Location("");
-            userLocation.setLatitude(json.getJSONObject("user_location").getDouble("lat"));
-            userLocation.setLongitude(json.getJSONObject("user_location").getDouble("lng"));
 
-            if(json.getString("type").equals("bus"))
-                map.doRequestStationByPlace(userLocation, json.getString("destination_name"), latlng, RequestStationType.BUS);
-            else if(json.getString("type").equals("veloh"))
-                map.doRequestStationByPlace(userLocation, json.getString("destination_name"), latlng, RequestStationType.VELOH);
+    public void replayRequest(JSONObject jsonRecord){
+       try{
+           map.getClusterManager().clearItems();
+           JSONArray stationsArray = jsonRecord.getJSONArray(map.getResources().getString(R.string.HISTORY_JSON_STATIONS_ARRAY_KEY));
 
-        }catch(Exception e){e.printStackTrace();}
-    }
+           LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+           Location userLocation = map.getLocation();
+           if(userLocation != null) {
+               boundsBuilder.include(new LatLng(userLocation.getLatitude(), userLocation.getLongitude()));
+           }
 
-    private void doRequestNearestStations(JSONObject json){
-        try{
-            Location location = new Location("");
-            location.setLongitude(json.getJSONObject("location").getDouble("lng"));
-            location.setLatitude(json.getJSONObject("location").getDouble("lat"));
+           for(int i = 0; i<stationsArray.length(); ++i){
+               JSONObject j = stationsArray.getJSONObject(i);
+               String type = j.getString(map.getResources().getString(R.string.HISTORY_JSON_STATION_TYPE_KEY));
 
-            /*if(json.getString("type").equals("bus"))
-                map.onItemRequestAllBusStationsClick();
-            else if(json.getString("type").equals("veloh"))
-                map.onItemRequestAllVelohStationsClick();*/
+               AbstractStation a = null;
+               if(type.equals(map.getResources().getString(R.string.HISTORY_JSON_BUS_STATION_TYPE_VALUE)))          a = new BusStation(j.getString(map.getResources().getString(R.string.HISTORY_JSON_BUSSTATION_ID_KEY)));
+               else if(type.equals(map.getResources().getString(R.string.HISTORY_JSON_VELOH_STATION_TYPE_VALUE)))   a = new VelohStation(j);
+               else if(type.equals(map.getResources().getString(R.string.HISTORY_JSON_DESTINATION_LOCATION_VALUE))) {
+                   a = new DestinationLocation();
+                   a.setName(j.getString(map.getResources().getString(R.string.HISTORY_JSON_STATION_NAME_KEY)));
+               }
+               else break;
 
-            map.onItemRequestNearestBusStationClick(location);
-        }catch(Exception e){e.printStackTrace();}
-    }
+               a.setLat(j.getJSONObject(map.getResources().getString(R.string.HISTORY_JSON_LOCATION_LATITUDE_LONGITUDE_KEY)).getDouble(map.getResources().getString(R.string.HISTORY_JSON_LOCATION_LATITUDE_KEY)));
+               a.setLng(j.getJSONObject(map.getResources().getString(R.string.HISTORY_JSON_LOCATION_LATITUDE_LONGITUDE_KEY)).getDouble(map.getResources().getString(R.string.HISTORY_JSON_LOCATION_LONGITUDE_KEY)));
 
-    private void doRequestStationsInRange(JSONObject json) {
-        try{
-            double dist = json.getDouble("range");
-            Location location = new Location("");
-            location.setLongitude(json.getJSONObject("location").getDouble("lng"));
-            location.setLatitude(json.getJSONObject("location").getDouble("lat"));
-
-            /*if(json.getString("type").equals("bus"))
-                map.onItemRequestAllBusStationsClick();
-            else if(json.getString("type").equals("veloh"))
-                map.onItemRequestAllVelohStationsClick();*/
-
-            map.doRequestStationsInRange(dist, location);
-        }catch(Exception e){e.printStackTrace();}
-    }
-
-    public MapActivity getMap() {
-        return map;
-    }
-
-    public void setMap(MapActivity map) {
-        this.map = map;
+               map.getClusterManager().addItem(a);
+               boundsBuilder.include(new LatLng(a.getLat(),a.getLng()));
+           }
+           int padding = 150;
+           LatLngBounds markerBounds = boundsBuilder.build();
+           map.getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(markerBounds, padding));
+           map.getClusterManager().cluster();
+       }catch(Exception e){e.printStackTrace();}
     }
 }

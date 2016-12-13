@@ -16,15 +16,40 @@
 
     <!-- *********************** FOR HISTORY JSON  *********************** -->
     <string name="HISTORY_JSON_STRING" translatable="false">HISTORY_JSON</string>
-    <string name="HISTORY_RANGE_KEY" translatable="false">range</string>
-    <string name="HISTORY_DATE_KEY" translatable="false">date</string>
-    <string name="HISTORY_LOCATION_STREET_KEY" translatable="false">location_street</string>
-    <string name="HISTORY_LOCATION_CITY_KEY" translatable="false">location_city</string>
-    <string name="HISTORY_RANGE_METER_VALUE_KEY" translatable="false">range</string>
-    <string name="HISTORY_NEAREST_BUS_STATION_KEY" translatable="false">neareststation</string>
-    <string name="HISTORY_ALLBUSSTAIONS_KEY" translatable="false">allbusstations</string>
-    <string name="HISTORY_ALLVELOHSTATIONS_KEY" translatable="false">allvelohstations</string>
-    <string name="HISTORY_STATIONS_BY_PLACE_KEY" translatable="false">stationsbyplace</string>
+    <string name="HISTORY_JSON_RECORDS_KEY" translatable="false">records</string>
+    <string name="HISTORY_JSON_RANGE_KEY" translatable="false">range</string>
+    <string name="HISTORY_JSON_LOCATION_STREET_KEY" translatable="false">location_street</string>
+    <string name="HISTORY_JSON_LOCATION_CITY_KEY" translatable="false">location_city</string>
+    <string name="HISTORY_JSON_USER_LOCATION_STREET_KEY" translatable="false">user_location_street</string>
+    <string name="HISTORY_JSON_USER_LOCATION_CITY_KEY" translatable="false">user_location_city</string>
+    <string name="HISTORY_JSON_STATION_NAME_KEY" translatable="false">name</string>
+    <string name="HISTORY_JSON_VELOHSTATION_NUMBER_KEY" translatable="false">number</string>
+    <string name="HISTORY_JSON_LOCATION_DESTINATION_NAME_KEY" translatable="false">destination_name</string>
+    <string name="HISTORY_JSON_LOCATION_LATITUDE_LONGITUDE_KEY" translatable="false">latlng</string>
+    <string name="HISTORY_JSON_LOCATION_LATITUDE_KEY" translatable="false">lat</string>
+    <string name="HISTORY_JSON_LOCATION_LONGITUDE_KEY" translatable="false">lng</string>
+    <string name="HISTORY_JSON_USER_LOCATION_KEY" translatable="false">user_location</string>
+    <string name="HISTORY_JSON_DESTINATION_LOCATION_KEY" translatable="false">destination_location</string>
+    <string name="HISTORY_JSON_DESTINATION_LOCATION_VALUE" translatable="false">destinationlocation</string>
+    <string name="HISTORY_JSON_LOCATION_KEY" translatable="false">location</string>
+    <string name="HISTORY_JSON_DATE_KEY" translatable="false">date</string>
+    <string name="HISTORY_JSON_DATE_VALUE_FORMAT" translatable="false">dd/MM/yyyy HH:mm:ss</string>
+    <string name="HISTORY_JSON_RANGE_METER_VALUE_KEY" translatable="false">range</string>
+    <string name="HISTORY_JSON_NEAREST_STATION_VALUE" translatable="false">nearest</string>
+    <string name="HISTORY_JSON_ALLBUSSTAIONS_VALUE" translatable="false">allbusstations</string>
+    <string name="HISTORY_JSON_ALLVELOHSTATIONS_VALUE" translatable="false">allvelohstations</string>
+    <string name="HISTORY_JSON_STATIONS_BY_PLACE_KEY" translatable="false">place</string>
+    <string name="HISTORY_JSON_ID_KEY" translatable="false">id</string>
+    <string name="HISTORY_JSON_BUSSTATION_ID_KEY" translatable="false">stationid</string>
+    <string name="HISTORY_JSON_RECORD_TYPE_KEY" translatable="false">record_type</string>
+    <string name="HISTORY_JSON_STATION_TYPE_KEY" translatable="false">type</string>
+    <string name="HISTORY_JSON_BUS_STATION_TYPE_VALUE" translatable="false">bus</string>
+    <string name="HISTORY_JSON_VELOH_STATION_TYPE_VALUE" translatable="false">veloh</string>
+    <string name="HISTORY_JSON_STATIONS_ARRAY_KEY" translatable="false">stations</string>
+    <string name="HISTORY_JSON_VELOH_STATION_TOTAL_BIKE_STANDS_KEY" translatable="false">bike_stands</string>
+    <string name="HISTORY_JSON_VELOH_STATION_AVAILABLE_BIKE_KEY" translatable="false">available_bikes</string>
+    <string name="HISTORY_JSON_VELOH_STATION_AVAILABLE_BIKE_STANDS_KEY" translatable="false">available_bike_stands</string>
+    <string name="HISTORY_JSON_VELOH_STATION_LOCATION_POSITION_KEY" translatable="false">position</string>
 
     <string-array name="history_spinner_array">
         <item>Bus</item>
@@ -37,7 +62,8 @@
     <string name="DIALOG_BUSSTATION_NAME_COLOR_HEX" translatable="false">#CD5C5C"</string>
     <string name="DIALOG_TITLE_VELOHSTATION_INFO">Veloh Station Information</string>
     <string name="DIALOG_NO_BUSSES">No busses at the moment…</string>
-    <string name="DIALOG_NO_BUSSSTATIONS_FOUND_FOR_LOCATION">No matching busstations found…</string>
+    <string name="DIALOG_NO_BUS_STATIONS_FOUND_FOR_LOCATION">No matching bus stations found…</string>
+    <string name="DIALOG_NO_VELOH_STATIONS_FOUND_FOR_LOCATION">No matching Veloh stations found…</string>
     <string name="DIALOG_ASK_USER_FOR_RANGE">Give a range in meter: </string>
     <string name="DIALOG_UNKNOWN_USER_LOCATION">Unknown user location…</string>
     <string name="DIALOG_OK">OK</string>
@@ -138,6 +164,9 @@
 
     <!-- HISTORY -->
     <string name="PREF_HEADER_HISTORY">History</string>
+
+    <string name="PREF_HISTORY_CLEAR">Clear history on startup</string>
+    <string name="PREF_HISTORY_CLEAR_KEY" translatable="false">pref_history_clear_key</string>
 
     <string name="PREF_REQUEST_LOGGING">Log requests in history</string>
     <string name="PREF_REQUEST_LOGGING_KEY" translatable="false">pref_request_logging_key</string>
