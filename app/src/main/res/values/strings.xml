@@ -33,7 +33,7 @@
     <string name="HISTORY_JSON_DESTINATION_LOCATION_VALUE" translatable="false">destinationlocation</string>
     <string name="HISTORY_JSON_LOCATION_KEY" translatable="false">location</string>
     <string name="HISTORY_JSON_DATE_KEY" translatable="false">date</string>
-    <string name="HISTORY_JSON_DATE_VALUE_FORMAT" translatable="false">dd/MM/yyyy HH:mm</string>
+    <string name="HISTORY_JSON_DATE_VALUE_FORMAT" translatable="false">dd/MM/yyyy HH:mm:ss</string>
     <string name="HISTORY_JSON_RANGE_METER_VALUE_KEY" translatable="false">range</string>
     <string name="HISTORY_JSON_NEAREST_STATION_VALUE" translatable="false">nearest</string>
     <string name="HISTORY_JSON_ALLBUSSTAIONS_VALUE" translatable="false">allbusstations</string>
