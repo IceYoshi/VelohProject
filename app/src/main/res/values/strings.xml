@@ -70,22 +70,31 @@
     <string name="VELOH_TOTAL_STANDS">Total stands:</string>
 
     <!-- *********************** ABOUT *********************** -->
-    <string name="ABOUT_GITHUB">IceYoshi/VelohProject</string>
+    <string name="ABOUT_GITHUB" translatable="false">IceYoshi/VelohProject</string>
 
-    <string name="ABOUT_MIKE_NAME">Mike Pereira Gonçalves (0130898735)</string>
-    <string name="ABOUT_MIKE_EMAIL">mike.pereira.001@student.uni.lu</string>
+    <string name="ABOUT_MIKE_NAME" translatable="false">Mike Pereira Gonçalves</string>
+    <string name="ABOUT_MIKE_ID" translatable="false">0130898735</string>
+    <string name="ABOUT_MIKE_EMAIL" translatable="false">mike.pereira.001@student.uni.lu</string>
 
-    <string name="ABOUT_DREN_NAME">Dren Gashi (0130732528)</string>
-    <string name="ABOUT_DREN_EMAIL">dren.gashi.001@student.uni.lu</string>
+    <string name="ABOUT_DREN_NAME" translatable="false">Dren Gashi</string>
+    <string name="ABOUT_DREN_ID" translatable="false">0130732528</string>
+    <string name="ABOUT_DREN_EMAIL" translatable="false">dren.gashi.001@student.uni.lu</string>
 
     <string name="ABOUT_AUTHORS">Authors:</string>
-    <string name="ABOUT_DESCRIPTION">Project Description... Test Test Test</string>
+    <string name="ABOUT_DESCRIPTION">VelohProject is our entry to the \"Luxembourg City Bus and Bike\" Project for the class \"Principles of Software Development\". The App is meant to be a public transportation guide of Luxembourg. It displays all bus and Veloh stations within Luxembourg and lets you request additional information about them. It also comes with a search functionality in order to only show relevant information.</string>
 
     <!-- *********************** PREFERENCES *********************** -->
 
     <!-- GENERAL -->
     <string name="PREF_HEADER_GENERAL">General</string>
     <string name="PREF_LOCALE">Change language</string>
+    <string name="PREF_DEFAULT_STATION_TYPE">Default station type on startup</string>
+    <string name="PREF_DEFAULT_STATION_TYPE_KEY" translatable="false">pref_default_station_type_key</string>
+
+    <string-array name="PREF_STATION_TYPES">
+        <item>Bus</item>
+        <item>Veloh</item>
+    </string-array>
 
     <!-- MAP -->
     <string name="PREF_HEADER_MAP">Map</string>
