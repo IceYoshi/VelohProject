@@ -81,7 +81,7 @@
     <string name="ABOUT_DREN_EMAIL" translatable="false">dren.gashi.001@student.uni.lu</string>
 
     <string name="ABOUT_AUTHORS">Authors:</string>
-    <string name="ABOUT_DESCRIPTION">VelohProject is our entry to the "Luxembourg City Bus and Bike" Project for the class "Principles of Software Development". The App is meant to be a public transportation guide of Luxembourg. It displays all bus and Veloh stations within Luxembourg and lets you request additional information about them. It also comes with a search functionality in order to only show relevant information.</string>
+    <string name="ABOUT_DESCRIPTION">VelohProject is our entry to the \"Luxembourg City Bus and Bike\" Project for the class \"Principles of Software Development\". The App is meant to be a public transportation guide of Luxembourg. It displays all bus and Veloh stations within Luxembourg and lets you request additional information about them. It also comes with a search functionality in order to only show relevant information.</string>
 
     <!-- *********************** PREFERENCES *********************** -->
 

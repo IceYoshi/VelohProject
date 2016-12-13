@@ -76,4 +76,5 @@
     </string-array>
     <string name="ABOUT_AUTHORS">Auteurs</string>
     <string name="PREF_DEFAULT_STATION_TYPE">Defaut type de station au démarrage</string>
+    <string name="ABOUT_DESCRIPTION">"VelohProject est notre soumission du projet \"Luxembourg City Bus and Bike\" pour le cours \"Principles of Software Development\". L'application guide l'utilisateur à retrouver des stations de bus et de Veloh tout autour de Luxembourg. Il propose un système de recherche performant qui ne montre que des stations relevants pour l'utilisateur."</string>
 </resources>
