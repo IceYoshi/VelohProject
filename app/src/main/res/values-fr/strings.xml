@@ -16,11 +16,11 @@
     <string name="NAV_ITEM_STATIONS_VELOH">Stations Veloh</string>
     <string name="NAV_ITEM_STATIONS_BUS">Stations de bus</string>
     <string name="NAV_ITEM_PREF">Préférences</string>
-    <string name="NAV_ITEM_FILTER_PLACE">Chercher stations par lieu</string>
+    <string name="NAV_ITEM_FILTER_PLACE">Stations par lieu</string>
     <string name="NAV_ITEM_ABOUT">À propos</string>
-    <string name="NAV_ITEM_FILTER_NEAREST">Chercher station la plus proche</string>
+    <string name="NAV_ITEM_FILTER_NEAREST">Station la plus proche</string>
     <string name="NAV_ITEM_HISTORY">Registre</string>
-    <string name="NAV_ITEM_FILTER_RANGE">Chercher stations aux alentours</string>
+    <string name="NAV_ITEM_FILTER_RANGE">Stations aux alentours</string>
     <string name="TITLE_HISTORY">Registre</string>
     <string name="STATION_TYPE">Type:</string>
     <string name="RANGE">aux alentours de</string>

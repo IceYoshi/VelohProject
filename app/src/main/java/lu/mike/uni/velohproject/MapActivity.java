@@ -1,8 +1,10 @@
 package lu.mike.uni.velohproject;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -165,7 +167,17 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         LatLng neCords = new LatLng(50.22, 6.57); // northeast
         mMap.setLatLngBoundsForCameraTarget(new LatLngBounds(swCords, neCords));
 
-        new DataRetriever(this, RequestFactory.requestBusStations());
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        String stationType = pref.getString(getResources().getString(R.string.PREF_DEFAULT_STATION_TYPE_KEY), "Unknown");
+
+        if(stationType.equals("Bus")) {
+            requestedStationType = RequestStationType.BUS;
+            new DataRetriever(this, RequestFactory.requestBusStations());
+        } else if(stationType.equals("Veloh")){
+            requestedStationType = RequestStationType.VELOH;
+            new DataRetriever(this, RequestFactory.requestVelohStations());
+        }
+
     }
 
     @Override
