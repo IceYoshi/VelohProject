@@ -16,7 +16,7 @@ public class AboutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View aboutPage = new AboutPage(this)
-                .setImage(R.drawable.velho)
+                .setImage(R.drawable.velohproject)
                 .setDescription(getResources().getString(R.string.ABOUT_DESCRIPTION))
                 .addGroup(getResources().getString(R.string.ABOUT_AUTHORS))
                 .addItem(createElementAutor(R.string.ABOUT_MIKE_NAME, R.string.ABOUT_MIKE_ID, R.string.ABOUT_MIKE_EMAIL))

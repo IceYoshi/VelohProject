@@ -129,7 +129,6 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         if(pref.getBoolean(getResources().getString(R.string.PREF_HISTORY_CLEAR_KEY), false)) {
             historyManager.clearHistory();
         }
-
     }
 
 
@@ -139,13 +138,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        mClusterManager = new ClusterManager<>(this, mMap);
-        mClusterManager.setOnClusterItemClickListener(this);
-        mClusterManager.setOnClusterClickListener(this);
-        mClusterManager.setRenderer(new CustomClusterItemRenderer(this, mMap, mClusterManager));
-        mMap.setOnCameraIdleListener(mClusterManager);
-        mMap.setOnMarkerClickListener(mClusterManager);
+        initClusterManager();
 
         // Show "my location" button if permission granted
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -178,6 +171,15 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
             new DataRetriever(this, RequestFactory.requestVelohStations());
         }
 
+    }
+
+    private void initClusterManager(){
+        mClusterManager = new ClusterManager<>(this, mMap);
+        mClusterManager.setOnClusterItemClickListener(this);
+        mClusterManager.setOnClusterClickListener(this);
+        mClusterManager.setRenderer(new CustomClusterItemRenderer(this, mMap, mClusterManager));
+        mMap.setOnCameraIdleListener(mClusterManager);
+        mMap.setOnMarkerClickListener(mClusterManager);
     }
 
     @Override
@@ -288,10 +290,6 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                     System.out.println("Clicked on id: "+id);
                     System.out.println("JSON Object: \n"+historyManager.getHistoryRecordById(id));
                     historyInterpreter.executeHistoryQuery(historyManager.getHistoryRecordById(id));
-
-                }
-                else {
-                    Log.d("","CANCELED !!!");
                 }
                 break;
             case GOOGLE_PLACE_AUTO_COMPLETE_CODE:
@@ -299,6 +297,14 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                     doRequestStationByPlace(mLastLocation, PlaceAutocomplete.getPlace(this, data).getName().toString(), PlaceAutocomplete.getPlace(this, data).getLatLng(), requestedStationType);
                 }
                     break;
+            case PREFERENCES_REQUEST_CODE:
+                Collection<AbstractStation> allItems = mClusterManager.getAlgorithm().getItems();
+                mClusterManager.clearItems();
+                mClusterManager.cluster();
+                initClusterManager();
+                mClusterManager.addItems(allItems);
+                mClusterManager.cluster();
+                break;
         }
     }
 
@@ -399,7 +405,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                 mClusterManager.clearItems();
                 mClusterManager.addItems(StationDataParser.parseStations(result, request.getRequestType()));
                 mClusterManager.cluster();
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(49.7518, 6.1319) , 9.0f));
+                //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(49.7518, 6.1319) , 9.0f));
                 break;
             case REQUEST_BUS_STATION_INFO:
                 showFetchedBusStationInfo(result);

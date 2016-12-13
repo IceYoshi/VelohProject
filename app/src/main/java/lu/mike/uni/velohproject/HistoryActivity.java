@@ -58,7 +58,7 @@ public class HistoryActivity extends AppCompatActivity {
                 JSONObject record = jarr.getJSONObject(i);
                 String record_type = record.getString(getResources().getString(R.string.HISTORY_JSON_RECORD_TYPE_KEY));
 
-                if(record.getString(getResources().getString(R.string.HISTORY_JSON_STATION_TYPE_KEY)).equals(stationType)){
+                if(stationType.equals(getResources().getStringArray(R.array.history_spinner_array)[0].toLowerCase()) || record.getString(getResources().getString(R.string.HISTORY_JSON_STATION_TYPE_KEY)).equals(stationType)){
                     if(record_type.equals(getResources().getString(R.string.HISTORY_JSON_ALLBUSSTAIONS_VALUE)))
                         list.add(this.getResources().getString(R.string.BUS_STATIONS_ALL) + " \n(" +record.getString(this.getResources().getString(R.string.HISTORY_JSON_DATE_KEY))+ ")");
                     else if(record_type.equals(getResources().getString(R.string.HISTORY_JSON_ALLVELOHSTATIONS_VALUE)))

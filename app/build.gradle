@@ -1,56 +1,38 @@
 apply plugin: 'com.android.application'
 
 android {
-    signingConfigs {
-        config {
-            keyAlias 'AndroidKey'
-            keyPassword '123456'
-            storePassword '123456'
-            storeFile file('C:/Users/Mike/keystones/VelohProject.jks')
-        }
-    }
     compileSdkVersion 24
     buildToolsVersion "24.0.3"
     defaultConfig {
         applicationId "lu.mike.uni.velohproject"
-        minSdkVersion 15
+        minSdkVersion 24
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
-        signingConfig signingConfigs.config
-        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            debuggable false
-            jniDebuggable false
-            signingConfig signingConfigs.config
-            renderscriptDebuggable false
-            renderscriptOptimLevel 3
-            zipAlignEnabled false
         }
     }
-    productFlavors {
-        free {
-        }
-    }
+    /*compileOptions{
+        sourceCompatibility org.gradle.api.JavaVersion.VERSION_1_8
+        targetCompatibility org.gradle.api.JavaVersion.VERSION_1_8
+    }*/
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:design:24.2.1'
-    compile 'com.google.android.gms:play-services:10.0.1'
-    compile 'com.google.maps.android:android-maps-utils:0.4.+'
-    compile 'com.android.support:support-v4:24.2.1'
-    compile 'com.android.support:support-vector-drawable:24.2.1'
+    compile 'com.google.android.gms:play-services:9.8.0'
+    compile 'com.google.maps.android:android-maps-utils:0.4+'
     compile 'com.github.medyo:android-about-page:1.1.1'
     testCompile 'junit:junit:4.12'
 }
