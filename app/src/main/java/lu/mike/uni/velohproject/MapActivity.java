@@ -298,12 +298,14 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                 }
                     break;
             case PREFERENCES_REQUEST_CODE:
-                Collection<AbstractStation> allItems = mClusterManager.getAlgorithm().getItems();
-                mClusterManager.clearItems();
-                mClusterManager.cluster();
-                initClusterManager();
-                mClusterManager.addItems(allItems);
-                mClusterManager.cluster();
+                if(mClusterManager != null) {
+                    Collection<AbstractStation> allItems = mClusterManager.getAlgorithm().getItems();
+                    mClusterManager.clearItems();
+                    mClusterManager.cluster();
+                    initClusterManager();
+                    mClusterManager.addItems(allItems);
+                    mClusterManager.cluster();
+                }
                 break;
         }
     }
