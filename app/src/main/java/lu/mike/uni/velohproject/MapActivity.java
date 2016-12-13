@@ -248,8 +248,16 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
             mClusterManager.clearItems();
             if(nearestStation != null) {
                 mClusterManager.addItem(nearestStation);
+                mClusterManager.cluster();
+
+                LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+                boundsBuilder.include(new LatLng(location.getLatitude(), location.getLongitude()));
+                boundsBuilder.include(nearestStation.getPosition());
+                LatLngBounds markerBounds = boundsBuilder.build();
+                int padding = 150;
+                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(markerBounds, padding));
             }
-            mClusterManager.cluster();
+
 
             if(requestedStationType.equals(RequestStationType.BUS))
                 historyManager.appendNearestStationsHistory(location, RequestObject.RequestType.REQUEST_NEAREST_BUS_STATION, mClusterManager.getAlgorithm().getItems());
@@ -341,13 +349,22 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
         if(!isLocationKnown()) return;
         onDataRetrieved(mLastRequestResult, mLastRequest);
+        LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+        boundsBuilder.include(new LatLng(location.getLatitude(), location.getLongitude()));
 
         Collection<AbstractStation> stations = mClusterManager.getAlgorithm().getItems();
         for(AbstractStation station :  stations) {
             if(station.distanceTo(location) > distance)
                 mClusterManager.removeItem(station);
+            else
+                boundsBuilder.include(station.getPosition());
         }
+
         mClusterManager.cluster();
+        LatLngBounds markerBounds = boundsBuilder.build();
+        int padding = 150;
+        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(markerBounds, padding));
+
 
         if(requestedStationType.equals(RequestStationType.BUS))
                 historyManager.appendRangeHistory(location, distance, RequestObject.RequestType.REQUEST_ALL_BUS_STATIONS_IN_RANGE, mClusterManager.getAlgorithm().getItems());
@@ -370,6 +387,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                 mClusterManager.clearItems();
                 mClusterManager.addItems(StationDataParser.parseStations(result, request.getRequestType()));
                 mClusterManager.cluster();
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(49.7518, 6.1319) , 9.0f));
                 break;
             case REQUEST_BUS_STATION_INFO:
                 showFetchedBusStationInfo(result);
@@ -584,4 +602,5 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
     public GoogleMap getMap(){return mMap;}
     public ClusterManager getClusterManager(){return mClusterManager;}
+    public Location getLocation(){return mLastLocation;}
 }
