@@ -1,6 +1,16 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ListPreference
+        android:icon="@drawable/ic_home"
+        android:defaultValue="Bus"
+        android:entries="@array/PREF_STATION_TYPES"
+        android:entryValues="@array/PREF_STATION_TYPES"
+        android:key="@string/PREF_DEFAULT_STATION_TYPE_KEY"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/PREF_DEFAULT_STATION_TYPE" />
+
+    <ListPreference
         android:icon="@drawable/ic_place"
         android:defaultValue="custommarkergreen"
         android:entries="@array/PREF_MARKER_COLOR_NAMES"

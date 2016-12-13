@@ -74,4 +74,6 @@
         <item>Blanc</item>
         <item>Jaune</item>
     </string-array>
+    <string name="ABOUT_AUTHORS">Auteurs</string>
+    <string name="PREF_DEFAULT_STATION_TYPE">Defaut type de station au démarrage</string>
 </resources>

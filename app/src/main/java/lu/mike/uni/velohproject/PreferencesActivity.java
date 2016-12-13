@@ -167,6 +167,7 @@ public class PreferencesActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_map);
             setHasOptionsMenu(true);
 
+            bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.PREF_DEFAULT_STATION_TYPE_KEY)));
             bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.PREF_BUS_MARKER_COLOR_KEY)));
             bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.PREF_VELOH_MARKER_COLOR_KEY)));
             bindPreferenceSummaryToValue(findPreference(getResources().getString(R.string.PREF_DEST_MARKER_COLOR_KEY)));
