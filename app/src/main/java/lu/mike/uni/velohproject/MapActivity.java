@@ -1,8 +1,10 @@
 package lu.mike.uni.velohproject;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -122,7 +124,11 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         historyManager.init(this);
         historyInterpreter = new HistoryInterpreter(this,historyManager);
         countDownTerminator = new CountDownTerminator(this);
-        historyManager.clearHistory();
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        if(pref.getBoolean(getResources().getString(R.string.PREF_HISTORY_CLEAR_KEY), false)) {
+            historyManager.clearHistory();
+        }
 
     }
 
@@ -161,7 +167,17 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         LatLng neCords = new LatLng(50.22, 6.57); // northeast
         mMap.setLatLngBoundsForCameraTarget(new LatLngBounds(swCords, neCords));
 
-        new DataRetriever(this, RequestFactory.requestBusStations());
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        String stationType = pref.getString(getResources().getString(R.string.PREF_DEFAULT_STATION_TYPE_KEY), "Unknown");
+
+        if(stationType.equals("Bus")) {
+            requestedStationType = RequestStationType.BUS;
+            new DataRetriever(this, RequestFactory.requestBusStations());
+        } else if(stationType.equals("Veloh")){
+            requestedStationType = RequestStationType.VELOH;
+            new DataRetriever(this, RequestFactory.requestVelohStations());
+        }
+
     }
 
     @Override
@@ -244,8 +260,16 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
             mClusterManager.clearItems();
             if(nearestStation != null) {
                 mClusterManager.addItem(nearestStation);
+                mClusterManager.cluster();
+
+                LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+                boundsBuilder.include(new LatLng(location.getLatitude(), location.getLongitude()));
+                boundsBuilder.include(nearestStation.getPosition());
+                LatLngBounds markerBounds = boundsBuilder.build();
+                int padding = 150;
+                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(markerBounds, padding));
             }
-            mClusterManager.cluster();
+
 
             if(requestedStationType.equals(RequestStationType.BUS))
                 historyManager.appendNearestStationsHistory(location, RequestObject.RequestType.REQUEST_NEAREST_BUS_STATION, mClusterManager.getAlgorithm().getItems());
@@ -337,13 +361,22 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
         if(!isLocationKnown()) return;
         onDataRetrieved(mLastRequestResult, mLastRequest);
+        LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+        boundsBuilder.include(new LatLng(location.getLatitude(), location.getLongitude()));
 
         Collection<AbstractStation> stations = mClusterManager.getAlgorithm().getItems();
         for(AbstractStation station :  stations) {
             if(station.distanceTo(location) > distance)
                 mClusterManager.removeItem(station);
+            else
+                boundsBuilder.include(station.getPosition());
         }
+
         mClusterManager.cluster();
+        LatLngBounds markerBounds = boundsBuilder.build();
+        int padding = 150;
+        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(markerBounds, padding));
+
 
         if(requestedStationType.equals(RequestStationType.BUS))
                 historyManager.appendRangeHistory(location, distance, RequestObject.RequestType.REQUEST_ALL_BUS_STATIONS_IN_RANGE, mClusterManager.getAlgorithm().getItems());
@@ -366,6 +399,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                 mClusterManager.clearItems();
                 mClusterManager.addItems(StationDataParser.parseStations(result, request.getRequestType()));
                 mClusterManager.cluster();
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(49.7518, 6.1319) , 9.0f));
                 break;
             case REQUEST_BUS_STATION_INFO:
                 showFetchedBusStationInfo(result);
@@ -539,7 +573,10 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
         }
 
         if(intersectionSet.isEmpty()){
-            dialogManager.showAlertDialog(getResources().getString(R.string.DIALOG_NO_BUSSSTATIONS_FOUND_FOR_LOCATION),this);
+            if(requestedStationType == RequestStationType.BUS)
+                dialogManager.showAlertDialog(getResources().getString(R.string.DIALOG_NO_BUS_STATIONS_FOUND_FOR_LOCATION),this);
+            else
+                dialogManager.showAlertDialog(getResources().getString(R.string.DIALOG_NO_VELOH_STATIONS_FOUND_FOR_LOCATION),this);
             mClusterManager.clearItems();
         } else {
             for(AbstractStation a : intersectionSet){
@@ -580,4 +617,5 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
     public GoogleMap getMap(){return mMap;}
     public ClusterManager getClusterManager(){return mClusterManager;}
+    public Location getLocation(){return mLastLocation;}
 }

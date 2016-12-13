@@ -1,6 +1,12 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <SwitchPreference
+        android:icon="@drawable/ic_clear"
+        android:defaultValue="false"
+        android:key="@string/PREF_HISTORY_CLEAR_KEY"
+        android:title="@string/PREF_HISTORY_CLEAR" />
+
+    <SwitchPreference
         android:icon="@drawable/ic_sync"
         android:defaultValue="true"
         android:key="@string/PREF_REQUEST_LOGGING_KEY"

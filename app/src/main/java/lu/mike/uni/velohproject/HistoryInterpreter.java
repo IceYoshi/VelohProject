@@ -9,9 +9,6 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import lu.mike.uni.velohproject.stations.AbstractStation;
 import lu.mike.uni.velohproject.stations.BusStation;
 import lu.mike.uni.velohproject.stations.DestinationLocation;
@@ -57,6 +54,11 @@ public class HistoryInterpreter {
            JSONArray stationsArray = jsonRecord.getJSONArray(map.getResources().getString(R.string.HISTORY_JSON_STATIONS_ARRAY_KEY));
 
            LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+           Location userLocation = map.getLocation();
+           if(userLocation != null) {
+               boundsBuilder.include(new LatLng(userLocation.getLatitude(), userLocation.getLongitude()));
+           }
+
            for(int i = 0; i<stationsArray.length(); ++i){
                JSONObject j = stationsArray.getJSONObject(i);
                String type = j.getString(map.getResources().getString(R.string.HISTORY_JSON_STATION_TYPE_KEY));
@@ -75,10 +77,10 @@ public class HistoryInterpreter {
 
                map.getClusterManager().addItem(a);
                boundsBuilder.include(new LatLng(a.getLat(),a.getLng()));
-               LatLngBounds markerBounds = boundsBuilder.build();
-               int padding = 150;
-               map.getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(markerBounds, padding));
            }
+           int padding = 150;
+           LatLngBounds markerBounds = boundsBuilder.build();
+           map.getMap().animateCamera(CameraUpdateFactory.newLatLngBounds(markerBounds, padding));
            map.getClusterManager().cluster();
        }catch(Exception e){e.printStackTrace();}
     }
