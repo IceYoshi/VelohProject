@@ -52,6 +52,7 @@
     <string name="HISTORY_JSON_VELOH_STATION_LOCATION_POSITION_KEY" translatable="false">position</string>
 
     <string-array name="history_spinner_array">
+        <item>All</item>
         <item>Bus</item>
         <item>Veloh</item>
     </string-array>

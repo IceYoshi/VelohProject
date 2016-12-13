@@ -29,6 +29,7 @@
     <string name="BUS_STATIONS_ALL">Tous les stations de bus</string>
 
     <string-array name="history_spinner_array">
+        <item>Tous</item>
         <item>Bus</item>
         <item>Veloh</item>
     </string-array>

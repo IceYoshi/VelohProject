@@ -67,7 +67,6 @@ public class HistoryManager implements DataRetrievedListener{
     private JSONObject history;
     private String HISTORY_KEY = "velohproject_history";
     private Boolean shouldLogHistory = true;
-    private int MAX_HISTORY;
 
     // current history record for storage
     private JSONObject current_record;
@@ -88,9 +87,6 @@ public class HistoryManager implements DataRetrievedListener{
         this.context = context;
         HISTORY_KEY = context.getResources().getString(R.string.PREFS_HISTORY_KEY);
 
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        MAX_HISTORY = Integer.parseInt(pref.getString(context.getResources().getString(R.string.PREF_HISTORY_SIZE_KEY), "-1"));
-
         loadHistory();
         if(history==null){
             Log.i("","INFO: Template JSON found: \n"+loadHistoryTemplate());
@@ -100,7 +96,10 @@ public class HistoryManager implements DataRetrievedListener{
 
     public void preBuildRecord(){
         try {
-            if(history.getJSONArray(context.getResources().getString(R.string.HISTORY_JSON_RECORDS_KEY)).length() == MAX_HISTORY) deleteLastRecords(1);
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+            int MAX_HISTORY = Integer.parseInt(pref.getString(context.getResources().getString(R.string.PREF_HISTORY_SIZE_KEY), "-1"));
+            int size = history.getJSONArray(context.getResources().getString(R.string.HISTORY_JSON_RECORDS_KEY)).length();
+            if(size >= MAX_HISTORY && MAX_HISTORY >= 0) deleteLastRecords(size-MAX_HISTORY+1);
 
             int id = history.getInt(context.getResources().getString(R.string.HISTORY_JSON_ID_KEY)) + 1;
             history.put(context.getResources().getString(R.string.HISTORY_JSON_ID_KEY), id);
@@ -303,11 +302,9 @@ public class HistoryManager implements DataRetrievedListener{
 
     public boolean getShouldLogHistory() {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        if(pref.getBoolean(context.getResources().getString(R.string.PREF_REQUEST_LOGGING_KEY), true)) {
-            return this.shouldLogHistory;
-        } else {
-            return false;
-        }
+        if(pref.getBoolean(context.getResources().getString(R.string.PREF_REQUEST_LOGGING_KEY), true))
+                return this.shouldLogHistory;
+        else    return false;
     }
 
     @Override
