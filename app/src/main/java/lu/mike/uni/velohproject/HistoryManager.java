@@ -67,7 +67,7 @@ public class HistoryManager implements DataRetrievedListener{
     private JSONObject history;
     private String HISTORY_KEY = "velohproject_history";
     private Boolean shouldLogHistory = true;
-    private int MAX_HISTORY = 10;
+    private int MAX_HISTORY;
 
     // current history record for storage
     private JSONObject current_record;
@@ -87,6 +87,10 @@ public class HistoryManager implements DataRetrievedListener{
     public void init(Activity context){
         this.context = context;
         HISTORY_KEY = context.getResources().getString(R.string.PREFS_HISTORY_KEY);
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        MAX_HISTORY = Integer.parseInt(pref.getString(context.getResources().getString(R.string.PREF_HISTORY_SIZE_KEY), "-1"));
+
         loadHistory();
         if(history==null){
             Log.i("","INFO: Template JSON found: \n"+loadHistoryTemplate());
