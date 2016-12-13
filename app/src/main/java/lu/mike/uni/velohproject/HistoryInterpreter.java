@@ -9,9 +9,6 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import lu.mike.uni.velohproject.stations.AbstractStation;
 import lu.mike.uni.velohproject.stations.BusStation;
 import lu.mike.uni.velohproject.stations.DestinationLocation;
