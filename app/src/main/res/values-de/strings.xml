@@ -10,7 +10,7 @@
     <string name="DIALOG_TITLE_BUSSTATION_INFO">Busstation Informationen</string>
     <string name="DIALOG_NO_BUSSSTATIONS_FOUND_FOR_LOCATION">Keine Treffer gefunden…</string>
     <string name="DIALOG_NO_BUSSES">Aktuell keine Buslinien verfügbar…</string>
-    <string name="DIALOG_ASK_USER_FOR_RANGE">Reichweite in meter eingeben:</string>
+    <string name="DIALOG_ASK_USER_FOR_RANGE">Reichweite in Meter eingeben:</string>
     <string name="NAV_MENU_SHOW">Anzeigen</string>
     <string name="NAV_MENU_FILTER">Filter</string>
     <string name="NAV_ITEM_STATIONS_VELOH">Veloh Stationen</string>
@@ -26,10 +26,55 @@
     <string name="RANGE">im Umkreis von</string>
     <string name="VELOH_STATIONS_ALL">Alle Veloh Stationen</string>
     <string name="NEAREST">am nächsten</string>
-    <string name="BUS_STATIONS_ALL">Alle Bus Stationen</string>
+    <string name="BUS_STATIONS_ALL">Alle Busstationen</string>
 
     <string-array name="history_spinner_array">
         <item>Bus</item>
         <item>Veloh</item>
     </string-array>
+
+    <string name="DIALOG_CANCEL">Abbrechen</string>
+    <string name="DIALOG_OK">OK</string>
+    <string name="DIALOG_CLOSE">Schließen</string>
+    <string name="VELOH_AVAILABLE_BIKES">Verfügbare Fahrräder:</string>
+    <string name="VELOH_EMPTY_STANDS">Leere Stände:</string>
+    <string name="VELOH_TOTAL_STANDS">Gesamtanzahl an Stände:</string>
+    <string name="title_activity_preferences">Einstellungen</string>
+    <string name="PREF_HEADER_MAP">Karte</string>
+    <string name="PREF_HEADER_HISTORY">Verlauf</string>
+    <string name="PREF_HEADER_GENERAL">Allgemein</string>
+    <string name="PREF_LOCALE">Sprache ändern</string>
+    <string name="PREF_HISTORY_SIZE">Verlaufgröße</string>
+    <string name="PREF_REQUEST_LOGGING">Verlauf aufzeichnen</string>
+    <string name="PREF_VELOH_MARKER_COLOR">Markerfarbe für Veloh Stationen</string>
+    <string name="PREF_BUS_MARKER_COLOR">Markerfarbe für Busstationen</string>
+    <string name="PREF_DEST_MARKER_COLOR">Markerfarbe für Zieladresse</string>
+
+    <string-array name="PREF_HISTORY_SIZE_NAMES">
+        <item>Unbegrenzt</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>30</item>
+        <item>50</item>
+        <item>100</item>
+        <item>500</item>
+    </string-array>
+
+    <string-array name="PREF_MARKER_COLOR_NAMES">
+        <item>Schwarz</item>
+        <item>Blau</item>
+        <item>Grün</item>
+        <item>Grau</item>
+        <item>Orange</item>
+        <item>Rosa</item>
+        <item>Lila</item>
+        <item>Rot</item>
+        <item>Türkis</item>
+        <item>Weiß</item>
+        <item>Gelb</item>
+    </string-array>
+    <string name="ABOUT_AUTHORS">Autoren</string>
+    <string name="PREF_DEFAULT_STATION_TYPE">Standard Stationtyp beim Start</string>
+    <string name="ABOUT_DESCRIPTION">"VelohProject ist unser Eintrag zu den \"Luxembourg City Bus and Bike\" Projekt beim Kurs \"Principles of Software Development\". Die App soll dem Benutzer helfen, Veloh- und Busstationen schnell und effizient zu finden. Sie wird mit einer effizienten Suchmaschine geliefert, die dem Benutzer nur für ihn relevalte Stationen anzeigt."</string>
 </resources>

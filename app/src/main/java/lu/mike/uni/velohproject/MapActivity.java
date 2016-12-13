@@ -3,6 +3,7 @@ package lu.mike.uni.velohproject;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -17,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -46,6 +48,7 @@ import lu.mike.uni.velohproject.stations.Bus;
 import lu.mike.uni.velohproject.stations.BusStation;
 import lu.mike.uni.velohproject.stations.DestinationLocation;
 import lu.mike.uni.velohproject.stations.VelohStation;
+import mehdi.sakout.aboutpage.AboutPage;
 
 import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_ALL_BUS_STATIONS;
 import static lu.mike.uni.velohproject.RequestObject.RequestType.REQUEST_ALL_VELOH_STATIONS;
@@ -65,6 +68,8 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
                                                                 ClusterManager.OnClusterItemClickListener<AbstractStation>, ClusterManager.OnClusterClickListener<AbstractStation> {
 
     private final static int HISTORY_REQUEST_CODE = 42;
+    private final static int ABOUT_REQUEST_CODE = 43;
+    private final static int PREFERENCES_REQUEST_CODE = 44;
     private final static int GOOGLE_PLACE_AUTO_COMPLETE_CODE = 413;
 
     private GoogleMap mMap;
@@ -187,13 +192,20 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
             case R.id.request_nearest_station:          onItemRequestNearestBusStationClick(mLastLocation);  break;
             case R.id.nav_request_stations_by_place:    onItemRequestStationsByPlaceClick();    break;
             case R.id.menu_history:                     onItemHistoryClick();                   break;
-            case R.id.about:                            onItemAboutClick();                     break;
+            case R.id.menu_preferences:                 onItemPreferencesClick();               break;
+            case R.id.menu_about:                       onItemAboutClick();                     break;
         }
         return true;
     }
 
-    public void onItemAboutClick(){
+    public void onItemPreferencesClick(){
+        Intent intent = new Intent(this, PreferencesActivity.class);
+        startActivityForResult(intent, PREFERENCES_REQUEST_CODE);
+    }
 
+    public void onItemAboutClick(){
+        Intent intent = new Intent(this, AboutActivity.class);
+        startActivityForResult(intent, ABOUT_REQUEST_CODE);
     }
 
     public void onItemHistoryClick(){
@@ -219,7 +231,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
     }
 
     public void onItemRequestNearestBusStationClick(Location location) {
-        if(location != null) {
+        if(isLocationKnown()) {
             onDataRetrieved(mLastRequestResult, mLastRequest);
             double minDistance = Double.MAX_VALUE;
             AbstractStation nearestStation = null;
@@ -319,7 +331,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
 
     @Override
     public void onInputDialogOKClick(String editTextValue, DialogManager.InputRequest inputRequest) {
-        if(inputRequest.equals(inputRequest.REQUEST_INPUT_FOR_STATIONS_IN_RANGE)){
+        if(!editTextValue.isEmpty() && inputRequest.equals(inputRequest.REQUEST_INPUT_FOR_STATIONS_IN_RANGE)){
             doRequestStationsInRange(Double.valueOf(editTextValue), mLastLocation);
         }
     }
@@ -344,9 +356,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
     }
 
     @Override
-    public void onInputDialogCancelClick() {
-        ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawers();
-    }
+    public void onInputDialogCancelClick() {}
 
     @Override
     public void onDataRetrieved(String result, RequestObject request) {
@@ -417,8 +427,7 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
     }
 
     public void doRequestStationByPlace(Location userLocation, String destinationName, LatLng latlngDestination, RequestStationType requestStationType){
-        if(!isLocationKnown()) return;
-        if(destinationName==null) return;
+        if(destinationName == null || !isLocationKnown()) return;
 
         onDataRetrieved(mLastRequestResult, mLastRequest);
 

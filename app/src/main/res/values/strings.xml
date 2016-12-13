@@ -51,6 +51,12 @@
     <string name="HISTORY_JSON_VELOH_STATION_AVAILABLE_BIKE_STANDS_KEY" translatable="false">available_bike_stands</string>
     <string name="HISTORY_JSON_VELOH_STATION_LOCATION_POSITION_KEY" translatable="false">position</string>
 
+    <string-array name="history_spinner_array">
+        <item>Bus</item>
+        <item>Veloh</item>
+    </string-array>
+    <string name="title_activity_preferences">Settings</string>
+
     <!-- *********************** DIALOGS *********************** -->
     <string name="DIALOG_TITLE_BUSSTATION_INFO">Bus Station Information</string>
     <string name="DIALOG_BUSSTATION_NAME_COLOR_HEX" translatable="false">#CD5C5C"</string>
@@ -59,6 +65,9 @@
     <string name="DIALOG_NO_BUSSSTATIONS_FOUND_FOR_LOCATION">No matching busstations found…</string>
     <string name="DIALOG_ASK_USER_FOR_RANGE">Give a range in meter: </string>
     <string name="DIALOG_UNKNOWN_USER_LOCATION">Unknown user location…</string>
+    <string name="DIALOG_OK">OK</string>
+    <string name="DIALOG_CLOSE">Close</string>
+    <string name="DIALOG_CANCEL">Cancel</string>
 
     <!-- *********************** NAVIGATION MENU ITEMS *********************** -->
     <string name="NAV_MENU_SHOW">Show</string>
@@ -80,10 +89,106 @@
     <string name="NEAREST">nearest</string>
     <string name="RANGE">with range</string>
 
+    <!-- *********************** STATION VELOH *********************** -->
+    <string name="VELOH_AVAILABLE_BIKES">Available bikes:</string>
+    <string name="VELOH_EMPTY_STANDS">Empty stands:</string>
+    <string name="VELOH_TOTAL_STANDS">Total stands:</string>
 
-    <string-array name="history_spinner_array">
+    <!-- *********************** ABOUT *********************** -->
+    <string name="ABOUT_GITHUB" translatable="false">IceYoshi/VelohProject</string>
+
+    <string name="ABOUT_MIKE_NAME" translatable="false">Mike Pereira Gonçalves</string>
+    <string name="ABOUT_MIKE_ID" translatable="false">0130898735</string>
+    <string name="ABOUT_MIKE_EMAIL" translatable="false">mike.pereira.001@student.uni.lu</string>
+
+    <string name="ABOUT_DREN_NAME" translatable="false">Dren Gashi</string>
+    <string name="ABOUT_DREN_ID" translatable="false">0130732528</string>
+    <string name="ABOUT_DREN_EMAIL" translatable="false">dren.gashi.001@student.uni.lu</string>
+
+    <string name="ABOUT_AUTHORS">Authors:</string>
+    <string name="ABOUT_DESCRIPTION">VelohProject is our entry to the \"Luxembourg City Bus and Bike\" Project for the class \"Principles of Software Development\". The App is meant to be a public transportation guide of Luxembourg. It displays all bus and Veloh stations within Luxembourg and lets you request additional information about them. It also comes with a search functionality in order to only show relevant information.</string>
+
+    <!-- *********************** PREFERENCES *********************** -->
+
+    <!-- GENERAL -->
+    <string name="PREF_HEADER_GENERAL">General</string>
+    <string name="PREF_LOCALE">Change language</string>
+    <string name="PREF_DEFAULT_STATION_TYPE">Default station type on startup</string>
+    <string name="PREF_DEFAULT_STATION_TYPE_KEY" translatable="false">pref_default_station_type_key</string>
+
+    <string-array name="PREF_STATION_TYPES">
         <item>Bus</item>
         <item>Veloh</item>
     </string-array>
 
+    <!-- MAP -->
+    <string name="PREF_HEADER_MAP">Map</string>
+
+    <string name="PREF_BUS_MARKER_COLOR">Bus station marker color</string>
+    <string name="PREF_BUS_MARKER_COLOR_KEY" translatable="false">pref_bus_marker_color_key</string>
+
+    <string name="PREF_VELOH_MARKER_COLOR">Veloh station marker color</string>
+    <string name="PREF_VELOH_MARKER_COLOR_KEY" translatable="false">pref_veloh_marker_color_key</string>
+
+    <string name="PREF_DEST_MARKER_COLOR">Destination marker color</string>
+    <string name="PREF_DEST_MARKER_COLOR_KEY" translatable="false">pref_dest_marker_color_key</string>
+
+    <string-array name="PREF_MARKER_COLOR_NAMES">
+        <item>Black</item>
+        <item>Blue</item>
+        <item>Green</item>
+        <item>Grey</item>
+        <item>Orange</item>
+        <item>Pink</item>
+        <item>Purple</item>
+        <item>Red</item>
+        <item>Turquoise</item>
+        <item>White</item>
+        <item>Yellow</item>
+    </string-array>
+
+    <string-array name="PREF_MARKER_COLOR_VALUES">
+        <item>custommarkerblack</item>
+        <item>custommarkerblue</item>
+        <item>custommarkergreen</item>
+        <item>custommarkergrey</item>
+        <item>custommarkerorange</item>
+        <item>custommarkerpink</item>
+        <item>custommarkerpurple</item>
+        <item>custommarkerred</item>
+        <item>custommarkerturkis</item>
+        <item>custommarkerwhite</item>
+        <item>custommarkeryellow</item>
+    </string-array>
+
+    <!-- HISTORY -->
+    <string name="PREF_HEADER_HISTORY">History</string>
+
+    <string name="PREF_REQUEST_LOGGING">Log requests in history</string>
+    <string name="PREF_REQUEST_LOGGING_KEY" translatable="false">pref_request_logging_key</string>
+
+    <string name="PREF_HISTORY_SIZE">History size</string>
+    <string name="PREF_HISTORY_SIZE_KEY" translatable="false">pref_history_size_key</string>
+
+    <string-array name="PREF_HISTORY_SIZE_NAMES">
+        <item>Unlimited</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>30</item>
+        <item>50</item>
+        <item>100</item>
+        <item>500</item>
+    </string-array>
+
+    <string-array name="PREF_HISTORY_SIZE_VALUES">
+        <item>-1</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>30</item>
+        <item>50</item>
+        <item>100</item>
+        <item>500</item>
+    </string-array>
 </resources>

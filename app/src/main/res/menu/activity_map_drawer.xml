@@ -5,9 +5,11 @@
         <menu>
             <item
                 android:id="@+id/nav_request_all_bus_stations"
+                android:icon="@drawable/ic_bus"
                 android:title="@string/NAV_ITEM_STATIONS_BUS" />
             <item
                 android:id="@+id/nav_request_all_veloh_stations"
+                android:icon="@drawable/ic_bike"
                 android:title="@string/NAV_ITEM_STATIONS_VELOH" />
         </menu>
     </item>
@@ -15,27 +17,32 @@
     <item android:title="@string/NAV_MENU_FILTER">
         <menu>
             <item
-                android:id="@+id/request_stations_in_range"
-                android:title="@string/NAV_ITEM_FILTER_RANGE" />
-
-            <item
                 android:id="@+id/request_nearest_station"
+                android:icon="@drawable/ic_nearby"
                 android:title="@string/NAV_ITEM_FILTER_NEAREST" />
-
+            <item
+                android:id="@+id/request_stations_in_range"
+                android:icon="@drawable/ic_range"
+                android:title="@string/NAV_ITEM_FILTER_RANGE" />
             <item
                 android:id="@+id/nav_request_stations_by_place"
+                android:icon="@drawable/ic_place"
                 android:title="@string/NAV_ITEM_FILTER_PLACE" />
         </menu>
     </item>
 
     <item
         android:id="@+id/menu_history"
+        android:icon="@drawable/ic_restore"
         android:title="@string/NAV_ITEM_HISTORY" />
 
-    <item android:title="@string/NAV_ITEM_PREF" android:enabled="false">
-    </item>
+    <item
+        android:id="@+id/menu_preferences"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/NAV_ITEM_PREF" />
 
-    <item android:title="@string/NAV_ITEM_ABOUT" android:id="@+id/about" android:enabled="false">
-    </item>
-
+    <item
+        android:id="@+id/menu_about"
+        android:icon="@drawable/ic_copyright"
+        android:title="@string/NAV_ITEM_ABOUT" />
 </menu>
