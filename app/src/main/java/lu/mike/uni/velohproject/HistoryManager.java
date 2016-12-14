@@ -201,7 +201,7 @@ public class HistoryManager implements DataRetrievedListener{
         }
     }
 
-    public void appendRangeHistory(Location l, double range, RequestObject.RequestType requestType, Collection<AbstractStation> stations){
+    public void appendRangeHistory(Location l, int range, RequestObject.RequestType requestType, Collection<AbstractStation> stations){
         if(getShouldLogHistory()){
             try {
                 preBuildRecord();
