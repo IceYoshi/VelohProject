@@ -360,11 +360,11 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
     @Override
     public void onInputDialogOKClick(String editTextValue, DialogManager.InputRequest inputRequest) {
         if(!editTextValue.isEmpty() && inputRequest.equals(inputRequest.REQUEST_INPUT_FOR_STATIONS_IN_RANGE)){
-            doRequestStationsInRange(Double.valueOf(editTextValue), mLastLocation);
+            doRequestStationsInRange(Integer.valueOf(editTextValue), mLastLocation);
         }
     }
 
-    public void doRequestStationsInRange(double distance, Location location){
+    public void doRequestStationsInRange(int distance, Location location){
         ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawers();
 
         if(!isLocationKnown()) return;
