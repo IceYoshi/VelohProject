@@ -100,4 +100,8 @@ public class HistoryActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public String getJsonHistoryString() {
+        return this.jsonHistoryString;
+    }
+
 }
