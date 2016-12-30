@@ -1,5 +1,6 @@
 package lu.mike.uni.velohproject;
 
+import android.app.DownloadManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -626,4 +627,5 @@ public class MapActivity extends AppCompatActivity implements   OnMapReadyCallba
     public GoogleMap getMap(){return mMap;}
     public ClusterManager getClusterManager(){return mClusterManager;}
     public Location getLocation(){return mLastLocation;}
+    public RequestObject getLastRequest() {return mLastRequest;};
 }
