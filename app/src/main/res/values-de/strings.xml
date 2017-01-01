@@ -77,7 +77,7 @@
     </string-array>
     <string name="ABOUT_AUTHORS">Autoren</string>
     <string name="PREF_DEFAULT_STATION_TYPE">Standard Stationtyp beim Start</string>
-    <string name="ABOUT_DESCRIPTION">"VelohProject ist unser Eintrag zu den \"Luxembourg City Bus and Bike\" Projekt beim Kurs \"Principles of Software Development\". Die App soll dem Benutzer helfen, Veloh- und Busstationen schnell und effizient zu finden. Sie wird mit einer effizienten Suchmaschine geliefert, die dem Benutzer nur für ihn relevalte Stationen anzeigt."</string>
+    <string name="ABOUT_DESCRIPTION">"VelohProject ist unser Beitrag für das \"Luxembourg City Bus and Bike\" Projekt des Kurses \"Principles of Software Development\". Die App soll dem Benutzer helfen, Veloh- und Busstationen schnell und effizient zu finden. Sie verfügt über eine effiziente Suchmaschine, welche dem Nutzer nur die für ihn relevalte Stationen anzeigt."</string>
     <string name="DIALOG_NO_VELOH_STATIONS_FOUND_FOR_LOCATION">Keine Treffer gefunden…</string>
     <string name="PREF_HISTORY_CLEAR">Verlauf beim Start leeren</string>
 </resources>
